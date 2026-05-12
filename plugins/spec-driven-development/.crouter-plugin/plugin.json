@@ -1,0 +1,10 @@
+{
+  "name": "spec-driven-development",
+  "version": "0.2.1",
+  "description": "Skills for spec-driven development — investigate, settle behavior, hand mechanism to the planner. Originated in the Claude Code RPI plugin (Requirements/Planning/Implementation).",
+  "source": "https://github.com/CaptainCrouton89/crouter-official-marketplace",
+  "owner": {
+    "name": "Silas Rhyneer",
+    "email": "rhyneer.silas@gmail.com"
+  }
+}

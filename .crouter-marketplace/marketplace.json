@@ -1,0 +1,24 @@
+{
+  "name": "crouter-official-marketplace",
+  "version": "0.3.0",
+  "owner": {
+    "name": "Silas Rhyneer",
+    "email": "rhyneer.silas@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "crtr-dev",
+      "source": "./plugins/crtr-dev",
+      "version": "0.1.0",
+      "description": "Canonical guides for authoring and developing crtr plugins, marketplaces, and skills.",
+      "keywords": ["crtr", "meta", "authoring", "self-hosting"]
+    },
+    {
+      "name": "spec-driven-development",
+      "source": "./plugins/spec-driven-development",
+      "version": "0.2.1",
+      "description": "Skills for spec-driven development — write specs, then review specs/designs/plans/requirements against each other.",
+      "keywords": ["spec", "planning", "rpi", "behavior", "requirements", "review"]
+    }
+  ]
+}
