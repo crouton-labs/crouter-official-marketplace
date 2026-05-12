@@ -1,6 +1,6 @@
 {
   "name": "crouter-official-marketplace",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "owner": {
     "name": "Silas Rhyneer",
     "email": "rhyneer.silas@gmail.com"
@@ -19,6 +19,20 @@
       "version": "0.2.1",
       "description": "Skills for spec-driven development — write specs, then review specs/designs/plans/requirements against each other.",
       "keywords": ["spec", "planning", "rpi", "behavior", "requirements", "review"]
+    },
+    {
+      "name": "claude-authoring",
+      "source": "./plugins/claude-authoring",
+      "version": "0.1.0",
+      "description": "Guides for authoring Claude Code artifacts — CLAUDE.md files, hooks, rules, skills, commands, and scripts.",
+      "keywords": ["claude-code", "authoring", "claude-md", "hooks", "rules", "skills", "commands", "scripts"]
+    },
+    {
+      "name": "llm-app-authoring",
+      "source": "./plugins/llm-app-authoring",
+      "version": "0.1.0",
+      "description": "Guides for building LLM applications — prompting, context management, structured output, evals, tool design, multi-agent orchestration, and more.",
+      "keywords": ["llm", "prompting", "evals", "structured-output", "context-management", "tool-design", "multi-agent"]
     }
   ]
 }

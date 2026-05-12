@@ -1,0 +1,10 @@
+{
+  "name": "llm-app-authoring",
+  "version": "0.1.0",
+  "description": "Guides for building LLM applications — prompting, context management, structured output, evals, tool design, multi-agent orchestration, and more.",
+  "source": "https://github.com/crouton-labs/crouter-official-marketplace",
+  "owner": {
+    "name": "Silas Rhyneer",
+    "email": "rhyneer.silas@gmail.com"
+  }
+}
