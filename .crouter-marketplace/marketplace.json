@@ -1,6 +1,6 @@
 {
   "name": "crouter-official-marketplace",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "owner": {
     "name": "Silas Rhyneer",
     "email": "rhyneer.silas@gmail.com"
@@ -33,6 +33,20 @@
       "version": "0.1.0",
       "description": "Guides for building LLM applications — prompting, context management, structured output, evals, tool design, multi-agent orchestration, and more.",
       "keywords": ["llm", "prompting", "evals", "structured-output", "context-management", "tool-design", "multi-agent"]
+    },
+    {
+      "name": "knowledge-capture",
+      "source": "./plugins/knowledge-capture",
+      "version": "0.1.0",
+      "description": "Skills for capturing knowledge through interviews, peer collaboration, breakthrough thinking, and session takeaways.",
+      "keywords": ["interview", "collaboration", "epiphany", "learn", "takeaways", "requirements"]
+    },
+    {
+      "name": "web",
+      "source": "./plugins/web",
+      "version": "0.1.0",
+      "description": "Skills for web development workflows — frontend product design and UX consultancy.",
+      "keywords": ["web", "frontend", "design", "ux", "ui"]
     }
   ]
 }

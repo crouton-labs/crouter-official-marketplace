@@ -1,0 +1,10 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "description": "Skills for web development workflows — frontend product design and UX consultancy.",
+  "source": "https://github.com/crouton-labs/crouter-official-marketplace",
+  "owner": {
+    "name": "Silas Rhyneer",
+    "email": "rhyneer.silas@gmail.com"
+  }
+}

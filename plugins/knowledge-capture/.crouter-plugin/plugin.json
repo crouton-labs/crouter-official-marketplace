@@ -1,0 +1,10 @@
+{
+  "name": "knowledge-capture",
+  "version": "0.1.0",
+  "description": "Skills for capturing knowledge through interviews, peer collaboration, breakthrough thinking, and session takeaways.",
+  "source": "https://github.com/crouton-labs/crouter-official-marketplace",
+  "owner": {
+    "name": "Silas Rhyneer",
+    "email": "rhyneer.silas@gmail.com"
+  }
+}
