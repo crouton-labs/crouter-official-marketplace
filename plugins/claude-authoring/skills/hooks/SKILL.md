@@ -1,6 +1,7 @@
 ---
 name: hooks
 description: Guide to Claude Code hooks — lifecycle events, handler types, decision control, and common patterns. Use when creating, debugging, or planning hooks for guardrails, context injection, quality gates, notifications, or automation.
+type: playbook
 user-invocable: false
 paths:
   - "**/hooks.json"

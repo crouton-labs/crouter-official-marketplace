@@ -1,6 +1,7 @@
 ---
 name: learn
 description: Extract key takeaways from the current session and save them to a learned-skills file. Use when the user asks to capture lessons, save what was learned, distill takeaways, or update a project-specific knowledge file from this conversation.
+type: runbook
 keywords: [learn, takeaways, lessons, distill, reflect, capture]
 ---
 

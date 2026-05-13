@@ -1,5 +1,6 @@
 ---
 name: developing-crtr-dev
+type: runbook
 description: How to install, use, and extend the crtr-dev plugin — the canonical home for skills that guide crtr's own development. Use when adding a skill to crtr-dev, bumping its version, or onboarding to the self-hosting workflow.
 keywords: [crtr-dev, plugin, marketplace, self-hosting, workflow]
 ---
@@ -7,6 +8,8 @@ keywords: [crtr-dev, plugin, marketplace, self-hosting, workflow]
 # Developing the crtr-dev plugin
 
 `crtr-dev` is the meta-plugin: it ships skills that explain how to build crtr itself. We dogfood the plugin/skill system to develop the plugin/skill system. New crtr feature → new skill in `crtr-dev` → next session, the agent already knows how to use it.
+
+Sibling links auto-append on `crtr skill show`; don't hand-roll them. Use `## Related` only for cross-plugin refs.
 
 The plugin lives in the `crouter-official-marketplace` repo, the first-party marketplace for crtr.
 
@@ -57,6 +60,7 @@ cd ~/Code/cli/crouter-official-marketplace
 
 # 2. Scaffold via crtr (it writes the frontmatter and enforces the name rule)
 crtr skill new crtr-dev:<new-skill-name> \
+  --type playbook \
   --description "Use when <trigger> — covers <topics>."
 
 # 3. Write the body. See [[authoring-skills]] for the format rules.

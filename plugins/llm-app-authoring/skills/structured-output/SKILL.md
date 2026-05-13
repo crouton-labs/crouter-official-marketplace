@@ -1,6 +1,7 @@
 ---
 name: structured-output
 description: Get reliable typed JSON from LLMs using constrained decoding, JSON Schema, Zod, Pydantic, and Instructor. Use when implementing structured output, JSON schema validation, typed API responses, constrained generation, Zod schemas, Pydantic models, schema design for LLM extraction, streaming structured data, or debugging malformed JSON responses from models.
+type: playbook
 ---
 
 # Structured Output

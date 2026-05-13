@@ -1,6 +1,7 @@
 ---
 name: prompting-effectively
 description: Structure Claude prompts for clarity and better results using roles, explicit instructions, context, positive framing, and strategic organization. Use when crafting prompts for complex tasks, long documents, tool workflows, or code generation.
+type: playbook
 ---
 
 # Prompt Architecture
@@ -313,14 +314,3 @@ This is the pattern behind Claude Code skills — descriptions loaded upfront, f
 - Rules → [rules-authoring](../rules/SKILL.md)
 - Hooks (lifecycle automation around prompts) → [hooks](../hooks/SKILL.md)
 
-## Related Skills
-
-Cross-cutting prompting topics with their own skills:
-
-- [system-vs-user-prompt](../system-vs-user-prompt/SKILL.md) — placement of instructions in `system` vs `user` messages at the API level
-- [tool-design](../tool-design/SKILL.md) — designing tool descriptions, parameter schemas, and error messages for function-calling agents
-- [structured-output](../structured-output/SKILL.md) — reliable typed JSON via constrained decoding, JSON Schema, Zod, Pydantic
-- [context-management](../context-management/SKILL.md) — token budgets, RAG, prompt caching, compression, multi-turn strategy
-- [output-variety](../output-variety/SKILL.md) — defeating sameyness in repeated LLM calls (personality lines, names, commentary)
-- [eval-and-quality-gates](../eval-and-quality-gates/SKILL.md) — measuring whether prompt changes actually help; LLM-as-judge, regression tests, guardrails
-- [sounding-human](../sounding-human/SKILL.md) — removing AI-tells from generated text

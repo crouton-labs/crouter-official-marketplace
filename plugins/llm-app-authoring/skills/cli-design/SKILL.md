@@ -1,6 +1,7 @@
 ---
 name: cli-design
 description: Design CLIs for humans and LLM agents — subcommand shape, output streams, exit codes, JSON modes, TTY-aware color, structured errors, mutation safety. Use when building or refactoring a CLI, adding machine-readable output, writing --help, deciding stdout vs stderr, or making a tool agent-friendly.
+type: playbook
 ---
 
 # CLI Design

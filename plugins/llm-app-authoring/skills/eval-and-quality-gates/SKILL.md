@@ -1,6 +1,7 @@
 ---
 name: eval-and-quality-gates
 description: Evaluation strategies and quality gates for LLM systems. LLM-as-judge implementation, prompt regression testing, structural and semantic validation pipelines, production monitoring, guardrails, and metrics that actually work. Use when building evals, setting up CI quality gates, testing prompts, measuring output quality, detecting regressions, or adding safety guardrails to AI applications.
+type: playbook
 ---
 
 # Evaluation and Quality Gates

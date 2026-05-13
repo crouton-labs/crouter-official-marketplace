@@ -1,6 +1,7 @@
 ---
 name: epiphany
 description: Breakthrough thinking — spawn 4 parallel advisors with conflicting lenses, then synthesize into actionable insight. Use when the user wants novel approaches, is stuck, or asks for "a breakthrough", "fresh thinking", or "out of the box" ideas on a problem.
+type: runbook
 keywords: [breakthrough, novel-thinking, advisors, parallel, synthesis, brainstorm]
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: review-plan
 description: Validate implementation plans against requirements and design. Use after creating a plan to ensure full coverage and no ambiguities.
+type: runbook
 keywords: [plan, review, requirements, design, coverage]
 ---
 

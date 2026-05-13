@@ -1,6 +1,6 @@
 {
   "name": "crtr-dev",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Canonical guides for authoring and developing crtr plugins, marketplaces, and skills. Used to bootstrap crtr's own development by dogfooding the skill system.",
   "source": "https://github.com/crouton-labs/crouter-official-marketplace",
   "owner": {

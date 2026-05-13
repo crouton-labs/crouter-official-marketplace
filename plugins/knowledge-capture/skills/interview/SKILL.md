@@ -1,6 +1,7 @@
 ---
 name: interview
 description: Structured Q&A to capture information through dialogue, saved as a markdown document. Use when the user asks to be interviewed, wants to gather requirements via Q&A, or asks to capture knowledge through structured conversation.
+type: runbook
 keywords: [interview, qa, requirements, dialogue, structured]
 ---
 

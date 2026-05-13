@@ -1,6 +1,7 @@
 ---
 name: test-strategy
 description: Opinionated do/don't on what to test when AI agents write the code. Use when planning a suite, reviewing coverage, pruning tests, or arguing about the pyramid. Skip mock-heavy units; invest in integration, property, contract, conformance.
+type: playbook
 keywords: [testing, agents, integration tests, property-based, mocks, coverage, e2e, conformance, tests-as-spec, pyramid]
 ---
 
@@ -63,6 +64,4 @@ See [reference.md](reference.md) for the per-task default table and the greppabl
 
 ## Related
 
-- `test-harness` — making the chosen tests fast, deterministic, diff-friendly so the agent iterates against them.
-- `test-pitfalls` — the cheating patterns the invest list is designed to resist.
 - `llm-app-authoring/eval-and-quality-gates` — testing LLM systems themselves (different problem).

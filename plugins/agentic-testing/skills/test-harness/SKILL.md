@@ -1,6 +1,7 @@
 ---
 name: test-harness
 description: Design the test feedback loop so coding agents iterate productively — fast, deterministic, diff-friendly, remediation-bearing. Use when wiring CI for agent-written code, writing CLAUDE.md/AGENTS.md, picking a runner, or debugging agent doom loops.
+type: playbook
 keywords: [harness, feedback loop, CI, claude code, aider, agents.md, claude.md, hooks, doom loop, remediation, flakes]
 ---
 
@@ -106,7 +107,5 @@ Hamel Husain: "Documentation tells the agent what to do. Telemetry tells it whet
 
 ## Related
 
-- `test-strategy` — what to test once the harness is good.
-- `test-pitfalls` — failure modes the harness must defend against.
 - `claude-authoring/claude-md` — writing the CLAUDE.md that holds the test command.
 - `claude-authoring/hooks` — Stop / PostToolUse hook patterns.

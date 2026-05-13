@@ -1,6 +1,7 @@
 ---
 name: collaborate
 description: Think alongside the user as a peer — no implementation, no artifacts. Use when the user explicitly asks to collaborate, think together, talk through a problem, or wants a sounding board rather than a solution.
+type: playbook
 keywords: [collaboration, thinking, peer, discussion, sounding-board]
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: tool-design
 description: Design tool interfaces for LLM agents — descriptions, parameter schemas, error messages, granularity, and composition. Use when creating function calling tools, building MCP servers, designing agent tool interfaces, writing tool descriptions, or debugging why a model calls the wrong tool, hallucinates parameters, or fails to call a tool at all.
+type: playbook
 ---
 
 # Tool Design for LLM Agents

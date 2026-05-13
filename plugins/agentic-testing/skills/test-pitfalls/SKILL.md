@@ -1,6 +1,7 @@
 ---
 name: test-pitfalls
 description: Treat agent-written tests as adversarial. Use when reviewing an agent's PR, auditing green CI you don't trust, or designing review process for agent-written code. Ranked guardrails against deletion, weakening, over-mocking, reward hacking, intent drift.
+type: playbook
 keywords: [cheating, reward hacking, test deletion, over-mocking, intent drift, mutation testing, code review, guardrails, adversarial]
 ---
 
@@ -124,6 +125,4 @@ Each is documented in the wild. Full catalog with citations and detection patter
 
 ## Related
 
-- `test-strategy` — choosing test types that resist these failures structurally.
-- `test-harness` — wiring the feedback loop so cheating is harder.
 - `claude-authoring/claude-md` — where the loss-function reframing belongs.

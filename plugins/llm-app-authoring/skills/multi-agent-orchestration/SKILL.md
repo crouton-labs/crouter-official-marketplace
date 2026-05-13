@@ -1,6 +1,7 @@
 ---
 name: multi-agent-orchestration
 description: Design and implement multi-agent LLM systems. Covers orchestrator patterns, parallel agent coordination, pipeline architecture, hierarchical delegation, agent communication, and failure handling. Use when building multi-agent workflows, coordinating parallel agents, designing orchestrators, splitting tasks across agents, or debugging multi-agent failures.
+type: playbook
 ---
 
 # Multi-Agent Orchestration

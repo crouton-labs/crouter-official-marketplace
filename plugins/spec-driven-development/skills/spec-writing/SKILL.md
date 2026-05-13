@@ -1,6 +1,7 @@
 ---
 name: spec-writing
 description: Define a feature through investigation and conversation, producing a behavior-focused specification. Use when starting a new feature, writing a spec, or capturing what a feature should do before planning the implementation.
+type: runbook
 keywords: [spec, planning, behavior, requirements]
 ---
 

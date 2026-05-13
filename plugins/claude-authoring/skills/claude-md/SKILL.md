@@ -1,6 +1,7 @@
 ---
 name: claude-md-authoring
 description: Best practices for writing effective CLAUDE.md files. Use when creating, updating, or auditing CLAUDE.md files for projects or directories.
+type: playbook
 user-invocable: false
 paths:
   - "**/CLAUDE.md"

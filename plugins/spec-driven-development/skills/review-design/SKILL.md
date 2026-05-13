@@ -1,6 +1,7 @@
 ---
 name: review-design
 description: Validate technical designs against requirements for coverage, feasibility, and architectural soundness. Use after creating a design.
+type: runbook
 keywords: [design, review, requirements, coverage, feasibility]
 ---
 

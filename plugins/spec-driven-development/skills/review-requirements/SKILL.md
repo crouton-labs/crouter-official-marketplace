@@ -1,6 +1,7 @@
 ---
 name: review-requirements
 description: Validate requirements documents for EARS compliance, completeness, and consistency. Use after creating requirements.
+type: runbook
 keywords: [requirements, review, EARS, completeness, consistency]
 ---
 

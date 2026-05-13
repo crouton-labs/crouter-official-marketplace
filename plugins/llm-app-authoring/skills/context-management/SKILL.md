@@ -1,6 +1,7 @@
 ---
 name: context-management
 description: Token budgeting, placement effects, RAG patterns, prompt caching, compression, and multi-turn context strategies for LLM applications. Use when dealing with context windows, token budgets, retrieval-augmented generation, long context, context overflow, caching costs, observation masking, or compressing LLM inputs.
+type: playbook
 ---
 
 # Context Management

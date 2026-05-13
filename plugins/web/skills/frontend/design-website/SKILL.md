@@ -1,6 +1,7 @@
 ---
 name: frontend/design-website
 description: Interactive product design workflow — gather requirements, explore design preferences, and generate a comprehensive design document with component examples. Use when the user asks to design a website, design a product UI, or wants a design system / design-document.html generated.
+type: runbook
 keywords: [design, website, frontend, design-system, ui, product-design]
 ---
 

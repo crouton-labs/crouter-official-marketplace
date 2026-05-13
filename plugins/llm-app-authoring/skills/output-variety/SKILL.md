@@ -1,6 +1,7 @@
 ---
 name: output-variety
 description: Techniques for getting varied, non-repetitive outputs from repeated LLM calls. Use when building systems that call LLMs in loops, generating personality lines, commentary, names, or any repeated creative text where outputs feel samey or cliche.
+type: playbook
 ---
 
 # Output Variety in Repeated LLM Calls
