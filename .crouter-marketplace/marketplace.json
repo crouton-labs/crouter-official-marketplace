@@ -14,13 +14,6 @@
       "keywords": ["testing", "agents", "harness", "feedback-loop", "mocks", "property-based", "tests-as-spec", "reward-hacking"]
     },
     {
-      "name": "crtr-dev",
-      "source": "./plugins/crtr-dev",
-      "version": "0.2.0",
-      "description": "Canonical guides for authoring and developing crtr plugins, marketplaces, and skills.",
-      "keywords": ["crtr", "meta", "authoring", "self-hosting"]
-    },
-    {
       "name": "spec-driven-development",
       "source": "./plugins/spec-driven-development",
       "version": "0.2.2",
