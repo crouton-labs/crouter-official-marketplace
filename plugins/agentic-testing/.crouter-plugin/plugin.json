@@ -1,6 +1,6 @@
 {
   "name": "agentic-testing",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Opinionated guides for testing software when AI agents write most of the code — what to test, how to shape the feedback loop, and how to guard against agent-specific test failures.",
   "source": "https://github.com/crouton-labs/crouter-official-marketplace",
   "owner": {

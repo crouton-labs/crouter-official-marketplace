@@ -1,6 +1,6 @@
 {
   "name": "crouter-official-marketplace",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "owner": {
     "name": "Silas Rhyneer",
     "email": "rhyneer.silas@gmail.com"
@@ -9,7 +9,7 @@
     {
       "name": "agentic-testing",
       "source": "./plugins/agentic-testing",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "description": "Opinionated guides for testing software when AI agents write most of the code — what to test, how to shape the feedback loop, and how to guard against agent-specific test failures.",
       "keywords": ["testing", "agents", "harness", "feedback-loop", "mocks", "property-based", "tests-as-spec", "reward-hacking"]
     },
