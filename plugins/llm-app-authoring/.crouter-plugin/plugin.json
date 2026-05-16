@@ -1,6 +1,6 @@
 {
   "name": "llm-app-authoring",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Guides for building LLM applications — prompting, context management, structured output, evals, tool design, multi-agent orchestration, agentic UX/UI for web and terminal, and more.",
   "source": "https://github.com/crouton-labs/crouter-official-marketplace",
   "owner": {
