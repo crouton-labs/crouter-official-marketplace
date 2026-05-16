@@ -1,0 +1,116 @@
+name: Auto-bump versions
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    if: "!startsWith(github.event.head_commit.message, 'chore: release')"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine bump kind from commit message
+        id: kind
+        env:
+          MSG: ${{ github.event.head_commit.message }}
+        run: |
+          if printf '%s' "$MSG" | grep -qE '^[a-z]+(\(.+\))?!:' \
+             || printf '%s' "$MSG" | grep -q 'BREAKING CHANGE'; then
+            kind=major
+          elif printf '%s' "$MSG" | grep -qE '^feat(\(.+\))?:'; then
+            kind=minor
+          else
+            kind=patch
+          fi
+          echo "kind=$kind" >> "$GITHUB_OUTPUT"
+          echo "Bump kind: $kind"
+
+      - name: Bump versions
+        id: bump
+        env:
+          KIND: ${{ steps.kind.outputs.kind }}
+        run: |
+          set -euo pipefail
+          MARKETPLACE=.crouter-marketplace/marketplace.json
+          SETV="node .github/scripts/set-version.mjs"
+
+          bump_version() {
+            local v="$1" kind="$2" major minor patch
+            IFS=. read -r major minor patch <<<"$v"
+            case "$kind" in
+              major) echo "$((major+1)).0.0" ;;
+              minor) echo "$major.$((minor+1)).0" ;;
+              patch) echo "$major.$minor.$((patch+1))" ;;
+            esac
+          }
+
+          read_version() {
+            # Read top-level "version" without reflowing the file.
+            grep -m1 -E '^[[:space:]]{0,2}"version":' "$1" \
+              | sed -E 's/.*"version":[[:space:]]*"([^"]+)".*/\1/'
+          }
+
+          if git rev-parse HEAD^ >/dev/null 2>&1; then
+            changed_plugins=$(git diff --name-only HEAD^ HEAD -- 'plugins/*' \
+              | awk -F/ 'NF>=2 {print $2}' | sort -u)
+            marketplace_changed=$(git diff --name-only HEAD^ HEAD -- "$MARKETPLACE")
+          else
+            changed_plugins=""
+            marketplace_changed=""
+          fi
+
+          bumped=0
+          while IFS= read -r name; do
+            [ -z "$name" ] && continue
+            pfile="plugins/$name/.crouter-plugin/plugin.json"
+            if [ ! -f "$pfile" ]; then
+              echo "skip $name: no plugin.json"
+              continue
+            fi
+            status=$(git diff --name-status HEAD^ HEAD -- "$pfile" | head -1 | cut -f1 || true)
+            if [ "$status" = "A" ]; then
+              echo "skip $name: plugin.json newly added"
+              continue
+            fi
+            old=$(read_version "$pfile")
+            new=$(bump_version "$old" "$KIND")
+            echo "$name: $old -> $new"
+            $SETV "$pfile" "$new"
+            $SETV "$MARKETPLACE" "$new" --plugin "$name"
+            bumped=1
+          done <<< "$changed_plugins"
+
+          if [ "$bumped" -eq 1 ] || [ -n "$marketplace_changed" ]; then
+            old=$(read_version "$MARKETPLACE")
+            new=$(bump_version "$old" "$KIND")
+            echo "marketplace: $old -> $new"
+            $SETV "$MARKETPLACE" "$new"
+            echo "new_version=$new" >> "$GITHUB_OUTPUT"
+          else
+            echo "Nothing to bump."
+          fi
+
+      - name: Commit and tag
+        if: steps.bump.outputs.new_version != ''
+        env:
+          NEW_VERSION: ${{ steps.bump.outputs.new_version }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No file changes after bump; skipping commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: release v${NEW_VERSION}"
+          git tag "v${NEW_VERSION}"
+          git push --follow-tags

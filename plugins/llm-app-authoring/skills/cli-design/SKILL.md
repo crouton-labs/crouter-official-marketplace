@@ -2,119 +2,204 @@
 name: cli-design
 description: Design CLIs for humans and LLM agents — subcommand shape, output streams, exit codes, JSON modes, TTY-aware color, structured errors, mutation safety. Use when building or refactoring a CLI, adding machine-readable output, writing --help, deciding stdout vs stderr, or making a tool agent-friendly.
 type: playbook
+keywords: [cli, agent-friendly, exit-codes, stdout-stderr, json-output, tty]
+---
+# CLI Design for Agents
+
+A CLI consumed only by an agent is a different artifact from one used by a human. The agent reads every token; there's no skimming, no tab completion, no visual scanning. `-h` is the only documentation that gets read. Output is parsed, not displayed. Shell ergonomics that matter for humans (color, pagers, interactive prompts, terseness for typing) are noise to an agent; the things that matter for agents (deterministic output, structured errors, complete specs at `-h`, cheap discovery) are afterthoughts in human-first CLIs.
+
+This guide treats the single-reader-is-an-agent case as the design target. Human ergonomics are absent intentionally, not by oversight.
+
+This file is the spec. **`reference.md` (sibling) is the spec applied** — a fully worked, annotated CLI (the fictional `crtr` runtime) with every pattern below instantiated and each design choice called out. Read it when you need a concrete instance of any rule here: root/branch/leaf shape, dynamic `-h`, long-running spawns, pagination, JSONL streaming. Design from the principles; consult `reference.md` for what a correct realization looks like.
+
+## Principles
+
+1. **Context is the scarce resource.** Every token in `-h` permanently costs budget for the rest of the agent's task. Minimize *tokens-to-correct-invocation*.
+
+2. **Information must precede invocation.** If a leaf can fail because the agent lacked information, the design failed — not the agent. World-state failures (network, contention, race) are a separate category.
+
+3. **Spec, not example.** Examples invite pattern-matching, which is lossy and bias-prone. A complete schema with semantic constraints is shorter and more reliable.
+
+4. **One format.** JSON object on stdin. JSON object on stdout for single responses; JSONL for streams. No format negotiation, no `--json` flag, no plain-text alternative.
+
+5. **Selection is the work.** Agents spend more cognition choosing the right leaf than constructing the invocation. The selection rubric at each node is the highest-leverage content in the tree.
+
+6. **The tree is an API surface.** Subcommand structure is the agent's mental map. Design it like a public API: orthogonal, minimal, named for concepts. One canonical name per operation, no aliases.
+
+7. **Noun-verb structure. Verbs always last.** `tool plan new`, not `tool new plan`. For deeper trees, nest more nouns: `tool plan task list` reads cleanly. An agent's reasoning composes noun-first ("I need to do something to a plan") and then picks the verb. Verb-first forces selection without an object in hand.
+
+8. **5–7 children per node, hard cap.** Past that, the selection space stops fitting in working context. The fix is always the same: introduce a sub-noun. If you have 12 verbs on one noun, you have two nouns hiding.
+
+9. **Effects are part of the contract.** Anything the world remembers after invocation — state changes, spawned processes, persisted files — is declared at the leaf.
+
+10. **Output is input.** Stdout is the next caller's stdin. Typed contract, not display. Deterministic order, no decoration.
+
+11. **Redundancy is leakage.** Each fact lives at the highest applicable node and is never restated. Globals appear only at root.
+
+12. **Errors carry recovery information.** Every failure says what was received, what was expected, and what to do next.
+
+13. **State is passed, not smuggled.** No command silently depends on another's side effects.
+
+14. **Long-running operations return a pointer, not a wait.** Operations exceeding a couple of seconds return a handle immediately. Progress accumulates in a log file. Final result writes atomically to a sidecar.
+
+15. **Dynamic content never balloons.** `-h` content reflecting runtime state has a per-node token budget. Aggregates only; never enumerates.
+
 ---
 
-# CLI Design
+## The tree
 
-A CLI has two readers now: the human typing at a prompt and the LLM agent invoking it from a shell tool. Most production CLIs were designed only for the first, and the failure modes diverge sharply once an agent starts calling them. The `--help` text is the agent's tool description. The output format is the response schema. Exit codes are error codes. Designed poorly, a CLI costs an agent roughly 35× the tokens of a well-designed one on equivalent workflows (MindStudio, measured against MCP equivalents) — and that's before the agent burns retries on errors it can't parse.
+Three node types: root, branch nodes, leaves.
 
-The good news: most of the rules that make a CLI agent-friendly also make it script-friendly and pipeline-friendly. The Unix philosophy and agent-friendliness converge on the same answers. The mistakes are specific and well-cataloged.
+**Root** establishes vocabulary and the I/O contract. Lists subtrees with selection discriminators. Lists globals once. States the JSON-on-stdin/stdout convention once.
 
-For tool-specific patterns, principle citations, and a long-form anti-pattern catalog with GitHub issues, see [reference.md](reference.md).
+**Branch nodes** extend the parent's definition with the local model (lifecycle, key states) and list children with one-line discriminators in `name short-description | use when X` form. May include bounded dynamic content (state counts, aggregate signals) that pre-empts downstream calls.
 
-## The Two-Reader Lens
+**Leaves** are the action surface. Each leaf declares:
+- One-line summary.
+- Input schema, with semantic constraints inline on each field.
+- Output schema, with *useful properties* of return values (sort order, semantic meaning), not just types.
+- Effects — every persistent change in the world.
 
-Every output path on every command should have a default human form and a machine form available on demand. Don't pick one — design both.
+There are no flags anywhere in the tree except `-h`. All input flows through stdin. Subcommand path is the navigation; stdin JSON is the parameters.
 
-Where the split shows up:
-
-- **Output format**: `git status` for humans, `git status --porcelain` for scripts. Human format can evolve between versions; porcelain format is a versioned contract.
-- **Color**: enabled in a TTY, automatically disabled when stdout is piped. Respect `NO_COLOR=1`; honor `FORCE_COLOR=1` as the override.
-- **Prompts**: only when stdin is a TTY. In non-TTY contexts, fail with instructions or honor `--yes` / `--non-interactive`. A CLI that prompts in a pipe hangs an agent indefinitely — this is the single most common production break.
-- **Progress**: spinners and bars in a TTY, nothing when piped. Or always to stderr, so capture is clean.
-
-The cost of getting this wrong is concrete and well-documented. A CLI that emits ANSI in pipes corrupts downstream `grep`. A CLI that prompts in a non-TTY hangs CI and agent workflows. A CLI that decorates JSON output with table borders is unparseable. These bug reports exist against npm, yarn, AWS CLI, Claude Code, codex — every project relearns the lesson.
-
-## Stream Discipline
-
-**stdout is data the caller wants to capture. stderr is everything else.**
-
-Progress, warnings, "fetching...", success confirmations — all stderr. The contract: `sis list -j | jq` should produce clean JSON even when the daemon prints "connecting to socket..." along the way. The diagnostic test: `cmd > /dev/null` should hide nothing the user wanted to see, and `cmd 2>/dev/null` should hide all decoration.
-
-The Rule of Silence applies: when a command succeeds and has nothing useful to print, say nothing. "✓ Task completed" on stdout is decorative and breaks composition. Modern dev tools relax this for friendliness — fine, but route the friendly message to stderr.
-
-## Machine Output Is a Contract
-
-The moment you ship `--json` or `--porcelain`, the shape is a versioned API. Renaming a field breaks every script in the wild — and every agent that learned to parse it.
-
-- **Include a `schema_version` field** (or use a versioned flag like `--porcelain=v2`, the way git does). Callers can branch on it; you can evolve safely.
-- **Prefer JSONL for streams.** One complete JSON object per line. Partial reads don't break parsing, no closing bracket to wait for, cheaper to consume in pieces. Use a JSON array only when the entire result is bounded and small.
-- **Make output deterministic.** Sort by a stable field; same input, same output. Random ordering or embedded timestamps break diffs and caching.
-- **Field selection beats post-filtering.** `gh pr list --json number,title` is leaner than `--json '*' | jq '{number,title}'`. Save the caller a step and save tokens — agents pay per byte.
-- **In `--json` mode, errors are structured too.** `{"error":"validation_failed","code":"INVALID_EFFORT","message":"...","valid_values":[...]}`. Agents branch on the code; humans read the message.
-
-## Errors as Road Signs
-
-An error is feedback the caller uses to correct itself. An opaque error produces retry loops; a road sign produces recovery. Every error needs three pieces: what was received, what was expected, and what to do next.
+### Branch format
 
 ```
-# Useless — agent loops on the same call
-Error: invalid argument
-
-# Recoverable — exact fix is implied
-Error: --effort must be one of: low, medium, high, xhigh (got: 'xmedium')
-
-# Recoverable with a path
-Error: deck file not found: ./questions.json
-       Pass an absolute path, or run from the directory containing the file.
+Branches
+  name      short description    | use when X
 ```
 
-Exit codes are the second channel. **0 on success, non-zero on any failure** is universal. Beyond that, document any specific codes the caller should branch on: `git diff` exits 1 to signal "differences exist" (a useful condition, not an error). Don't invent codes unless callers will branch on them — most CLIs need only `0` and `1`. If you do specialize, write them down: `2` for usage error, `5` for conflict, `127` for not-found are the conventional choices.
+The `| use when X` portion is the selection rubric. It's higher-leverage than the description because the question the agent is answering is "would I pick this?" not "what does this do?" Once the agent picks a branch, the leaf's own `-h` answers "what does this do?" in depth.
 
-## Command Shape
+### Node sizing
 
-Past about seven top-level verbs, organize them. Three shapes work; mixing them doesn't.
+A node with 5–7 children fits in working context. Past that, selection rubrics stop differentiating — too many similar lines. Always split into sub-nouns:
 
-- **Flat verbs** (`tar`, `curl`, `rg`, `jq`): fast to type, breaks down past ~10 commands. Right for a focused tool with one purpose.
-- **Verb-noun** (`kubectl get pods`, `cargo build`): predictable when the same verbs apply to many objects. The shape is exploration-friendly — knowing `kubectl get` predicts that `kubectl describe` and `kubectl delete` exist. For agents, this is deterministic tree search through `--help`.
-- **Noun-verb** (`docker container create`, `gh pr list`): better when objects have many distinct operations that don't share verbs across types. Pairs naturally with `--json field,field` projections.
+Wrong: `tool task claim, done, list, show, abandon, retry, restart, archive, export, import`.
 
-Pick one and apply it uniformly. The worst CLIs mix shapes (`tool deploy --app foo` next to `tool config set key val` next to `tool users list`). Be deliberate about aliases — `npm install`, `npm add`, `npm i` look helpful in isolation but force scripts and agents to remember three names for one operation. Pick the canonical name and document the others as aliases, not equals.
+Right: `tool task lifecycle {claim, done, abandon, retry}` and `tool task inspect {show, list, export}`.
 
-## Inputs: Flags, Environment, Stdin
+---
 
-The standard precedence is **flags > env vars > project config > user config > defaults**. Flags always win, so scripts can inject overrides without touching state.
+## I/O contract
 
-A few rules with sharp edges:
+**Input.** A single JSON object on stdin. Required fields, optional fields, and semantic constraints all live in the leaf's `-h`. There are no flags other than `-h`; everything parameterizing a call is a stdin field.
 
-- **Accept stdin when content is the natural input.** Long prompts, file contents, queries. By convention, a bare `-` as a positional argument means "read from stdin"; pair it with an explicit `--stdin` flag when ambiguity matters.
-- **Never accept secrets via flags.** `ps aux` reveals them; shell history saves them. Use `--password-file`, stdin, or a credentials file.
-- **Respect standard env vars.** `NO_COLOR`, `FORCE_COLOR`, `PAGER`, `EDITOR`, `XDG_*`, `TMPDIR`. Don't reinvent these.
-- **Don't smuggle state across invocations.** If `cmd-a` writes to `~/.cache/tool/state` and `cmd-b` silently depends on it, agents calling `cmd-b` in a fresh shell will fail. Pass state explicitly.
+**Output.**
 
-## Mutation Safety
+- *Single-shot operations* (`plan new`, `task list`, `job status`) — one JSON object on stdout. The whole response is one value.
+- *Streams* (`job logs --follow`, anything emitting events over time) — JSONL. One complete JSON object per line, newline-delimited. Partial reads don't break parsing. No closing bracket to wait for.
 
-For destructive or expensive operations, separate preview from execution. The pattern compounds: it makes agents safer (they can plan before acting) and humans saner (no surprise commits).
+A paginated list is not a stream — it's a single response containing many items. JSONL is for incremental emission over time, not for "a lot of stuff at once."
 
-- **`--dry-run` for "show what would happen."** Should be cheap, side-effect-free, and structurally identical to the real run.
-- **Plan/apply for complex changes.** `terraform plan -out=file` saves a plan; `terraform apply file` executes exactly that plan. No drift between preview and execute.
-- **Confirmation prompts only in a TTY.** In non-TTY, require `--yes` or fail. Never assume.
-- **Idempotency wherever possible.** Running `apply -f config.yaml` twice should converge to the same state as once. This is more valuable than perfect rollback.
+**Stderr.** In-flight diagnostic output the agent may capture if it wants. Never carries the result. Contract test: `cmd > /dev/null` should hide all of the result; `cmd 2> /dev/null` should hide only diagnostic chatter.
 
-## Help Is the Tool Description
+**Exit codes.** 0 on success, non-zero on failure. Specific non-zero codes are worth defining only if the agent will branch on them — almost never in practice. The structured error payload is what the agent reads.
 
-For agents, `--help` is the only documentation that reliably gets read. Treat it the way you would a function description in a tool schema.
+---
 
-- **Lead with one-line examples** before formal option descriptions. Models pattern-match on examples to construct calls correctly — this is the CLI analog of `input_examples` in tool schemas.
-- **Show the output shape.** When a command produces structured data, say so: "Output: JSON array of `{id, name, status}` objects."
-- **Cross-reference related commands.** "See also: `sis status` for live state." Helps both humans and agents discover the right command.
-- **Make it reachable two ways**: `cmd --help` and `cmd help <sub>`. Both are common patterns and cheap to support.
+## Errors
 
-## Anti-Patterns to Memorize
+An error is feedback for correction. Opaque errors produce retry loops; structured errors produce recovery. Every error includes:
 
-Each of these is a real production bug, repeatedly:
+- **What was received.** The input the agent gave.
+- **What was expected.** The constraint that wasn't met.
+- **What to do next.** A concrete action.
 
-- **Color in pipes** — ANSI escapes leak when stdout isn't a TTY. Detect or honor `NO_COLOR`.
-- **Prompt in non-TTY** — CLI hangs forever in CI and agents. Detect stdin TTY; fail or use `--yes`.
-- **stdout pollution** — status messages or progress on stdout corrupts machine output. Move to stderr.
-- **Decorated JSON** — table borders, prefixes, or ANSI inside `--json` output. Keep machine modes strictly plain.
-- **Flag explosion** — 40-flag commands. Split into subcommands or split the tool.
-- **Alias chaos** — same operation under three names. Pick one canonical, deprecate the rest.
-- **Unstable JSON schema** — silent field renames between versions. Add `schema_version`; deprecate over releases.
-- **Silent truncation** — output cut to terminal width when piped. Emit full data or fail loudly.
-- **Pager in non-TTY** — `less` auto-launches when output is captured. Disable when stdout isn't a TTY.
-- **Stack trace on stderr** — internal panic surfaces to users. Wrap with context; gate full trace behind `--debug`.
-- **Smuggled state** — command B depends on `cd` or env from command A. Pass state explicitly.
-- **Secrets in flags** — visible in `ps` and shell history. Use stdin or files.
+Shape (in the JSON response when the failure is at the command level, on stderr when the failure is at the runtime level):
 
-For each anti-pattern with the GitHub issues that filed them and the canonical fix, see [reference.md](reference.md).
+```json
+{
+  "error": "invalid_status",
+  "message": "status must be one of: draft, claimed, done, failed",
+  "received": "drafted",
+  "field": "status",
+  "next": "Retry with one of the listed values, or omit to include all statuses."
+}
+```
+
+The `error` field is a stable string the agent can branch on. The `message` is for the human reading the agent's logs. `next` is the road sign.
+
+Internal failures — panics, unhandled exceptions — never reach the agent raw. Wrap as `{"error": "internal", ...}` with a stable code. Full traces gate behind an explicit debug invocation, not stderr leakage.
+
+---
+
+## Long-running operations
+
+Anything exceeding a couple of seconds separates kickoff from collection.
+
+1. **The kickoff leaf returns a job handle immediately.** Under a second. Output JSON includes `job_id`, anything immediately known about the spawn, and a `follow_up` string telling the agent the recommended next call.
+
+2. **Progress accumulates in a structured log file** at `$XDG_STATE_HOME/<tool>/jobs/<job_id>.log`. Each line is a JSON event with at minimum:
+    - `ts` — ISO 8601 timestamp.
+    - `level` — `debug | info | warn | error`.
+    - `event` — short stable string identifying the kind of event.
+    - `message` — human-readable summary.
+    - Event-specific structured payload as needed.
+
+3. **The final result writes atomically to a sidecar** at `<job_id>.result.json`. Appearance of the file is the terminal signal. No scanning logs for a sentinel.
+
+4. **A separate subtree reads both.** Typically `tool job` with:
+    - `logs` — stream JSONL from the log file (optionally filtered or followed).
+    - `result` — read the sidecar; optional `wait` field blocks until appearance.
+    - `status` — `live | done | failed | canceled`, plus age and last-event signals.
+    - `cancel` — best-effort.
+
+5. **Files are the source of truth.** No in-memory job registry to lose. An agent can pick up an existing job by id without coordination. Crashes recover by reading files.
+
+`cancel` is best-effort: some workers expose cancellation hooks, others run to completion. Success means the signal was delivered, not that execution stopped. Worth knowing internally; not worth doc tokens at the call site.
+
+---
+
+## Pagination
+
+Any leaf returning a list takes:
+- `limit` — integer, with default and hard max.
+- `cursor` — opaque string from a previous response's `next_cursor`, omitted on first call.
+
+Returns:
+- `items` — the page, sorted by a stable field (sort order is part of the leaf's contract).
+- `next_cursor` — string or null. Null is the only end-of-list signal.
+- `total` — nullable integer. Exact when cheap; null when expensive on filtered or large result sets.
+
+Cursor-based, not page-numbered: stable under inserts and deletes between pages. Cursor is opaque — the runtime owns its encoding, the agent treats it as a token.
+
+---
+
+## Dynamic `-h`
+
+`-h` may include content reflecting runtime state when it earns its tokens — typically a state-distribution summary on a branch node. Constraints:
+
+- **Bounded by a token budget per node.** When data exceeds the budget, aggregate.
+- **Never enumerate.** Listing 4000 plans by id in `-h` is a failure mode. Counts and aggregate signals only.
+- **Fail soft.** When the backend is unreachable, fall back to static `-h` with a note that the snapshot is unavailable. Discovery breaking because state is unreachable is a worse failure mode than slightly less informative `-h`.
+
+The test for whether dynamic content earns its slot: does it pre-empt a call the agent would otherwise make? Counts of plans by state save a separate `state show` call. A list of currently-running jobs would not — it unbounds quickly and is better fetched explicitly.
+
+---
+
+## Anti-patterns
+
+Each is a real failure mode.
+
+- **stdout pollution.** Status messages, progress indicators, or decorations on stdout corrupt downstream parsing. All of it belongs on stderr or in the log file.
+- **Decorated JSON.** Table borders, banners, ANSI escapes inside structured output. Plain JSON only.
+- **Plain-text output modes.** No "friendly" alternative format. The agent doesn't need one; supporting it forks the surface.
+- **Stack traces leaked raw.** Internal panics surface as opaque noise. Wrap as structured errors.
+- **Smuggled state.** Command B depending on `cd`, env, or a hidden cache from command A. Pass state explicitly.
+- **Auto-launching pagers, interactive prompts, TTY-detection-dependent behavior.** There is no terminal; these hang the agent.
+- **Aliases.** Same operation under multiple names forces the agent to memorize three things for one operation. Pick one canonical name.
+- **Flags.** There are no flags in this design except `-h`. Flag-vs-stdin decisions disappear. If a parameter exists, it's a field on stdin JSON.
+- **Color, TTY detection, terminal-width truncation.** No reader needs any of it. Truncation silently corrupts machine consumption.
+- **Fuzzy-match "did you mean" suggestions.** If the agent reached an invalid invocation, the discovery layer failed. Suggestions paper over the bug.
+- **Unstable output order.** Random or insertion-order results break diffs and resumable pagination. Sort by a stable field.
+- **Examples in `-h`.** Pattern-matching bypasses the constraint spec. The spec is the contract.
+- **`--dry-run` / `--verbose` / `--quiet`.** If preview matters, it's a separate leaf (`tool plan simulate`). Severity lives in the log file.
+- **`SEE ALSO`-style cross-refs.** The tree is its own cross-reference.
+- **Separate `Preconditions` sections.** Field constraints live inline with the field they apply to.
+
+---
+
+## A note on what's missing
+
+This guide has no section on workflow discovery — no "common patterns," no `tool how`, no epilogue on root `-h` showing a typical call chain. That's deliberate. The tree with good selection rubrics gives the agent enough to compose workflows from primitives. Scaffolding "typical flows" couples documentation to a moment-in-time understanding of how the tool is used, ages badly, and costs tokens at every discovery step. Trust the tree.

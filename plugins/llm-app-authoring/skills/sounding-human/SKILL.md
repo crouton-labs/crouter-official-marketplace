@@ -8,6 +8,7 @@ description: |
   attributions, em dash overuse, rule of three, AI vocabulary words, passive
   voice, negative parallelisms, and filler phrases.
 type: playbook
+keywords: [ai-writing, humanize, editing, naturalness, voice, depatternize]
 allowed-tools:
   - Read
   - Write

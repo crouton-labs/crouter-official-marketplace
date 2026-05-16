@@ -31,8 +31,8 @@
       "name": "llm-app-authoring",
       "source": "./plugins/llm-app-authoring",
       "version": "0.2.0",
-      "description": "Guides for building LLM applications — prompting, context management, structured output, evals, tool design, multi-agent orchestration, and more.",
-      "keywords": ["llm", "prompting", "evals", "structured-output", "context-management", "tool-design", "multi-agent"]
+      "description": "Guides for building LLM applications — prompting, context management, structured output, evals, tool design, multi-agent orchestration, agentic UX/UI for web and terminal, and more.",
+      "keywords": ["llm", "prompting", "evals", "structured-output", "context-management", "tool-design", "multi-agent", "agentic-ux", "agentic-ui", "human-agent", "terminal"]
     },
     {
       "name": "knowledge-capture",

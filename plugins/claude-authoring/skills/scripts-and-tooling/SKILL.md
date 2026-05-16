@@ -2,6 +2,7 @@
 name: scripts-and-tooling
 description: Guide to creating CLI tools and scripts that augment Claude Code. Use when building bin/ executables, automation scripts, hook handlers, or tooling that abstracts repeated agent workflows.
 type: playbook
+keywords: [scripts, cli-tools, automation, bin, agent-facing]
 user-invocable: false
 ---
 

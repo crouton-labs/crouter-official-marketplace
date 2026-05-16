@@ -2,6 +2,7 @@
 name: system-vs-user-prompt
 description: What belongs in system prompt vs user prompt and why. Placement decisions for API calls, system messages, and prompt architecture — system as identity/constraints/tools, user as task/context/state. Use when designing system prompts, structuring API calls, deciding where instructions belong, writing prompts for production systems, or debugging instruction compliance.
 type: playbook
+keywords: [placement, system-prompt, user-prompt, instruction-hierarchy, compliance, api]
 ---
 
 # System Prompt vs User Prompt

@@ -2,6 +2,7 @@
 name: prompting-effectively
 description: Structure Claude prompts for clarity and better results using roles, explicit instructions, context, positive framing, and strategic organization. Use when crafting prompts for complex tasks, long documents, tool workflows, or code generation.
 type: playbook
+keywords: [prompt-architecture, system-prompt, instructions, roles, task-zone, framing]
 ---
 
 # Prompt Architecture
