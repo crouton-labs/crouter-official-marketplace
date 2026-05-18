@@ -27,7 +27,7 @@ Subtrees
 Globals
   help    print -h for any node or leaf
 
-I/O contract: JSON on stdin, JSON on stdout (JSONL for streams).
+I/O contract: flags and positional args on input, JSON on stdout (JSONL for streams).
 Exit 0 on success, non-zero on failure. Schemas appear at leaf -h.
 ```
 
@@ -63,15 +63,15 @@ Branches
 
 ```
 $ crtr plan new -h
-plan new: create a draft plan from intent.
+plan new: create a draft plan from intent. Reads intent from stdin.
 
-Input (stdin, JSON)
-  intent      string, required. One paragraph describing desired outcome.
-              Treated as the planner's north star; not parsed further.
-  context     string, optional. Additional facts the planner treats as ground truth.
-              Use for constraints, prior decisions, or environmental assumptions.
-              Hard cap: 8k tokens.
-  parent_id   string, optional. Must reference a plan in `active` state.
+Input
+  stdin              required. One paragraph describing desired outcome.
+                     Treated as the planner's north star; not parsed further.
+  --context-file PATH  optional. Path to a text file with additional facts the
+                     planner treats as ground truth. Use for constraints, prior
+                     decisions, or environmental assumptions. Hard cap: 8k tokens.
+  --parent-id ID     optional. Must reference a plan in `active` state.
 
 Output (stdout, JSON)
   id          string. Plan id. Use with crtr plan show and crtr task *.
@@ -84,7 +84,8 @@ Effects
   transitions to `active` (automatic on first crtr task claim).
 ```
 
-- Field constraints (required, "must reference active plan," "8k tokens") live inline with the field. No separate `Preconditions` section.
+- Constraints (required, "must reference active plan," "8k tokens") live inline with each parameter. No separate `Preconditions` section.
+- Stdin carries the primary content blob (the intent prose). Atomic parameters are flags; long-form text goes through `--context-file` rather than a value flag.
 - Output fields carry *useful properties* of return values, not just types. `task_ids` in topological order is what makes downstream claiming safe.
 - Effects pre-empts the likely wrong next move: claiming a task before the plan transitions to active.
 
@@ -96,17 +97,19 @@ Effects
 $ crtr task claim -h
 task claim: claim a draft task and spawn a worker. Returns immediately.
 
-Input (stdin, JSON)
-  task_id     string, required. Task in `draft` state.
-  worker      string, optional. Worker template. Default: matches task.kind.
-  context     object, optional. Additional facts injected into the worker's prompt.
+Input
+  TASK_ID                positional, required. Task in `draft` state.
+  --worker NAME          optional. Worker template. Default: matches task.kind.
+  --context-file PATH    optional. Path to a JSON file with additional facts
+                         injected into the worker's prompt. Object shape;
+                         worker-template-specific keys.
 
 Output (stdout, JSON)
   job_id      string. Use with crtr job logs, crtr job result, crtr job status.
   task_id     string. Echo of input.
   worker      string. Template selected.
-  follow_up   string. Recommended next action. Typical: `crtr job result` with
-              stdin {"job_id": "<id>", "wait": true} to block until the worker
+  follow_up   string. Recommended next action. Typical:
+              `crtr job result <job_id> --wait` to block until the worker
               emits a result.
 
 Effects
@@ -116,10 +119,12 @@ Effects
   Worker runs until termination or cancellation.
 ```
 
+- `task_id` is the obvious primary target, so it's positional. Everything else is a flag.
+- `--context-file` takes a path because the value is a structured JSON object; the leaf's `-h` documents the file's shape.
 - The kickoff result is a *handle*, not the work itself. Returns in milliseconds.
-- `follow_up` tells the agent the recommended next call. Cheaper than the agent rederiving it from scratch.
+- `follow_up` tells the agent the recommended next call as a literal command string. Cheaper than the agent rederiving it from scratch.
 - Effects names every persistent change. Paths are informational — the agent reads via `crtr job`, not the filesystem directly.
-- No `wait` flag on `claim`. If the agent wants to block, it composes: `claim` then `job result` with `wait: true`. The primitive stays simple; composition handles policy.
+- No `--wait` flag on `claim`. If the agent wants to block, it composes: `claim` then `job result --wait`. The primitive stays simple; composition handles policy.
 
 ---
 
@@ -129,13 +134,13 @@ Effects
 $ crtr task list -h
 task list: filtered, paginated list of tasks.
 
-Input (stdin, JSON)
-  plan_id     string, optional. Restrict to one plan.
-  status      string, optional. One of: draft, claimed, done, failed. Omit for all.
-  worker      string, optional. Restrict to tasks claimed by a specific worker.
-  limit       integer, optional. Default 20, max 100.
-  cursor      string, optional. Opaque token from a previous response's next_cursor.
-              Omit on the first call.
+Input
+  --plan-id ID         optional. Restrict to one plan.
+  --status STATE       optional. One of: draft, claimed, done, failed. Omit for all.
+  --worker NAME        optional. Restrict to tasks claimed by a specific worker.
+  --limit N            optional. Default 20, max 100.
+  --cursor TOKEN       optional. Opaque token from a previous response's next_cursor.
+                       Omit on the first call.
 
 Output (stdout, JSON)
   items       object[]. Each: {id, plan_id, status, worker?, created_at}.
@@ -145,9 +150,10 @@ Output (stdout, JSON)
               May be null for large or filtered result sets; do not retry to force it.
 ```
 
+- All filters are flags; no positional because there is no single obvious target.
 - The whole response is one value, so this is JSON, not JSONL. JSONL is for incremental emission over time.
 - Cursor is opaque — the runtime owns its encoding. Resilient to inserts and deletes between pages.
-- `limit` has a default and a hard cap. Agents can't accidentally pull 10k results.
+- `--limit` has a default and a hard cap. Agents can't accidentally pull 10k results.
 - `next_cursor: null` is the only end-of-list signal. No separate `has_more` flag.
 - `total` is nullable because exact counts on filtered sets are expensive at scale. Better to expose the truth than to lie.
 - Sort order is part of the contract. Resumption requires it.
@@ -160,14 +166,14 @@ Output (stdout, JSON)
 $ crtr job logs -h
 job logs: read log events from a job. Emits JSONL.
 
-Input (stdin, JSON)
-  job_id      string, required. Job id from crtr task claim.
-  since       string, optional. ISO 8601 timestamp. Only emit events at or after.
-  until       string, optional. ISO 8601 timestamp. Only emit events before.
-  level       string, optional. Minimum severity: debug, info, warn, error.
-              Default: info. Lower severities are dropped.
-  follow      boolean, optional. Default false. When true, stream new events as
-              they're appended until the job terminates, then close stdout.
+Input
+  JOB_ID            positional, required. Job id from crtr task claim.
+  --since ISO       optional. ISO 8601 timestamp. Only emit events at or after.
+  --until ISO       optional. ISO 8601 timestamp. Only emit events before.
+  --level LEVEL     optional. Minimum severity: debug, info, warn, error.
+                    Default: info. Lower severities are dropped.
+  --follow          optional boolean. When present, stream new events as they're
+                    appended until the job terminates, then close stdout.
 
 Output (stdout, JSONL)
   One JSON event per line. Each line:
@@ -182,9 +188,11 @@ Effects
   None. Read-only.
 ```
 
+- `job_id` is the obvious primary target — positional. Everything else is a flag.
+- `--follow` is a boolean flag: present means true, absent means false. No `--no-follow`.
 - JSONL because events are emitted incrementally. Each line is independently parseable.
-- Without `follow`, returns historical events from the file and exits. With `follow: true`, continues streaming until the job terminates. The agent picks the mode.
-- `level` defaults to `info`, dropping debug noise from the default reading path. Agents asking explicitly for debug get it.
+- Without `--follow`, returns historical events from the file and exits. With `--follow`, continues streaming until the job terminates. The agent picks the mode.
+- `--level` defaults to `info`, dropping debug noise from the default reading path. Agents asking explicitly for debug get it.
 - `event` is a stable vocabulary the agent can branch on — separate from the free-form `message`. Code reads `event`; logs read `message`.
 - Effects explicitly states "None. Read-only." Worth declaring rather than leaving silent — confirms the agent can call freely without side effects.
 
@@ -198,10 +206,14 @@ Effects
 | Branch node with dynamic content | `crtr plan -h` | The tree, Dynamic `-h` |
 | Selection rubric | All branch listings | Principles 5, The tree |
 | Synchronous mutator | `crtr plan new` | The tree |
+| Stdin as content blob | `crtr plan new` intent | I/O contract |
+| File-path flag for structured input | `crtr plan new --context-file` | I/O contract |
+| Positional + flags | `crtr task claim`, `crtr job logs` | I/O contract |
 | Long-running operation | `crtr task claim` | Long-running operations |
 | Sidecar result file | `crtr task claim` effects | Long-running operations |
 | Paginated query | `crtr task list` | Pagination |
 | JSONL streaming output | `crtr job logs` | I/O contract |
+| Boolean flag | `crtr job logs --follow` | I/O contract |
 | Read-only declaration | `crtr job logs` effects | Principle 9 |
 | Inline field constraints | All leaves | The tree |
 | Effects as contract | All leaves | Principle 9 |

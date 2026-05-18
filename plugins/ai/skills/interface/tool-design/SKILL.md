@@ -58,7 +58,7 @@ Parameters are the model's interface to the tool's internals. Every naming and t
 
 **Use `input_examples` for complex parameters.** Anthropic's `input_examples` feature improved complex parameter handling from 72% to 90% accuracy. Especially useful for parameters with non-obvious correlation (e.g., different escalation fields that are appropriate for critical bugs but not feature requests).
 
-**Enable strict mode.** Both Anthropic and OpenAI offer `strict: true` for tool schemas — guarantees calls match the schema exactly, eliminating format-related failures (API-Bank: 23.7% of errors). Always enable when available. See [structured-output](../structured-output/SKILL.md) for schema design principles.
+**Enable strict mode.** Both Anthropic and OpenAI offer `strict: true` for tool schemas — guarantees calls match the schema exactly, eliminating format-related failures (API-Bank: 23.7% of errors). Always enable when available. See [structured-output](../../output/structured-output/SKILL.md) for schema design principles.
 
 ## Error Messages That Enable Recovery
 

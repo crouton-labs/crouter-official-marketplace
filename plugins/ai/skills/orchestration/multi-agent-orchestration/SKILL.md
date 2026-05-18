@@ -69,7 +69,7 @@ After review:
   ├── validation subagent 2  (sonnet, everything else)
   └── dismissal audit        (sonnet, samples dismissed findings)
 ```
-Findings that don't survive validation get dropped before they reach the implementer. For detailed judge methodology, see [eval-and-quality-gates](../eval-and-quality-gates/SKILL.md).
+Findings that don't survive validation get dropped before they reach the implementer. For detailed judge methodology, see [eval-and-quality-gates](../../output/eval-and-quality-gates/SKILL.md).
 
 ### Hierarchical Delegation
 

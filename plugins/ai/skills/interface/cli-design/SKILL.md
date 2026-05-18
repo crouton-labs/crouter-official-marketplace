@@ -20,7 +20,7 @@ This file is the spec. **`reference.md` (sibling) is the spec applied** — a fu
 
 3. **Spec, not example.** Examples invite pattern-matching, which is lossy and bias-prone. A complete schema with semantic constraints is shorter and more reliable.
 
-4. **One format.** JSON object on stdin. JSON object on stdout for single responses; JSONL for streams. No format negotiation, no `--json` flag, no plain-text alternative.
+4. **Standard input, structured output.** Parameters arrive via flags and positional arguments. Stdout is JSON for single responses, JSONL for streams; no format negotiation, no `--text` mode, no plain-text alternative.
 
 5. **Selection is the work.** Agents spend more cognition choosing the right leaf than constructing the invocation. The selection rubric at each node is the highest-leverage content in the tree.
 
@@ -50,17 +50,17 @@ This file is the spec. **`reference.md` (sibling) is the spec applied** — a fu
 
 Three node types: root, branch nodes, leaves.
 
-**Root** establishes vocabulary and the I/O contract. Lists subtrees with selection discriminators. Lists globals once. States the JSON-on-stdin/stdout convention once.
+**Root** establishes vocabulary and the I/O contract. Lists subtrees with selection discriminators. Lists globals once. States the input-via-flags / JSON-on-stdout convention once.
 
 **Branch nodes** extend the parent's definition with the local model (lifecycle, key states) and list children with one-line discriminators in `name short-description | use when X` form. May include bounded dynamic content (state counts, aggregate signals) that pre-empts downstream calls.
 
 **Leaves** are the action surface. Each leaf declares:
 - One-line summary.
-- Input schema, with semantic constraints inline on each field.
+- Input schema, with semantic constraints inline on each parameter. Flags, positional args, and stdin are all parameters and live in the same schema block.
 - Output schema, with *useful properties* of return values (sort order, semantic meaning), not just types.
 - Effects — every persistent change in the world.
 
-There are no flags anywhere in the tree except `-h`. All input flows through stdin. Subcommand path is the navigation; stdin JSON is the parameters.
+Subcommand path is the navigation; flags and positional args are the parameters.
 
 ### Branch format
 
@@ -83,7 +83,12 @@ Right: `tool task lifecycle {claim, done, abandon, retry}` and `tool task inspec
 
 ## I/O contract
 
-**Input.** A single JSON object on stdin. Required fields, optional fields, and semantic constraints all live in the leaf's `-h`. There are no flags other than `-h`; everything parameterizing a call is a stdin field.
+**Input.** Flags and positional arguments. Required, optional, and semantic constraints all live in the leaf's `-h`.
+
+- *Positional argument* — at most one per leaf, used only when the leaf has an obvious primary target (a plan id, a task id, a file path). When in doubt, use a flag.
+- *Flags* — long-form only (`--task-id`, `--limit`). No short aliases. Boolean flags take no value (`--follow`), set to true when present. Repeatable flags (`--tag foo --tag bar`) appear as arrays in the leaf's input schema.
+- *Stdin* — reserved for piped content blobs (a document body, a prompt, raw text). If the leaf accepts stdin, the schema names it `stdin` alongside the flags and states what kind of content is expected.
+- *Structured input* — when a parameter is itself structured (an object, a heterogeneous array), accept it as a path to a JSON file: `--context-file PATH`. The leaf's `-h` states the file's JSON shape.
 
 **Output.**
 
@@ -189,7 +194,8 @@ Each is a real failure mode.
 - **Smuggled state.** Command B depending on `cd`, env, or a hidden cache from command A. Pass state explicitly.
 - **Auto-launching pagers, interactive prompts, TTY-detection-dependent behavior.** There is no terminal; these hang the agent.
 - **Aliases.** Same operation under multiple names forces the agent to memorize three things for one operation. Pick one canonical name.
-- **Flags.** There are no flags in this design except `-h`. Flag-vs-stdin decisions disappear. If a parameter exists, it's a field on stdin JSON.
+- **Short flag aliases.** `-t` for `--task-id` saves a human three keystrokes; for an agent it doubles the name surface — two strings to remember for one parameter, two strings to grep across docs. Long-form only.
+- **Inline structured values.** `--filter '{"status":"open"}'` breaks under shell quoting. Structured parameters take a file path; the leaf's `-h` documents the file's shape.
 - **Color, TTY detection, terminal-width truncation.** No reader needs any of it. Truncation silently corrupts machine consumption.
 - **Fuzzy-match "did you mean" suggestions.** If the agent reached an invalid invocation, the discovery layer failed. Suggestions paper over the bug.
 - **Unstable output order.** Random or insertion-order results break diffs and resumable pagination. Sort by a stable field.

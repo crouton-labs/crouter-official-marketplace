@@ -7,11 +7,11 @@
   },
   "plugins": [
     {
-      "name": "agentic-testing",
-      "source": "./plugins/agentic-testing",
-      "version": "0.3.0",
-      "description": "Opinionated guides for testing software when AI agents write most of the code — what to test, how to shape the feedback loop, and how to guard against agent-specific test failures.",
-      "keywords": ["testing", "agents", "harness", "feedback-loop", "mocks", "property-based", "tests-as-spec", "reward-hacking"]
+      "name": "ai",
+      "source": "./plugins/ai",
+      "version": "0.1.0",
+      "description": "Skills for building with LLMs and designing for agents — prompt architecture, agent interface design (UI/UX/CLI/tools), multi-agent orchestration, LLM output quality, and agentic testing.",
+      "keywords": ["llm", "agents", "prompting", "agentic-ux", "agentic-ui", "cli-design", "tool-design", "multi-agent", "context-management", "structured-output", "evals", "testing", "feedback-loop"]
     },
     {
       "name": "spec-driven-development",
@@ -26,13 +26,6 @@
       "version": "0.2.0",
       "description": "Guides for authoring Claude Code artifacts — CLAUDE.md files, hooks, rules, skills, commands, and scripts.",
       "keywords": ["claude-code", "authoring", "claude-md", "hooks", "rules", "skills", "commands", "scripts"]
-    },
-    {
-      "name": "llm-app-authoring",
-      "source": "./plugins/llm-app-authoring",
-      "version": "0.3.0",
-      "description": "Guides for building LLM applications — prompting, context management, structured output, evals, tool design, multi-agent orchestration, agentic UX/UI for web and terminal, and more.",
-      "keywords": ["llm", "prompting", "evals", "structured-output", "context-management", "tool-design", "multi-agent", "agentic-ux", "agentic-ui", "human-agent", "terminal"]
     },
     {
       "name": "knowledge-capture",

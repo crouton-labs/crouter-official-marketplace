@@ -20,7 +20,7 @@ The most important architectural decision: what goes where.
 **Behavior zone** (system prompt, agents, modes):
 - Identity, personality, tone
 - Constraints and hard rules
-- Tool usage policies (→ [tool-design](../tool-design/SKILL.md) covers designing the tools themselves)
+- Tool usage policies (→ [tool-design](../../interface/tool-design/SKILL.md) covers designing the tools themselves)
 - Decision frameworks ("when X, do Y")
 - Formatting preferences
 
@@ -308,7 +308,7 @@ This is the pattern behind Claude Code skills — descriptions loaded upfront, f
 | Rules | Behavior | No role — constraints only | Declarative constraints scoped by file pattern. |
 
 **Deeper guides for each component:**
-- Agents → [multi-agent-orchestration](../multi-agent-orchestration/SKILL.md) for designing systems of cooperating agents
+- Agents → [multi-agent-orchestration](../../orchestration/multi-agent-orchestration/SKILL.md) for designing systems of cooperating agents
 - Commands → [commands-authoring](../commands/SKILL.md)
 - Skills → [skills-authoring](../skills/SKILL.md)
 - CLAUDE.md → [claude-md-authoring](../claude-md/SKILL.md)
