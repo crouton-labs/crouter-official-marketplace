@@ -52,7 +52,7 @@ Three node types: root, branch nodes, leaves.
 
 **Root** establishes vocabulary and the I/O contract. Lists subtrees with selection discriminators. Lists globals once. States the input-via-flags / JSON-on-stdout convention once.
 
-**Branch nodes** extend the parent's definition with the local model (lifecycle, key states) and list children with one-line discriminators in `name short-description | use when X` form. May include bounded dynamic content (state counts, aggregate signals) that pre-empts downstream calls.
+**Branch nodes** extend the parent's definition with a *local model* — short prose orienting the agent to what the subtree contains, how children differ, and what each child is for — followed by the children list in `name short-description | use when X` form. The local model describes *what's inside and why an agent would descend into each child*, never whether the agent should be at this branch in the first place: by the time `-h` runs, that decision is past, so entry-gating prose ("run only when…") wastes the slot. Depth lives on the leaves, reachable via `-h` from here; the branch model points the agent at the right one. May include bounded dynamic content (state counts, aggregate signals) that pre-empts downstream calls.
 
 **Leaves** are the action surface. Each leaf declares:
 - One-line summary.
@@ -202,6 +202,7 @@ Each is a real failure mode.
 - **Examples in `-h`.** Pattern-matching bypasses the constraint spec. The spec is the contract.
 - **`--dry-run` / `--verbose` / `--quiet`.** If preview matters, it's a separate leaf (`tool plan simulate`). Severity lives in the log file.
 - **`SEE ALSO`-style cross-refs.** The tree is its own cross-reference.
+- **Branch help framed as an entry gate.** "Run only when X" prose in a branch node's `-h`. The decision to be at that branch already happened; the slot is for child distinctions and subtree shape, not for re-litigating whether the parent should have been invoked. Symptom: the model field reads as guidance to the *caller of the parent* rather than the *agent now choosing a child*.
 - **Separate `Preconditions` sections.** Field constraints live inline with the field they apply to.
 
 ---
