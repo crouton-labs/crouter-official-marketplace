@@ -44,6 +44,10 @@ This file is the spec. **`reference.md` (sibling) is the spec applied** — a fu
 
 15. **Dynamic content never balloons.** `-h` content reflecting runtime state has a per-node token budget. Aggregates only; never enumerates.
 
+16. **List output is for selection, not consumption.** Per-item field count multiplied by result count is the agent's token cost — a 200-token field across 20 hits is 4k tokens spent choosing which item to read in full. Default lists carry only the discriminators the agent uses to pick the next call: ids/names, status, ranking, and *one* short field that distinguishes hits (a description, headline, or summary). Heavier payload (full bodies, prompts, all keywords/metadata) lives one composition step away behind a sibling leaf (`show`, `read`).
+
+    Inline bulk content is allowed when it genuinely speeds selection, but gate it behind an opt-in flag (`--full`, `--with-bodies`) — off by default, paired with a small `--limit` default and filtering flags so the agent can bound cost in both axes before opting in. Every list leaf attaches a top-level `follow_up` string. When the leaf is a simple primitive with no payload toggle and no filtering flags worth advertising, `follow_up` names the detail leaf (`Use \`tool noun show <id>\` for full content.`). When the leaf has filters or a `--full`-style toggle, `follow_up` points at `-h` instead of enumerating them inline (`Run \`tool noun search -h\` for filters and verbosity.`). Inline enumeration multiplies per-call cost; `-h` is the canonical reference.
+
 ---
 
 ## The tree

@@ -128,7 +128,9 @@ Effects
 
 ---
 
-## Paginated query
+## Paginated list — simple pattern
+
+The simplest list shape: every item carries only the discriminators the agent uses to pick the next call. There's no payload toggle, so the leaf has nothing to advertise beyond the canonical drill-in.
 
 ```
 $ crtr task list -h
@@ -148,6 +150,7 @@ Output (stdout, JSON)
   next_cursor string | null. Pass on the next call to continue. null means no more.
   total       integer | null. Total matching the filter when cheap to compute.
               May be null for large or filtered result sets; do not retry to force it.
+  follow_up   string. "Use `crtr task show <id>` for full task content."
 ```
 
 - All filters are flags; no positional because there is no single obvious target.
@@ -157,6 +160,43 @@ Output (stdout, JSON)
 - `next_cursor: null` is the only end-of-list signal. No separate `has_more` flag.
 - `total` is nullable because exact counts on filtered sets are expensive at scale. Better to expose the truth than to lie.
 - Sort order is part of the contract. Resumption requires it.
+- Items carry only structural fields — id, plan_id, status, worker, created_at. The heavier payload (prompt text, accumulated summaries, worker output) sits behind `crtr task show <id>`. Per Principle 16, that payload would otherwise multiply by `--limit`; composition keeps the cost paid only for the one item that mattered.
+- `follow_up` is a single concrete pointer at the detail leaf. No `-h` reference because this leaf has no payload toggle and no filters worth re-advertising — they're already visible in this `-h` output the agent just rendered.
+
+---
+
+## Paginated search — rich pattern (filters + opt-in payload)
+
+When inline payload genuinely speeds selection, gate it behind `--full`, default it off, pair it with a small `--limit` and filters, and route `follow_up` at `-h` instead of enumerating the option surface.
+
+```
+$ crtr plan search -h
+plan search: rank plans by text in intent and task summaries. Returns hits in score order.
+
+Input
+  QUERY              positional, required. Whitespace-separated terms matched case-insensitively
+                     against intent and task summaries; plans matching more terms rank higher.
+  --status STATE     optional. One of: draft, active, handed-off. Omit for all.
+  --since ISO        optional. ISO 8601 timestamp. Restrict to plans created at or after.
+  --limit N          optional. Default 5, max 50.
+  --cursor TOKEN     optional. Opaque token from a previous response's next_cursor.
+  --full             optional boolean. When present, each hit includes the full intent paragraph
+                     and matched task summaries. Off by default; pair with --limit to bound cost.
+
+Output (stdout, JSON)
+  hits         object[]. Each: {id, status, score, headline}. Sorted by score descending.
+               headline is a one-line excerpt drawn from intent — the always-cheap discriminator.
+               With --full, each hit also contains: {intent, matched_summaries[]}.
+  next_cursor  string | null. null means no more hits.
+  follow_up    string. "Use `crtr plan show <id>` for the full plan with task tree.
+                Run `crtr plan search -h` for filters and verbosity."
+```
+
+- Default hits include `headline` because it's bounded per-item (one short sentence) and is the discriminator the agent needs to pick. The full intent paragraph is 200–500 tokens — it stays out unless the agent opted in.
+- `--full` is the opt-in payload toggle. Default off; with default `--limit` of 5, even `--full` stays bounded. Together they cap cost in both axes before the agent commits.
+- `--limit` default is small (5) because this is a ranked search — the top few are usually all the agent reads. `task list` defaulted to 20 because enumeration over a known plan often wants the full set.
+- `follow_up` does not enumerate `--status`, `--since`, `--full`, or any other flag. Listing them inline would multiply per-call cost; `-h` is already the canonical reference and the agent can render it on demand. The `plan show <id>` pointer stays because it's a different command tree the agent wouldn't find by re-reading this `-h`.
+- The contrast with `task list`: `task list` has no payload-toggle, so `follow_up` is a single pointer. `plan search` adds `--full` and a richer filter set, so `follow_up` adds the `-h` route.
 
 ---
 
@@ -211,7 +251,8 @@ Effects
 | Positional + flags | `crtr task claim`, `crtr job logs` | I/O contract |
 | Long-running operation | `crtr task claim` | Long-running operations |
 | Sidecar result file | `crtr task claim` effects | Long-running operations |
-| Paginated query | `crtr task list` | Pagination |
+| Paginated list (simple, follow_up → show-leaf) | `crtr task list` | Pagination, Principle 16 |
+| Paginated search (rich, --full opt-in, follow_up → -h) | `crtr plan search` | Pagination, Principle 16 |
 | JSONL streaming output | `crtr job logs` | I/O contract |
 | Boolean flag | `crtr job logs --follow` | I/O contract |
 | Read-only declaration | `crtr job logs` effects | Principle 9 |
