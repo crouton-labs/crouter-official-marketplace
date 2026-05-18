@@ -1,6 +1,6 @@
 {
   "name": "claude-authoring",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Guides for authoring Claude Code artifacts — CLAUDE.md files, hooks, rules, skills, commands, and scripts.",
   "source": "https://github.com/crouton-labs/crouter-official-marketplace",
   "owner": {
