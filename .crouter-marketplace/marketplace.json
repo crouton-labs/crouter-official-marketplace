@@ -1,6 +1,6 @@
 {
   "name": "crouter-official-marketplace",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "owner": {
     "name": "Silas Rhyneer",
     "email": "rhyneer.silas@gmail.com"
@@ -9,7 +9,7 @@
     {
       "name": "ai",
       "source": "./plugins/ai",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "description": "Skills for building with LLMs and designing for agents — prompt architecture, agent interface design (UI/UX/CLI/tools), multi-agent orchestration, LLM output quality, and agentic testing.",
       "keywords": ["llm", "agents", "prompting", "agentic-ux", "agentic-ui", "cli-design", "tool-design", "multi-agent", "context-management", "structured-output", "evals", "testing", "feedback-loop"]
     },
@@ -23,7 +23,7 @@
     {
       "name": "claude-authoring",
       "source": "./plugins/claude-authoring",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "description": "Guides for authoring Claude Code artifacts — CLAUDE.md files, hooks, rules, skills, commands, and scripts.",
       "keywords": ["claude-code", "authoring", "claude-md", "hooks", "rules", "skills", "commands", "scripts"]
     },
@@ -37,7 +37,7 @@
     {
       "name": "web",
       "source": "./plugins/web",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "description": "Skills for web development workflows — frontend product design and UX consultancy.",
       "keywords": ["web", "frontend", "design", "ux", "ui"]
     }
