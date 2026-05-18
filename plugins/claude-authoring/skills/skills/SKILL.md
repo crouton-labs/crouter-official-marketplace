@@ -124,6 +124,7 @@ LLM reasoning degrades as context grows — research shows meaningful accuracy d
 - Tables are expensive — a 3-line prose summary often teaches the same thing as a 25-row table.
 - Example reasoning chains > example outputs. Show *how to think*, not *what to produce*.
 - One well-placed "don't" prevents more bad behavior than three paragraphs of explanation.
+- No citations or source attributions. State the rule directly — `(Author 2025)`, arXiv IDs, "research shows", and Sources tables are bloat that competes for the agent's context budget. A *reference* skill is the lone exception: it links one source-of-truth so facts can be verified.
 
 **The test:** Can someone reading your SKILL.md for 30 seconds make a better decision than they would without it? If they have to read the whole thing to get value, you've buried the judgment.
 

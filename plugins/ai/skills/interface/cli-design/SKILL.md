@@ -209,3 +209,13 @@ Each is a real failure mode.
 ## A note on what's missing
 
 This guide has no section on workflow discovery — no "common patterns," no `tool how`, no epilogue on root `-h` showing a typical call chain. That's deliberate. The tree with good selection rubrics gives the agent enough to compose workflows from primitives. Scaffolding "typical flows" couples documentation to a moment-in-time understanding of how the tool is used, ages badly, and costs tokens at every discovery step. Trust the tree.
+
+---
+
+## When the agent doesn't walk the tree
+
+"Trust the tree" assumes the agent *walks* it: root → branch → leaf, reading each node's selection rubric on the way down. An agent driving a shell does not. It emits the full `tool noun verb {…}` in one shot from priors and never renders the branch node — so progressive disclosure degrades to nothing for every leaf reachable directly, which is exactly the high-consequence mutating leaves whose branch rubric (edit-vs-create, irreversibility, required structure) mattered most.
+
+When consumption is shell-style one-shot invocation, push the branch rubric into context instead of waiting for traversal. Cheapest sufficient lever first: a scoped, *reasoned* rule in the agent's prompt — "read the leaf's `-h` before any create/update/delete/archive; reads exempt." State the why, not just the imperative; a reasoned rule survives task pressure that a bare order does not. The read-only carve-out is load-bearing: without it the rule reads as overkill on cheap commands, the model downgrades it to advisory, and the downgrade leaks to the commands that mattered.
+
+Do not reach for a fail-closed gate (a leaf that errors until acknowledged) or a blanket preload first. Ship the scoped rule, run the actual failing scenario, and escalate to enforcement only if it empirically fails. A prompt rule is usually enough; enforcement machinery you didn't need is its own anti-pattern.
