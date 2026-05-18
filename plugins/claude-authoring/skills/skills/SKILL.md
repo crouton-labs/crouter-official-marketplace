@@ -1,5 +1,5 @@
 ---
-name: skills-authoring
+name: skills
 description: Guide to writing SKILL.md files for Claude Code. Use when creating skills that provide on-demand reference, methodology, or workflow guidance.
 type: playbook
 keywords: [skills, on-demand, bundling, methodology, SKILL-md]

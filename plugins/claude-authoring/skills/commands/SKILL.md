@@ -1,5 +1,5 @@
 ---
-name: commands-authoring
+name: commands
 description: Guide to writing slash commands for Claude Code. Use when creating commands that set mode, constraints, or workflows invoked via /command-name.
 type: playbook
 keywords: [slash-commands, mode-setting, workflow, invocation, frontmatter]

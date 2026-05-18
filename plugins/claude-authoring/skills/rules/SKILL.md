@@ -1,5 +1,5 @@
 ---
-name: rules-authoring
+name: rules
 description: Guide to writing .claude/rules/*.md files — auto-applied constraints scoped by file patterns. Use when creating or updating rules for code conventions, quality standards, or file-specific guidance.
 type: playbook
 keywords: [rules, file-scoped, conventions, path-patterns, constraints]

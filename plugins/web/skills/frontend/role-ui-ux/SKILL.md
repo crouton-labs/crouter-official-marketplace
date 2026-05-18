@@ -1,5 +1,5 @@
 ---
-name: frontend/role-ui-ux
+name: role-ui-ux
 description: UX consultant role — explore the project, form independent opinions, and guide design direction without implementing code. Use when the user asks to evaluate UX, review design direction, get a UX consultant's perspective, or wants opinions on flows and information architecture.
 type: playbook
 keywords: [ux, consultant, design-review, ui, evaluation, opinion]
