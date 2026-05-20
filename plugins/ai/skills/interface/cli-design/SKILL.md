@@ -196,6 +196,7 @@ Each is a real failure mode.
 - **Plain-text output modes.** No "friendly" alternative format. The agent doesn't need one; supporting it forks the surface.
 - **Stack traces leaked raw.** Internal panics surface as opaque noise. Wrap as structured errors.
 - **Smuggled state.** Command B depending on `cd`, env, or a hidden cache from command A. Pass state explicitly.
+- **Creator verbs on the primitive.** Putting creation under the noun that names the *result* — `job start prompt`, `record create`, `session new` — forces the primitive's surface to inherit one producer's vocabulary. Operations on a primitive (status, logs, cancel) live with the primitive; *making* one lives with whoever makes — the agent, the scheduler, the queue. The monitoring surface stays producer-agnostic; new producers compose with the same read/cancel leaves instead of forcing a restructure. Test: if a second producer arrived tomorrow, would the surface change?
 - **Auto-launching pagers, interactive prompts, TTY-detection-dependent behavior.** There is no terminal; these hang the agent.
 - **Aliases.** Same operation under multiple names forces the agent to memorize three things for one operation. Pick one canonical name.
 - **Short flag aliases.** `-t` for `--task-id` saves a human three keystrokes; for an agent it doubles the name surface — two strings to remember for one parameter, two strings to grep across docs. Long-form only.
