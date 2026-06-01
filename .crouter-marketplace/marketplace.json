@@ -40,6 +40,13 @@
       "version": "0.1.2",
       "description": "Skills for web development workflows — frontend product design and UX consultancy.",
       "keywords": ["web", "frontend", "design", "ux", "ui"]
+    },
+    {
+      "name": "development",
+      "source": "./plugins/development",
+      "version": "0.1.0",
+      "description": "Core software-development skills and agents — systematic debugging, runtime verification, plus a multi-file implementation agent and a read-only senior-advisor.",
+      "keywords": ["debugging", "runtime-verification", "pr-review", "agents", "programmer", "senior-advisor", "implementation"]
     }
   ]
 }

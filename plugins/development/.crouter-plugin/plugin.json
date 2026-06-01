@@ -1,0 +1,10 @@
+{
+  "name": "development",
+  "version": "0.1.0",
+  "description": "Core software-development skills and agents — systematic debugging, runtime verification, plus a multi-file implementation agent and a read-only senior-advisor.",
+  "source": "https://github.com/crouton-labs/crouter-official-marketplace",
+  "owner": {
+    "name": "Silas Rhyneer",
+    "email": "rhyneer.silas@gmail.com"
+  }
+}
