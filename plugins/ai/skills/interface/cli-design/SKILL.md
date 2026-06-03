@@ -1,16 +1,16 @@
 ---
 name: cli-design
-description: Design CLIs for humans and LLM agents — subcommand shape, output streams, exit codes, JSON modes, TTY-aware color, structured errors, mutation safety. Use when building or refactoring a CLI, adding machine-readable output, writing --help, deciding stdout vs stderr, or making a tool agent-friendly.
+description: Design CLIs for humans and LLM agents — subcommand shape, agent-shaped output, exit codes, rendered-vs-JSON output, structured errors, mutation safety. Use when building or refactoring a CLI, shaping output for a model to act on, writing --help, deciding stdout vs stderr, or making a tool agent-friendly.
 type: playbook
-keywords: [cli, agent-friendly, exit-codes, stdout-stderr, json-output, tty]
+keywords: [cli, agent-friendly, exit-codes, stdout-stderr, prompt-output, tty]
 ---
 # CLI Design for Agents
 
-A CLI consumed only by an agent is a different artifact from one used by a human. The agent reads every token; there's no skimming, no tab completion, no visual scanning. `-h` is the only documentation that gets read. Output is parsed, not displayed. Shell ergonomics that matter for humans (color, pagers, interactive prompts, terseness for typing) are noise to an agent; the things that matter for agents (deterministic output, structured errors, complete specs at `-h`, cheap discovery) are afterthoughts in human-first CLIs.
+A CLI consumed only by an agent is a different artifact from one used by a human. The agent reads every token; there's no skimming, no tab completion, no visual scanning. `-h` is the only documentation that gets read. Output is read by a model and acted on, not displayed to a person. Shell ergonomics that matter for humans (color, pagers, interactive prompts, terseness for typing) are noise to an agent; the things that matter for agents (deterministic output, structured errors, complete specs at `-h`, cheap discovery) are afterthoughts in human-first CLIs.
 
 This guide treats the single-reader-is-an-agent case as the design target. Human ergonomics are absent intentionally, not by oversight.
 
-This file is the spec. **`reference.md` (sibling) is the spec applied** — a fully worked, annotated CLI (the fictional `crtr` runtime) with every pattern below instantiated and each design choice called out. Read it when you need a concrete instance of any rule here: root/branch/leaf shape, dynamic `-h`, long-running spawns, pagination, JSONL streaming. Design from the principles; consult `reference.md` for what a correct realization looks like.
+This file is the spec. **`reference.md` (sibling) is the spec applied** — a fully worked, annotated CLI (the fictional `crtr` runtime) with every pattern below instantiated and each design choice called out. Read it when you need a concrete instance of any rule here: root/branch/leaf shape, dynamic `-h`, long-running spawns, pagination, streaming output. Design from the principles; consult `reference.md` for what a correct realization looks like.
 
 ## Principles
 
@@ -20,7 +20,7 @@ This file is the spec. **`reference.md` (sibling) is the spec applied** — a fu
 
 3. **Spec, not example.** Examples invite pattern-matching, which is lossy and bias-prone. A complete schema with semantic constraints is shorter and more reliable.
 
-4. **Standard input, structured output.** Parameters arrive via flags and positional arguments. Stdout is JSON for single responses, JSONL for streams; no format negotiation, no `--text` mode, no plain-text alternative.
+4. **Standard input, prompt-shaped output.** Parameters arrive via flags and positional arguments. Stdout is the result rendered *for the model to act on* — markdown fenced with light XML, read as a continuation of the agent's prompt, not a data structure it parses. Decision-first prose where prose belongs; named blocks (`<spawned>`, `<feed>`) and short attributes for the scalars (ids, statuses, counts). A raw-JSON form exists behind an opt-in global for programmatic consumers, but it is not the agent contract and is never documented at the call site.
 
 5. **Selection is the work.** Agents spend more cognition choosing the right leaf than constructing the invocation. The selection rubric at each node is the highest-leverage content in the tree.
 
@@ -32,7 +32,7 @@ This file is the spec. **`reference.md` (sibling) is the spec applied** — a fu
 
 9. **Effects are part of the contract.** Anything the world remembers after invocation — state changes, spawned processes, persisted files — is declared at the leaf.
 
-10. **Output is input.** Stdout is the next caller's stdin. Typed contract, not display. Deterministic order, no decoration.
+10. **Output is the next prompt.** Stdout flows straight into the next reader's context — usually the model's. Write it to be acted on, not parsed: instruction-shaped, deterministic field order, no decoration. Light structure (named XML blocks around markdown) carries the scalars; prose carries the actual signal.
 
 11. **Redundancy is leakage.** Each fact lives at the highest applicable node and is never restated. Globals appear only at root.
 
@@ -44,7 +44,13 @@ This file is the spec. **`reference.md` (sibling) is the spec applied** — a fu
 
 15. **Dynamic content never balloons.** `-h` content reflecting runtime state has a per-node token budget. Aggregates only; never enumerates.
 
-16. **List output is for selection, not consumption.** Per-item field count multiplied by result count is the agent's token cost — a 200-token field across 20 hits is 4k tokens spent choosing which item to read in full. Default lists carry only the discriminators the agent uses to pick the next call: ids/names, status, ranking, and *one* short field that distinguishes hits (a description, headline, or summary). Heavier payload (full bodies, prompts, all keywords/metadata) lives one composition step away behind a sibling leaf (`show`, `read`).
+16. **Each node owns its representation one level up.** A node declares two things: its own `-h`, and the content that stands for it in its parent — its line in the parent's listing plus any bounded block it contributes to the parent's `-h`. The parent *assembles* its help by walking its children; it never hardcodes a child's description. Co-located declaration is what makes principle 11 hold across levels: the upstream line can't drift from the node, because they are one source.
+
+17. **State lives with the thing it describes.** A node's bounded runtime block is grouped with the node it belongs to — nested inside that command's block at the parent level, and rendered right after the name at the node's own `-h`. It is never pooled into a shared "state" section away from the command it describes. Grouping is the point: the live job count sits inside `<job>`, the loaded-skill catalog inside `<skill>`, so reading one command means reading its current state in the same breath. The header (tagline) and footer (globals + I/O contract) are the only non-command areas.
+
+18. **Each command is its own fenced block; volatile state nests as a self-named element.** When `-h` is consumed inside a system prompt, each subtree renders as a uniform `<command name="…">` block — concept, rubric, and any state — so the model reads one self-contained concern domain per command, the same way a prompt separates identity from data. The uniform wrapper is load-bearing: it *states* command-ness ("invoke as `tool <name>`") instead of leaving the model to infer it from a different tag per command, and it makes a nested state element — never itself a `<command>` — impossible to misread as a sibling command. State nests as a self-named element the subtree authors: the **tag carries the label** (`<skills>`, `<jobs>`) so the body never repeats it, and **scalars ride in attributes** (`count="42"`, `draft="2"`) rather than as restated prose — element bodies hold only the genuine prose or list. The same element renders identically everywhere it appears (root and the subtree's own `-h`). Two levels of nesting max (`<command>` → `<state>`); the consuming harness adds at most one outer guide tag. This is the same fenced-prose shape principle 4 gives *stdout*: both stdout and `-h` are prose for a model, which reads fenced domains better than a wall of text — but tag every line and the structure becomes noise, so fence domains, not sentences.
+
+19. **List output is for selection, not consumption.** Per-item field count multiplied by result count is the agent's token cost — a 200-token field across 20 hits is 4k tokens spent choosing which item to read in full. Default lists carry only the discriminators the agent uses to pick the next call: ids/names, status, ranking, and *one* short field that distinguishes hits (a description, headline, or summary). Heavier payload (full bodies, prompts, all keywords/metadata) lives one composition step away behind a sibling leaf (`show`, `read`).
 
     Inline bulk content is allowed when it genuinely speeds selection, but gate it behind an opt-in flag (`--full`, `--with-bodies`) — off by default, paired with a small `--limit` default and filtering flags so the agent can bound cost in both axes before opting in. Every list leaf attaches a top-level `follow_up` string. When the leaf is a simple primitive with no payload toggle and no filtering flags worth advertising, `follow_up` names the detail leaf (`Use \`tool noun show <id>\` for full content.`). When the leaf has filters or a `--full`-style toggle, `follow_up` points at `-h` instead of enumerating them inline (`Run \`tool noun search -h\` for filters and verbosity.`). Inline enumeration multiplies per-call cost; `-h` is the canonical reference.
 
@@ -54,7 +60,7 @@ This file is the spec. **`reference.md` (sibling) is the spec applied** — a fu
 
 Three node types: root, branch nodes, leaves.
 
-**Root** establishes vocabulary and the I/O contract. Lists subtrees with selection discriminators. Lists globals once. States the input-via-flags / JSON-on-stdout convention once.
+**Root** establishes vocabulary and the I/O contract. It owns only the frame — tagline, globals, the input-via-flags / prose-on-stdout convention — and *assembles* its subtree listing and any standing dynamic blocks from the subtrees themselves (see [Each node owns its parent-level representation](#each-node-owns-its-parent-level-representation)). Globals appear only here.
 
 **Branch nodes** extend the parent's definition with a *local model* — short prose orienting the agent to what the subtree contains, how children differ, and what each child is for — followed by the children list in `name short-description | use when X` form. The local model describes *what's inside and why an agent would descend into each child*, never whether the agent should be at this branch in the first place: by the time `-h` runs, that decision is past, so entry-gating prose ("run only when…") wastes the slot. Depth lives on the leaves, reachable via `-h` from here; the branch model points the agent at the right one. May include bounded dynamic content (state counts, aggregate signals) that pre-empts downstream calls.
 
@@ -83,6 +89,22 @@ Wrong: `tool task claim, done, list, show, abandon, retry, restart, archive, exp
 
 Right: `tool task lifecycle {claim, done, abandon, retry}` and `tool task inspect {show, list, export}`.
 
+### Each node owns its parent-level representation
+
+A parent's `-h` is *composed from* its children, not a hand-maintained copy of them. Each child hands its parent three things:
+- a **concept line** (vocabulary) for the parent's listing,
+- a **selection rubric** (`desc | use when X`),
+- optionally, a **bounded dynamic block** it contributes to the parent's `-h` — a catalog, a count, standing guidance.
+
+The parent owns only what is genuinely its own — the vocabulary frame, the globals — and builds the rest by walking its children. Adding a child surfaces it upstream automatically; nothing about it is restated. A hardcoded parent listing is a second copy of each child's purpose that rots silently when the child changes; co-locating the two collapses them to one fact (principle 11, across levels).
+
+This is also where a subtree's runtime aggregate is authored. The state lives with the subtree that owns it — the loaded-skill catalog, the running-worker count — and the subtree renders a bounded block the parent concatenates into its `-h`. The parent stays ignorant of skills and jobs; it just stacks whatever blocks its children hand up. The enumerate-vs-aggregate budget (principle 15) governs each block, and the two canonical shapes contrast cleanly:
+
+- **Enumerate the bounded, stable set.** A loaded-skill catalog is a finite grouped name-tree the agent selects from; surfacing it whole at the parent pre-empts the discovery call the agent would otherwise make.
+- **Aggregate the volatile, unbounded set.** Running jobs churn and have no ceiling; the subtree hands up a count plus the command to list on demand, never the list itself.
+
+When the root `-h` is auto-loaded into the agent's context (see [When the agent doesn't walk the tree](#when-the-agent-doesnt-walk-the-tree)), this pattern is what makes that single payload a complete capability guide: every subtree pushes its standing guidance and current aggregate up to the one level that actually gets read.
+
 ---
 
 ## I/O contract
@@ -94,12 +116,14 @@ Right: `tool task lifecycle {claim, done, abandon, retry}` and `tool task inspec
 - *Stdin* — reserved for piped content blobs (a document body, a prompt, raw text). If the leaf accepts stdin, the schema names it `stdin` alongside the flags and states what kind of content is expected.
 - *Structured input* — when a parameter is itself structured (an object, a heterogeneous array), accept it as a path to a JSON file: `--context-file PATH`. The leaf's `-h` states the file's JSON shape.
 
-**Output.**
+**Output.** The result is rendered *for the model*: light XML blocks around markdown, written as a continuation of the agent's prompt. Each command names its result block (`<spawned>`, `<pushed>`, `<feed>`); scalars (ids, statuses, counts) ride as attributes, prose and lists fill the body. Field order is the leaf's output schema — deterministic.
 
-- *Single-shot operations* (`plan new`, `task list`, `job status`) — one JSON object on stdout. The whole response is one value.
-- *Streams* (`job logs --follow`, anything emitting events over time) — JSONL. One complete JSON object per line, newline-delimited. Partial reads don't break parsing. No closing bracket to wait for.
+- *Single-shot operations* (`plan new`, `task list`, `job status`) — one rendered block. The whole response is one value, shaped to be acted on.
+- *Streams* (`job logs --follow`, anything emitting events over time) — one self-contained record per line, emitted incrementally; a partial read still yields whole records.
 
-A paginated list is not a stream — it's a single response containing many items. JSONL is for incremental emission over time, not for "a lot of stuff at once."
+A paginated list is not a stream — it's a single rendered response (a markdown table or list) holding many items. Streaming is for incremental emission over time, not for "a lot of stuff at once."
+
+A raw-JSON escape hatch (`--json`) mirrors any result as the underlying object for programmatic consumers — the same data, unrendered. It is not the agent's default and earns no doc tokens at the call site; the rendered prose is the contract.
 
 **Stderr.** In-flight diagnostic output the agent may capture if it wants. Never carries the result. Contract test: `cmd > /dev/null` should hide all of the result; `cmd 2> /dev/null` should hide only diagnostic chatter.
 
@@ -115,19 +139,18 @@ An error is feedback for correction. Opaque errors produce retry loops; structur
 - **What was expected.** The constraint that wasn't met.
 - **What to do next.** A concrete action.
 
-Shape (in the JSON response when the failure is at the command level, on stderr when the failure is at the runtime level):
+Shape — rendered as an instruction block the agent acts on (a `--json` mirror carries the same fields for tooling; runtime-level failures go to stderr):
 
-```json
-{
-  "error": "invalid_status",
-  "message": "status must be one of: draft, claimed, done, failed",
-  "received": "drafted",
-  "field": "status",
-  "next": "Retry with one of the listed values, or omit to include all statuses."
-}
+```
+<error code="invalid_status">
+status must be one of: draft, claimed, done, failed
+received: drafted
+field: status
+Next: Retry with one of the listed values, or omit to include all statuses.
+</error>
 ```
 
-The `error` field is a stable string the agent can branch on. The `message` is for the human reading the agent's logs. `next` is the road sign.
+`code` is a stable string the agent can branch on. The body states what was received against what was expected; `Next:` is the road sign. The `--json` mirror carries the same `error`/`message`/`received`/`field`/`next` fields — same recovery information, just unrendered.
 
 Internal failures — panics, unhandled exceptions — never reach the agent raw. Wrap as `{"error": "internal", ...}` with a stable code. Full traces gate behind an explicit debug invocation, not stderr leakage.
 
@@ -137,7 +160,7 @@ Internal failures — panics, unhandled exceptions — never reach the agent raw
 
 Anything exceeding a couple of seconds separates kickoff from collection.
 
-1. **The kickoff leaf returns a job handle immediately.** Under a second. Output JSON includes `job_id`, anything immediately known about the spawn, and a `follow_up` string telling the agent the recommended next call.
+1. **The kickoff leaf returns a job handle immediately.** Under a second. The rendered result carries `job_id`, anything immediately known about the spawn, and a `follow_up` line telling the agent the recommended next call.
 
 2. **Progress accumulates in a structured log file** at `$XDG_STATE_HOME/<tool>/jobs/<job_id>.log`. Each line is a JSON event with at minimum:
     - `ts` — ISO 8601 timestamp.
@@ -192,8 +215,8 @@ The test for whether dynamic content earns its slot: does it pre-empt a call the
 Each is a real failure mode.
 
 - **stdout pollution.** Status messages, progress indicators, or decorations on stdout corrupt downstream parsing. All of it belongs on stderr or in the log file.
-- **Decorated JSON.** Table borders, banners, ANSI escapes inside structured output. Plain JSON only.
-- **Plain-text output modes.** No "friendly" alternative format. The agent doesn't need one; supporting it forks the surface.
+- **ANSI / decoration in output.** Color codes, spinners, banners, table-drawing borders in the result stream. The model reads tokens, not a terminal; decoration is noise in the rendered prose and corrupts the `--json` mirror. Markdown structure is signal — escape sequences are not.
+- **JSON as the agent's default.** Returning a raw data structure the model must parse before it can act, when instruction-shaped prose would let it act directly. Parsing is a wasted step and reads worse. Keep JSON as the opt-in escape hatch for tooling; the rendered result is the contract. (And don't fork *more* formats — one rendered surface, one JSON mirror, nothing else.)
 - **Stack traces leaked raw.** Internal panics surface as opaque noise. Wrap as structured errors.
 - **Smuggled state.** Command B depending on `cd`, env, or a hidden cache from command A. Pass state explicitly.
 - **Creator verbs on the primitive.** Putting creation under the noun that names the *result* — `job start prompt`, `record create`, `session new` — forces the primitive's surface to inherit one producer's vocabulary. Operations on a primitive (status, logs, cancel) live with the primitive; *making* one lives with whoever makes — the agent, the scheduler, the queue. The monitoring surface stays producer-agnostic; new producers compose with the same read/cancel leaves instead of forcing a restructure. Test: if a second producer arrived tomorrow, would the surface change?
