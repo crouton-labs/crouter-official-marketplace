@@ -45,8 +45,8 @@
       "name": "development",
       "source": "./plugins/development",
       "version": "0.1.0",
-      "description": "Core software-development skills and agents — systematic debugging, runtime verification, plus a multi-file implementation agent and a read-only senior-advisor.",
-      "keywords": ["debugging", "runtime-verification", "pr-review", "agents", "programmer", "senior-advisor", "implementation"]
+      "description": "Core software-development skills and agents — systematic debugging and runtime verification, plus a full delegation set: explore (read-only scout), planner, programmer, reviewer, and a read-only senior-advisor.",
+      "keywords": ["debugging", "runtime-verification", "pr-review", "agents", "explore", "planner", "programmer", "reviewer", "senior-advisor", "implementation"]
     }
   ]
 }
