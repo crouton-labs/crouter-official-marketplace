@@ -20,7 +20,7 @@ The most important architectural decision: what goes where.
 **Behavior zone** (system prompt, agents, modes):
 - Identity, personality, tone
 - Constraints and hard rules
-- Tool usage policies (→ [tool-design](../../interface/tool-design/SKILL.md) covers designing the tools themselves)
+- Tool usage policies (→ [tool-design](../../interface/agent-facing/tool-design/SKILL.md) covers designing the tools themselves)
 - Decision frameworks ("when X, do Y")
 - Formatting preferences
 

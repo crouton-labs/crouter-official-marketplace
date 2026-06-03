@@ -1,6 +1,6 @@
 ---
 name: cli-design
-description: Design CLIs for humans and LLM agents — subcommand shape, agent-shaped output, exit codes, rendered-vs-JSON output, structured errors, mutation safety. Use when building or refactoring a CLI, shaping output for a model to act on, writing --help, deciding stdout vs stderr, or making a tool agent-friendly.
+description: Design CLIs consumed by an LLM agent (the agent is the user driving a shell, not a human at a TTY) — subcommand-tree shape, -h progressive disclosure, prompt-shaped stdout, stdout-vs-stderr, exit codes, structured errors, long-running job handles, pagination. Use when building or refactoring a CLI for an agent to drive, shaping output for a model to act on, or writing --help. For capability exposed as structured tool-calls (function calling / MCP) rather than a shell command, see tool-design.
 type: playbook
 keywords: [cli, agent-friendly, exit-codes, stdout-stderr, prompt-output, tty]
 ---
@@ -11,6 +11,8 @@ A CLI consumed only by an agent is a different artifact from one used by a human
 This guide treats the single-reader-is-an-agent case as the design target. Human ergonomics are absent intentionally, not by oversight.
 
 This file is the spec. **`reference.md` (sibling) is the spec applied** — a fully worked, annotated CLI (the fictional `crtr` runtime) with every pattern below instantiated and each design choice called out. Read it when you need a concrete instance of any rule here: root/branch/leaf shape, dynamic `-h`, long-running spawns, pagination, streaming output. Design from the principles; consult `reference.md` for what a correct realization looks like.
+
+**Sibling surface.** This skill is one of two ways to expose capability to an agent: the shell-driven CLI. For capability the agent calls as a structured tool (function calling / MCP), see [tool-design](../tool-design/SKILL.md). The theory is shared — selection is the work, errors carry recovery, focused over broad, output is minimally sufficient — but the delivery mechanics differ (subcommand tree + `-h` + stdout here; JSON schema + descriptions there). This skill owns the CLI mechanics; don't re-derive the shared theory from it when designing a tool-call.
 
 ## Principles
 

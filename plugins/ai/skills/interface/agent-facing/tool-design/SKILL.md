@@ -1,6 +1,6 @@
 ---
 name: tool-design
-description: Design tool interfaces for LLM agents — descriptions, parameter schemas, error messages, granularity, and composition. Use when creating function calling tools, building MCP servers, designing agent tool interfaces, writing tool descriptions, or debugging why a model calls the wrong tool, hallucinates parameters, or fails to call a tool at all.
+description: Design tool interfaces an LLM agent calls as structured tool-calls (function calling / MCP) — descriptions, parameter schemas, error messages, granularity, and composition. Use when creating function calling tools, building MCP servers, designing agent tool interfaces, writing tool descriptions, or debugging why a model calls the wrong tool, hallucinates parameters, or fails to call a tool at all. For capability an agent drives as a shell command rather than a structured tool-call, see cli-design.
 type: playbook
 keywords: [function-calling, tool-descriptions, mcp, parameter-schema, selection, agent-tools]
 ---
@@ -12,6 +12,8 @@ Tools are not APIs with documentation bolted on. They're prompt engineering. Whe
 The consequences are predictable. According to API-Bank (Li et al., 2023, EMNLP), the most common failure mode isn't calling the wrong tool — it's **not calling a tool at all** (36.8% of errors). Models encounter a tool with an ambiguous description and decide the tool doesn't apply. Description quality is the highest-leverage variable in tool design.
 
 For implementation examples, schema patterns, and benchmark citations, see [reference.md](reference.md).
+
+**Sibling surface.** This skill is one of two ways to expose capability to an agent: the structured tool-call (function calling / MCP). For capability the agent drives as a shell command, see [cli-design](../cli-design/SKILL.md). The theory is shared — selection is the work, errors carry recovery, focused over broad, output is minimally sufficient — but the delivery mechanics differ (JSON schema + descriptions here; subcommand tree + `-h` + stdout there). This skill owns the tool-call mechanics; don't re-derive the shared theory from it when designing a CLI.
 
 ## Descriptions Are the Interface
 
@@ -58,7 +60,7 @@ Parameters are the model's interface to the tool's internals. Every naming and t
 
 **Use `input_examples` for complex parameters.** Anthropic's `input_examples` feature improved complex parameter handling from 72% to 90% accuracy. Especially useful for parameters with non-obvious correlation (e.g., different escalation fields that are appropriate for critical bugs but not feature requests).
 
-**Enable strict mode.** Both Anthropic and OpenAI offer `strict: true` for tool schemas — guarantees calls match the schema exactly, eliminating format-related failures (API-Bank: 23.7% of errors). Always enable when available. See [structured-output](../../output/structured-output/SKILL.md) for schema design principles.
+**Enable strict mode.** Both Anthropic and OpenAI offer `strict: true` for tool schemas — guarantees calls match the schema exactly, eliminating format-related failures (API-Bank: 23.7% of errors). Always enable when available. See [structured-output](../../../output/structured-output/SKILL.md) for schema design principles.
 
 ## Error Messages That Enable Recovery
 

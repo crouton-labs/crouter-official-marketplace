@@ -21,8 +21,8 @@ Audience: future LLM agent sessions designing or reviewing agent-facing UX.
 ## When NOT to use
 
 - Concrete UI patterns (streaming, diffs, tool-call cards, alt-screen) — [agentic-ui](../agentic-ui/SKILL.md).
-- A CLI **consumed by** an agent (agent is the user) — [cli-design](../cli-design/SKILL.md).
-- Orchestrating agents internally, not the human seam — [multi-agent-orchestration](../../orchestration/multi-agent-orchestration/SKILL.md).
+- A CLI **consumed by** an agent (agent is the user) — [cli-design](../../agent-facing/cli-design/SKILL.md).
+- Orchestrating agents internally, not the human seam — [multi-agent-orchestration](../../../orchestration/multi-agent-orchestration/SKILL.md).
 
 ## The core reframe
 

@@ -20,7 +20,7 @@ Audience: future LLM agent sessions building or reviewing agent-facing UI, web o
 ## When NOT to use
 
 - The interaction model, trust, autonomy, friction policy — sibling [agentic-ux](../agentic-ux/SKILL.md) (read it first; this skill assumes it).
-- A CLI **consumed by** an agent (the agent is the user, not a human at a TTY) — [cli-design](../cli-design/SKILL.md). The only shared seam is the TTY-vs-pipe duality below.
+- A CLI **consumed by** an agent (the agent is the user, not a human at a TTY) — [cli-design](../../agent-facing/cli-design/SKILL.md). The only shared seam is the TTY-vs-pipe duality below.
 
 ## The core decision
 

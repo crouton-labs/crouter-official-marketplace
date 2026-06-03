@@ -51,7 +51,7 @@ Put a `reasoning` or `thinking` field **first** in your schema. LLMs generate ke
 - Max 24 optional parameters (Anthropic hard limit). Each optional field roughly doubles grammar state space.
 - Recursive schemas not supported on Anthropic.
 
-These patterns apply directly to [tool-design](../../interface/tool-design/SKILL.md) — tool schemas are structured output schemas.
+These patterns apply directly to [tool-design](../../interface/agent-facing/tool-design/SKILL.md) — tool schemas are structured output schemas.
 
 ## The Production Loop
 
