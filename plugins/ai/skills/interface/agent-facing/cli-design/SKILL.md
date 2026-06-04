@@ -64,7 +64,7 @@ Three node types: root, branch nodes, leaves.
 
 **Root** establishes vocabulary and the I/O contract. It owns only the frame — tagline, globals, the input-via-flags / prose-on-stdout convention — and *assembles* its subtree listing and any standing dynamic blocks from the subtrees themselves (see [Each node owns its parent-level representation](#each-node-owns-its-parent-level-representation)). Globals appear only here.
 
-**Branch nodes** extend the parent's definition with a *local model* — short prose orienting the agent to what the subtree contains, how children differ, and what each child is for — followed by the children list in `name short-description | use when X` form. The local model describes *what's inside and why an agent would descend into each child*, never whether the agent should be at this branch in the first place: by the time `-h` runs, that decision is past, so entry-gating prose ("run only when…") wastes the slot. Depth lives on the leaves, reachable via `-h` from here; the branch model points the agent at the right one. May include bounded dynamic content (state counts, aggregate signals) that pre-empts downstream calls.
+**Branch nodes** extend the parent's definition with a *local model* — short prose orienting the agent to the subtree as a group: how the children divide the space and differ from one another — followed by one `<subcommand>` row per child. The model is cross-child orientation, not a per-child restatement: each child's purpose already lives in its own row, which the child owns, so glossing every child in the model just duplicates those rows. It also never re-litigates whether the agent should be at this branch: by the time `-h` runs, that decision is past, so entry-gating prose ("run only when…") wastes the slot. Depth lives on the leaves, reachable via `-h` from here; the branch model points the agent at the right one. May include bounded dynamic content (state counts, aggregate signals) that pre-empts downstream calls.
 
 **Leaves** are the action surface. Each leaf declares:
 - One-line summary.
@@ -76,12 +76,16 @@ Subcommand path is the navigation; flags and positional args are the parameters.
 
 ### Branch format
 
-```
-Branches
-  name      short description    | use when X
+A branch renders as a `<command>` block — its own `-h` description on the wrapper, optional model prose and bounded state nested inside, then one `<subcommand>` element per child:
+
+```xml
+<command name="human" description="<this branch's own -h summary>">
+  <model>... cross-child orientation; any bounded state block nests here ...</model>
+  <subcommand name="ask" description="<short>" whenToUse="<plain statement of when to reach for this child — expansive with examples if its uses vary>"/>
+</command>
 ```
 
-The `| use when X` portion is the selection rubric. It's higher-leverage than the description because the question the agent is answering is "would I pick this?" not "what does this do?" Once the agent picks a branch, the leaf's own `-h` answers "what does this do?" in depth.
+`whenToUse` is the selection rubric: a plain statement of *when to reach for this child*, read at the branch to decide whether to pick it, and rendered verbatim. Write it as a standalone sentence, not a fragment. For a judgment-heavy or varied-use child, make it expansive — lead with the trigger, then spell out a wide variety of concrete situations, and contrast the siblings it is confused with ("use X instead when…"); for a genuinely single-purpose child, keep it a tight one-liner. The question at the branch is "would I pick this?"; the child's own `-h` answers "what does it do, exactly?" once picked — so `whenToUse` never restates the child's mechanics and never tells the agent to "read my `-h`". Each child owns its `<subcommand>` row, supplying `description`, `whenToUse`, and its tier on its own def; the parent assembles the listing by walking its children and never hardcodes a child's description. This is principle 16 reaching branch children, not just root subtrees. Because the read-`-h`-before-mutate rule ([below](#when-the-agent-doesnt-walk-the-tree)) already teaches the agent to pull a command's own `-h` before invoking it, a CLI needs no per-child "call `-h`" prompt and no standalone `-h: print help` global stub.
 
 ### Node sizing
 
@@ -95,7 +99,7 @@ Right: `tool task lifecycle {claim, done, abandon, retry}` and `tool task inspec
 
 A parent's `-h` is *composed from* its children, not a hand-maintained copy of them. Each child hands its parent three things:
 - a **concept line** (vocabulary) for the parent's listing,
-- a **selection rubric** (`desc | use when X`),
+- a **selection rubric** — its `description` plus a plain-statement `whenToUse`, on its own `<subcommand>` row,
 - optionally, a **bounded dynamic block** it contributes to the parent's `-h` — a catalog, a count, standing guidance.
 
 The parent owns only what is genuinely its own — the vocabulary frame, the globals — and builds the rest by walking its children. Adding a child surfaces it upstream automatically; nothing about it is restated. A hardcoded parent listing is a second copy of each child's purpose that rots silently when the child changes; co-locating the two collapses them to one fact (principle 11, across levels).
@@ -232,7 +236,8 @@ Each is a real failure mode.
 - **Examples in `-h`.** Pattern-matching bypasses the constraint spec. The spec is the contract.
 - **`--dry-run` / `--verbose` / `--quiet`.** If preview matters, it's a separate leaf (`tool plan simulate`). Severity lives in the log file.
 - **`SEE ALSO`-style cross-refs.** The tree is its own cross-reference.
-- **Branch help framed as an entry gate.** "Run only when X" prose in a branch node's `-h`. The decision to be at that branch already happened; the slot is for child distinctions and subtree shape, not for re-litigating whether the parent should have been invoked. Symptom: the model field reads as guidance to the *caller of the parent* rather than the *agent now choosing a child*.
+- **Self-justification on a node's own `-h`.** Motivational why-to-use prose on a command's own `-h` — "reach for X whenever…", "run only when…". The agent reading `tool foo -h` already chose `foo`; when-to-pick-`foo` is the *parent's* rubric (the `whenToUse` row), not `foo`'s own slot. A branch model re-litigating whether the agent should be at this branch is the same failure. Symptom: the field reads as guidance to the *caller of the parent* rather than the *agent now choosing a child*.
+- **Branch model restating each child.** A model that glosses every child 1:1 duplicates the `<subcommand>` rows the children already own (principle 11). The model carries only cross-child structure — how the children divide the space — never a per-child recap.
 - **Separate `Preconditions` sections.** Field constraints live inline with the field they apply to.
 
 ---
