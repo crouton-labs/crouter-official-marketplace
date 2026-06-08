@@ -11,7 +11,7 @@
       "source": "./plugins/ai",
       "version": "0.5.1",
       "description": "Skills for building with LLMs and designing for agents — prompt architecture, agent interface design (UI/UX/CLI/tools), multi-agent orchestration, LLM output quality, and agentic testing.",
-      "keywords": ["llm", "agents", "prompting", "agentic-ux", "agentic-ui", "cli-design", "tool-design", "multi-agent", "context-management", "structured-output", "evals", "testing", "feedback-loop"]
+      "keywords": ["llm", "agents", "prompting", "prompt-review", "agentic-ux", "agentic-ui", "cli-design", "tool-design", "multi-agent", "context-management", "structured-output", "evals", "testing", "feedback-loop"]
     },
     {
       "name": "spec-driven-development",
@@ -47,6 +47,13 @@
       "version": "0.2.0",
       "description": "Core software-development skills and agents — systematic debugging and runtime verification, plus a full delegation set: explore (read-only scout), planner, programmer, reviewer, and a read-only senior-advisor.",
       "keywords": ["debugging", "runtime-verification", "pr-review", "agents", "explore", "planner", "programmer", "reviewer", "senior-advisor", "implementation"]
+    },
+    {
+      "name": "design-discovery",
+      "source": "./plugins/design-discovery",
+      "version": "0.1.0",
+      "description": "Socratic, crtr human-led design-discovery interviews — grill the user in question waves to shape the ideal product experience and to extract and pressure-test the technical design before building.",
+      "keywords": ["design", "discovery", "interview", "socratic", "product-design", "ux", "experience", "architecture", "technical-design", "crtr-human", "elicitation", "requirements", "grillme"]
     }
   ]
 }
