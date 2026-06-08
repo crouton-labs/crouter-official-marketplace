@@ -1,6 +1,6 @@
 {
   "name": "crouter-official-marketplace",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "owner": {
     "name": "Silas Rhyneer",
     "email": "rhyneer.silas@gmail.com"
@@ -9,7 +9,7 @@
     {
       "name": "ai",
       "source": "./plugins/ai",
-      "version": "0.5.1",
+      "version": "0.6.0",
       "description": "Skills for building with LLMs and designing for agents — prompt architecture, agent interface design (UI/UX/CLI/tools), multi-agent orchestration, LLM output quality, and agentic testing.",
       "keywords": ["llm", "agents", "prompting", "prompt-review", "agentic-ux", "agentic-ui", "cli-design", "tool-design", "multi-agent", "context-management", "structured-output", "evals", "testing", "feedback-loop"]
     },
