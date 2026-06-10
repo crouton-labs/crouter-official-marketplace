@@ -1,6 +1,6 @@
 {
   "name": "development",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Core software-development skills and agents — systematic debugging and runtime verification, plus a full delegation set: explore (read-only scout), planner, programmer, reviewer, and a read-only senior-advisor.",
   "source": "https://github.com/crouton-labs/crouter-official-marketplace",
   "owner": {
