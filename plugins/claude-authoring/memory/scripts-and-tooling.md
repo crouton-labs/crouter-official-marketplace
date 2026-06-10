@@ -1,0 +1,74 @@
+---
+kind: skill
+when-and-why-to-read: When you are building CLI tools or scripts that augment Claude Code — bin/ executables, automation scripts, hook handlers — this skill should be read because it covers creating agent-facing tooling that abstracts repeated workflows.
+short-form: Create CLI tools and scripts that augment Claude Code — bin/ executables, automation, hook handlers.
+system-prompt-visibility: name
+file-read-visibility: none
+---
+
+# Creating Scripts and Tooling
+
+Scripts abstract away multi-step sequences, complex computation, and ceremony that the agent would otherwise do manually each time. Only the script's *output* enters context — complex logic costs zero tokens, and the script persists across sessions and context resets.
+
+## When to Create a Script
+
+- Agent repeats the same 3+ step sequence across sessions
+- The agent regularly constructs complex shell pipelines for the same task
+- An existing tool's output needs reformatting for agent consumption
+
+## Where Scripts Live
+
+| Location | Mechanism | Use Case |
+|----------|-----------|----------|
+| `bin/` on PATH | Agent calls via Bash | General-purpose CLI tools |
+| `scripts/` | Agent calls via Bash | Project-specific automation |
+| `hooks/` scripts | Called by hooks.json | Lifecycle handlers (guards, formatters, loggers) |
+| `skills/*/scripts/` | Bundled with SKILL.md | Deterministic computation a skill needs |
+| `.mcp.json` + MCP servers | Claude calls as native tools | API wrappers, database access |
+
+## Design Principles for Agent-Facing CLIs
+
+**Self-documenting for agents** — `--help` must be comprehensive enough that an agent never needs to look elsewhere. It's the canonical source of truth, not external docs.
+
+**Every output is a prompt** — the agent's next action depends on your script's output. Design both success and failure output to guide the agent forward, not just report status.
+
+**Familiar interfaces** — model your CLI after tools the agent already knows (`pytest`, `docker`, `kubectl`). The agent can infer behavior from convention without reading docs.
+
+**No interactive input** — agents can't respond to prompts. Use flags/args/env vars instead.
+
+## Output Design
+
+Script output is the primary interface between your tool and the agent. A silent success or cryptic error is a dead end.
+
+**Success output** — confirm what happened, echo IDs/paths the agent needs next, suggest next steps:
+
+```
+# bad
+OK
+
+# good
+Created deployment deploy-a1b2c3d4 (env: staging, 3 services)
+
+Next:
+  Check status:  deploy status deploy-a1b2c3d4
+  View logs:     deploy logs deploy-a1b2c3d4
+  Roll back:     deploy rollback deploy-a1b2c3d4
+```
+
+**Error output** — three parts: what went wrong, how to fix it, what to do next:
+
+```
+# bad
+Error: connection refused
+
+# good
+ERROR: Cannot connect to database at localhost:5432 (connection refused)
+
+Fix: Ensure postgres is running:
+  brew services start postgresql
+  # or: docker start postgres-dev
+
+Then retry: ./migrate --target production
+```
+
+**Structured output** — emit JSON when the agent will consume the result programmatically. Raw human-readable text is fine for notification scripts or when the agent just needs to relay information to the user.
