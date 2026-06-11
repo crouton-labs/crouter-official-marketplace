@@ -12,7 +12,7 @@ The single most consequential decision in prompt architecture is where an instru
 
 This skill covers the mechanics of why placement matters, what each zone is for, and what breaks when you get it wrong. For API patterns, caching math, and security details, see [system-vs-user-prompt-reference.md](system-vs-user-prompt-reference.md).
 
-[prompting-effectively](prompting-effectively.md) covers the broader Two Zones framework. This skill goes deep on the system/user boundary specifically.
+[[prompting-effectively]] covers the broader Two Zones framework. This skill goes deep on the system/user boundary specifically.
 
 ## The Cognitive Model
 

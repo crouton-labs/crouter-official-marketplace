@@ -56,4 +56,4 @@ crtr human review /tmp/<name>-assembled.md
 
 This kicks off a live review pane and returns at once — the user's anchored comments fan into your inbox when they submit, waking you. Don't poll, re-present, or verify the pane opened. The pane tracks the file: to change something mid-review, edit it in place and it re-renders.
 
-When the comments come back and you revise the actual prompt sources, → [prompting-effectively](prompting-effectively.md) for the changes themselves.
+When the comments come back and you revise the actual prompt sources, → [[prompting-effectively]] for the changes themselves.
