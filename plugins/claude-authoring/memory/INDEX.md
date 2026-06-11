@@ -1,5 +1,5 @@
 ---
-kind: reference
+kind: knowledge
 when-and-why-to-read: When you are authoring artifacts for Claude Code — a CLAUDE.md, slash command, hook, rule, skill, or augmenting script/tooling — open this dir because it holds the authoring guide for each Claude Code artifact type.
 short-form: Authoring guides for Claude Code artifacts — CLAUDE.md, commands, hooks, rules, scripts, skills.
 system-prompt-visibility: name

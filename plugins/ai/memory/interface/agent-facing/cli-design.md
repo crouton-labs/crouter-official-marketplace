@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are building or refactoring a CLI that an LLM agent drives as a shell command — shaping its subcommand tree, -h output, stdout/stderr split, exit codes, or error shapes — this skill should be read because it gives the agent-as-user design rules so the model can act on your CLI's output reliably.
 short-form: Design CLIs an LLM agent drives — subcommand shape, -h disclosure, prompt-shaped stdout, exit codes, structured errors, job handles, pagination.
 system-prompt-visibility: name

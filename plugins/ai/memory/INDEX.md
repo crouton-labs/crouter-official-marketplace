@@ -1,5 +1,5 @@
 ---
-kind: reference
+kind: knowledge
 when-and-why-to-read: When you are building anything on top of LLMs — designing prompts, agent tools or CLIs, multi-agent orchestration, structured output, evals, or the UI/UX an agent presents to a human — open this dir because it holds the AI-engineering playbooks for those areas.
 short-form: AI-engineering skills — interface (agent + human facing), prompting, orchestration, output, and testing for LLM systems.
 system-prompt-visibility: preview

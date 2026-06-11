@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you have just created an implementation plan and need it validated against requirements and design for full coverage and no ambiguity, this skill should be read because it gives the plan-review checklist.
 short-form: Validate an implementation plan against requirements and design — coverage, no ambiguities.
 system-prompt-visibility: name

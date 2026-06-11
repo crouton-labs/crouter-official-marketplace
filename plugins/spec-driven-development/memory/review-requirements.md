@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you have just created a requirements document and need it validated for EARS compliance, completeness, and consistency, this skill should be read because it gives the requirements-review checklist.
 short-form: Validate requirements for EARS compliance, completeness, and consistency.
 system-prompt-visibility: name

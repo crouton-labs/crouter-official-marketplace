@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are stuck on a hard bug that resists quick fixes, this skill should be read because it gives systematic methodologies — rubber ducking, code tracing, hypothesis testing, logging strategy — to find the root cause.
 short-form: Systematic debugging for hard bugs — rubber ducking, code tracing, hypothesis testing, logging.
 system-prompt-visibility: name

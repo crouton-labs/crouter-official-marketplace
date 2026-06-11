@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When the user wants to think through how to build something, says "grill me on the architecture", or a technical approach is underspecified, this skill should be read because it runs a Socratic interview that extracts and pressure-tests the technical design before building.
 short-form: Socratic human-led interview to extract and pressure-test a system's technical design — architecture, scale, data, failure modes.
 system-prompt-visibility: name

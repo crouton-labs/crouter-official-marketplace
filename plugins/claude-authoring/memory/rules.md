@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are creating or updating .claude/rules/*.md files — auto-applied constraints scoped by file pattern — this skill should be read because it covers how to write file-scoped conventions and guidance.
 short-form: Write .claude/rules/*.md — auto-applied, path-scoped constraints and conventions.
 system-prompt-visibility: name

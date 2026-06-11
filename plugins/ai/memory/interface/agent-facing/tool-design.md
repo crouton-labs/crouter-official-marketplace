@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are creating function-calling / MCP tools an LLM invokes as structured tool-calls — writing descriptions, parameter schemas, or error messages — or debugging why a model calls the wrong tool, this skill should be read because it gives the tool-interface design rules that make models select and call tools correctly.
 short-form: Design structured tool-call (function-calling / MCP) interfaces — descriptions, schemas, error messages, granularity, composition.
 system-prompt-visibility: name

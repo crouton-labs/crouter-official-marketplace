@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you have just created a technical design and need it validated against requirements for coverage, feasibility, and architectural soundness, this skill should be read because it gives the design-review checklist.
 short-form: Validate a technical design against requirements — coverage, feasibility, architectural soundness.
 system-prompt-visibility: name

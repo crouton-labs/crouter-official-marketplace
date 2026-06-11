@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are building evals or CI quality gates for an LLM system — LLM-as-judge, prompt regression tests, validation pipelines, guardrails, or production monitoring — this skill should be read because it covers the evaluation strategies and metrics that actually catch regressions.
 short-form: Evaluation strategies and quality gates for LLM systems — LLM-as-judge, regression tests, validation, guardrails, monitoring.
 system-prompt-visibility: name

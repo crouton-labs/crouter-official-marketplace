@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When the user asks to capture lessons, save what was learned, or update a project knowledge file from this conversation, this skill should be read because it extracts the session's key takeaways into a learned-skills file.
 short-form: Extract key takeaways from the session and save them to a learned-skills file.
 system-prompt-visibility: name

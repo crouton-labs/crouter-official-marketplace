@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are creating a SKILL.md for Claude Code — on-demand reference, methodology, or workflow guidance — this skill should be read because it covers the skill file format and bundling conventions.
 short-form: Write SKILL.md files for Claude Code — on-demand reference, methodology, bundling.
 system-prompt-visibility: name

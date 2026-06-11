@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When the user is stuck or asks for a breakthrough, fresh thinking, or out-of-the-box ideas on a problem, this skill should be read because it spawns four parallel advisors with conflicting lenses and synthesizes them into actionable insight.
 short-form: Breakthrough thinking — spawn 4 conflicting-lens advisors in parallel, then synthesize into actionable insight.
 system-prompt-visibility: name

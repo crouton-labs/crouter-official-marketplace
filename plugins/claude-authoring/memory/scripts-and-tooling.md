@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are building CLI tools or scripts that augment Claude Code — bin/ executables, automation scripts, hook handlers — this skill should be read because it covers creating agent-facing tooling that abstracts repeated workflows.
 short-form: Create CLI tools and scripts that augment Claude Code — bin/ executables, automation, hook handlers.
 system-prompt-visibility: name

@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are creating, debugging, or planning Claude Code hooks — for guardrails, context injection, quality gates, notifications, or automation — this skill should be read because it covers the lifecycle events, handler types, and decision-control patterns.
 short-form: Claude Code hooks — lifecycle events, handler types, decision control, guardrail/injection patterns.
 system-prompt-visibility: name

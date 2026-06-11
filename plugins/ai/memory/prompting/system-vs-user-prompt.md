@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are deciding what belongs in the system vs the user prompt — structuring API calls, placing instructions, or debugging instruction compliance — this skill should be read because it gives the placement rules (system as identity/constraints/tools, user as task/context/state).
 short-form: What belongs in system vs user prompt — placement rules for API calls, instruction hierarchy, compliance.
 system-prompt-visibility: name

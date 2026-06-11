@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are implementing reliable typed JSON from an LLM — constrained decoding, JSON Schema, Zod, Pydantic, Instructor — or debugging malformed model JSON, this skill should be read because it covers the schema-design and extraction patterns that make structured output reliable.
 short-form: Reliable typed JSON from LLMs — constrained decoding, JSON Schema, Zod, Pydantic, Instructor, schema design.
 system-prompt-visibility: name

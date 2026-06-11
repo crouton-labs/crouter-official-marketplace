@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are creating a Claude Code slash command — one that sets mode, constraints, or a workflow invoked via /command-name — this skill should be read because it covers the command file format and conventions.
 short-form: Write Claude Code slash commands — mode-setting, constraints, workflows, frontmatter.
 system-prompt-visibility: name

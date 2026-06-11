@@ -1,5 +1,5 @@
 ---
-kind: reference
+kind: knowledge
 when-and-why-to-read: When you are debugging a frontend issue and the debugging skill points you here, this reference should be read because it holds the frontend-specific techniques — component hierarchy, state, rendering — the general methodology defers to.
 short-form: Frontend-specific debugging techniques — component hierarchy, state, rendering.
 system-prompt-visibility: none

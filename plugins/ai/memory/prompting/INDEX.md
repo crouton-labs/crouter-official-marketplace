@@ -1,5 +1,5 @@
 ---
-kind: reference
+kind: knowledge
 when-and-why-to-read: When you are writing or debugging prompts for an LLM — structuring them, placing instructions in system vs user, managing the context window, or reviewing an assembled prompt — open this dir because it holds the prompting playbooks for those tasks.
 short-form: Prompting skills — effective prompt structure, system-vs-user placement, context management, prompt review.
 system-prompt-visibility: preview

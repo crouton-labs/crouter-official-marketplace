@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When the user explicitly asks to collaborate, think together, or wants a sounding board rather than a solution, this skill should be read because it sets the peer-thinking mode — no implementation, no artifacts.
 short-form: Think alongside the user as a peer — no implementation, no artifacts; a sounding board.
 system-prompt-visibility: name

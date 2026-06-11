@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are building multi-agent LLM workflows — designing an orchestrator, coordinating parallel agents, splitting tasks across agents, or debugging multi-agent failures — this skill should be read because it covers the orchestration patterns and failure handling those systems need.
 short-form: Design multi-agent LLM systems — orchestrator patterns, parallel coordination, pipelines, hierarchical delegation, failure handling.
 system-prompt-visibility: name

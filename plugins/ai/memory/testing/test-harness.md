@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are wiring the test feedback loop for coding agents — setting up CI, writing CLAUDE.md/AGENTS.md, picking a runner, or debugging agent doom loops — this skill should be read because it shows how to make the loop fast, deterministic, and remediation-bearing so agents iterate productively.
 short-form: Design the test feedback loop for coding agents — fast, deterministic, diff-friendly, remediation-bearing CI.
 system-prompt-visibility: name

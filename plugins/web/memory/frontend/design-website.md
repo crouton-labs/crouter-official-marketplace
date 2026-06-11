@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When the user asks to design a website or product UI, or wants a design system / design-document.html generated, this skill should be read because it runs an interactive workflow that gathers requirements, explores preferences, and produces a comprehensive design document with component examples.
 short-form: Interactive product-design workflow — gather requirements, explore preferences, generate a design document with components.
 system-prompt-visibility: name

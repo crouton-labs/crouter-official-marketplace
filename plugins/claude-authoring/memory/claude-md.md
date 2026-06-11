@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are creating, updating, or auditing a CLAUDE.md file for a project or directory, this skill should be read because it gives the practices for writing one that actually constrains and contextualizes the agent.
 short-form: Best practices for writing effective CLAUDE.md files — constraints, codebase context, gotchas.
 system-prompt-visibility: name

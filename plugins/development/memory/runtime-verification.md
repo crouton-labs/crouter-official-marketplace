@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are asked to verify a PR, confirm a fix works, or validate local changes before pushing, this skill should be read because it shows how to prove a change works by running the app and observing real behavior.
 short-form: Verify a change works by running the app and observing behavior — PR review, manual testing, evidence.
 system-prompt-visibility: name

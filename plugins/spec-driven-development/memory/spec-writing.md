@@ -1,5 +1,5 @@
 ---
-kind: skill
+kind: knowledge
 when-and-why-to-read: When you are starting a new feature and need to capture what it should do before planning implementation, this skill should be read because it walks you through investigation and conversation to produce a behavior-focused specification.
 short-form: Define a feature through investigation and conversation — a behavior-focused spec before planning.
 system-prompt-visibility: name
