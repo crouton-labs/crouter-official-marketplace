@@ -1,13 +1,13 @@
 ---
 kind: knowledge
-when-and-why-to-read: When you are applying the system-vs-user-prompt skill and follow its pointers to worked examples, the full catalog, or the annotated reference, this reference should be read because it holds the deep-dive material the skill body links to.
-short-form: Deep-dive companion to the system-vs-user-prompt skill — worked examples and the full catalog the skill body points to.
+when-and-why-to-read: When you are applying the system-prompts skill and follow its pointers to worked examples, the full catalog, or the annotated reference, this reference should be read because it holds the deep-dive material the skill body links to.
+short-form: Deep-dive companion to the system-prompts skill — worked examples and the full catalog the skill body points to.
 system-prompt-visibility: none
 file-read-visibility: none
 ---
-# System vs User Prompt — Reference
+# System Prompts — Reference
 
-Patterns, code, and evidence for the decisions described in [system-vs-user-prompt.md](system-vs-user-prompt.md).
+Patterns, code, and evidence for the decisions described in [system-prompts.md](system-prompts.md).
 
 ---
 

@@ -97,7 +97,7 @@ Prompt caching has zero quality impact and significant cost impact. Cache-friend
 
 Anthropic requires marking blocks with `"cache_control": {"type": "ephemeral"}`. OpenAI caches automatically for prompts 1,024+ tokens. Anthropic's explicit control is more powerful; OpenAI's is zero-config.
 
-Production case studies: Thomson Reuters Labs (60% cost reduction), YUV.AI (70% cost reduction). See also [system-vs-user-prompt](system-vs-user-prompt.md) for how prompt slot placement affects cache hit rates.
+Production case studies: Thomson Reuters Labs (60% cost reduction), YUV.AI (70% cost reduction). See also [system-prompts](system-prompts.md) for how prompt slot placement affects cache hit rates.
 
 Known Anthropic cache invalidation triggers: changing `tool_choice`, toggling web search/citations, modifying thinking parameters.
 

@@ -1,0 +1,337 @@
+---
+kind: knowledge
+when-and-why-to-read: When you are writing any prompt, whether a one-off task, a long-document or tool workflow, or a system prompt, agent, mode, skill, or command, this skill should be read because it gives both the architecture (the zones, tone registers, escalation ladder, subtract-before-you-add) and the craft (positive framing, motivation, examples, quality modifiers) that make prompts clear, reliable, and maintainable.
+short-form: Writing effective prompts — the zones, tone registers, escalation ladder, subtract-before-you-add, positive framing, the why, examples, and quality modifiers. Pairs with prompting-effectively-reference for worked examples and the full deep-dive.
+system-prompt-visibility: name
+file-read-visibility: none
+---
+# Writing Effective Prompts
+
+Effective prompts have structure. This skill is the architecture of prompting: where each kind of instruction belongs, and how to make a *system* of prompts (commands, agents, modes, skills, API system prompts) reliable and maintainable. For worked examples and the full annotated catalog behind every principle below, see [prompting-effectively-reference.md](prompting-effectively-reference.md).
+
+## The Two Zones
+
+The most important architectural decision: what goes where.
+
+**Behavior zone** (system prompt, agents, modes):
+- Identity, personality, tone
+- Constraints and hard rules
+- Tool usage policies (→ [[tool-design]] covers designing the tools themselves)
+- Decision frameworks ("when X, do Y")
+- Formatting preferences
+
+**Task zone** (commands, skills, task prompts):
+- Temporary role shifts and focus areas
+- Step-by-step procedures or constraints for the task
+- Context the agent needs to do this specific thing
+
+**Knowledge zone** (skills, documents, user context, CLAUDE.md):
+- Reference material and domain knowledge
+- User-specific context and preferences
+- Project information
+- Data that changes between sessions
+
+System prompt content gets treated as foundational identity. Task-zone content layers on top — it *redirects* the agent without replacing who it is. Knowledge gets treated as reference material. Mixing these up creates agents that treat their own rules as optional suggestions, or user-turn prompts that fight the system prompt for control of identity.
+
+→ For the orthogonal harness-level question — which channel of the agent system an instruction or piece of context should live in at all — see [context-placement-channels.md](context-placement-channels.md); for the system prompt specifically, [system-prompts.md](system-prompts.md).
+
+## XML for Instruction Domains
+
+Use XML tags to separate concern domains (identity, safety, tools, formatting). Rules:
+
+- Section-level boundaries only — don't wrap every paragraph
+- Two levels of nesting maximum for instructions (deeper is fine for examples)
+- Over-tagging creates noise that dilutes the structural signal
+
+Over-formatted system prompts bleed into over-formatted responses — use the lightest formatting that makes content clear.
+
+(XML also structures *output* and *input documents*, not just instructions — multi-document inputs, response sections, grounding quotes, long-context placement. That's a different use; see [prompting-effectively-reference.md](prompting-effectively-reference.md) → User Message Architecture, which is the single home for long-context technique.)
+
+## Tone Registers
+
+The voice you use affects how the model interprets instructions — and the right voice depends on *where the prompt lives*.
+
+**Third person → Identity (system prompts only):**
+> "Claude cares about people's wellbeing."
+> "The agent avoids over-formatting responses."
+
+Establishes personality traits. The model internalizes these as "who I am." This framing belongs in system prompts, agents, and modes — not in commands or skills.
+
+**"You are X" → Identity declaration (system prompts only):**
+> "You are a senior security auditor who reviews code for vulnerabilities."
+
+Defines the agent's core role. In a system prompt, this is foundational. In a user-turn prompt (command, skill, task), it conflicts with the identity already established — use "Act as X for this task" instead.
+
+**"Act as X" → Temporary role (commands, skills, task prompts):**
+> "Act as a security auditor for this review. Focus on auth flows and input validation."
+
+Layers a role on top of the existing identity without overriding it. The agent applies this lens for the current task, then returns to its base behavior.
+
+**Second person → Operations:**
+> "When you encounter X, stop immediately."
+> "You should use the minimum number of tools needed."
+
+Direct instruction for procedures and workflows. Works in both zones.
+
+**Imperative → Hard rules:**
+> "NEVER reproduce song lyrics."
+> "ALWAYS search before responding about current events."
+
+Absolute rules that should not be overridden by context.
+
+### The Escalation Ladder
+
+1. **Suggestion**: "It's fine to..." / "Claude can..."
+2. **Default**: "Claude does..." / "Claude avoids..."
+3. **Instruction**: "You should..." / "Always prefer..."
+4. **Hard rule**: "NEVER..." / "MUST..." / "CRITICAL:..."
+5. **Repeated hard rule**: Same rule in multiple sections with different framing
+
+Most guidance sits at levels 2–3. Reserve 4–5 for genuine non-negotiables. If everything is CRITICAL, nothing is.
+
+## Subtract Before You Add
+
+When the model produces bad output, scan the prompt for the instruction causing it and delete that instruction. The model has strong defaults — out-of-distribution behaviors (wrapping output in unusual tags, inventing structure, weird formatting) almost always trace back to a prompt that pushed the model there. The fix is subtraction, not addition.
+
+**Worked example.** A tool description read:
+
+> "Task instruction wrapped in `<fork-task>` verbatim."
+
+The model wrapped its output in `<fork-task>` tags because the description told it to. The minimal fix is deletion:
+
+> "The task this fork should execute."
+
+What goes wrong if you skip the delete step:
+
+- **Adding a prohibition while leaving the cause:** keep the "wrapped in `<fork-task>`" instruction, then bolt on *"DO NOT wrap in `<fork-task>` tags."* Now the prompt contradicts itself, and the prohibition primes attention toward the very tags you don't want.
+- **Replacing with a positive description when none was needed:** "One self-contained instruction, e.g. 'Send a DM to Priya.'" Reads fine, but the field name and schema already convey this. You've spent tokens telling the model to write normally — which is what it would have done anyway.
+
+**Order of preference:**
+
+1. **Delete** the instruction causing the misbehavior. Often nothing needs to take its place — the field name, type, or surrounding context already conveys what's expected.
+2. **Rephrase positively** when the field genuinely lacks a description. "DO NOT use ellipses" → "Use periods instead" — describe the target, not its inverse.
+3. **Prohibit** only when you have observed the failure *without* any prompt pushing the model there. Rare. The bar is evidence, not preference.
+
+**When negative framing earns its place:** the model has an observed prior toward the wrong behavior with no prompt cause. "Avoid Inter" works because the model genuinely defaults to Inter. "Be conservative" in a code review actively suppresses findings. Otherwise: trust the default.
+
+**Heuristic:** before adding *anything* in response to bad output, find the line in the prompt that caused it. If you find one, delete it and stop. Telling the model to "write normally" or "respond naturally" is a token-burning no-op — it would have done that already if you hadn't told it otherwise.
+
+## Positive Framing
+
+For instructions that survive the subtraction check — genuine deviations from default behavior — describe the target, not its inverse.
+
+**Weak:** "Do not use ellipses."
+**Strong:** "Use periods or commas to end clauses."
+
+The model produces what you describe. "Don't do X" requires the model to represent X in order to avoid it, which can prime the failure mode rather than suppress it. "Do Y" steers directly. This holds across domains:
+
+- Output style: "don't be verbose" → "keep responses to 2–3 sentences for simple questions"
+- Tool use: "don't call this tool unnecessarily" → "call this tool when you see X, Y, or Z"
+- Behavioral guidance: "don't be sycophantic" → "open with the answer, not a compliment"
+
+Concrete positive instructions outperform abstract negative ones, especially in long prompts where any single rule's attention weight is diluted by surrounding context. If you find yourself writing a "don't," ask what the corresponding "do" is — that's usually the better instruction.
+
+## Context & Motivation
+
+Explain *why* an instruction exists. The model generalizes from the reason to cases you didn't enumerate — a bare rule only covers what it literally says.
+
+**Weak:** "Never use ellipses."
+**Strong:** "Your response will be read aloud by a text-to-speech engine, which can't pronounce ellipses — so use complete sentences."
+
+With the reason attached, the model extends the intent correctly (it will also avoid other unpronounceable punctuation), instead of pattern-matching the single literal rule. This pairs with positive framing: state the target behavior *and* the reason it matters. Keep it to a line — motivation is a lever, not an essay.
+
+## Quality Modifiers
+
+The model calibrates effort to the task and will not pad — if you want maximal effort, ask for it explicitly. "Include as many features as possible" is the one lever that reliably raises ambition:
+
+> Include as many relevant features and interactions as possible. Go beyond the basics to a fully-featured implementation.
+
+Pair it with concrete targets ("add hover states, transitions, and micro-interactions"; "apply hierarchy, contrast, balance, and movement") rather than a bare "make it good" — the model follows explicit scope, not vibes.
+
+## Examples
+
+**Rules:**
+- Place examples adjacent to the rules they illustrate — never in a separate appendix
+- Use good/bad pairs for nuanced behaviors
+- Add rationale tags when the reasoning matters for generalization
+- Make examples diverse — vary them so the model doesn't latch onto an unintended pattern shared across them
+
+```xml
+<example>
+  <user>What should I eat for lunch?</user>
+  <good_response>A Mediterranean bowl with...</good_response>
+</example>
+```
+
+```xml
+<example>
+  <user>Search for a recent article about fisheries.</user>
+  <response>I found the article... [paraphrased summary]</response>
+  <rationale>Paraphrases entirely in own words, conveying key facts
+  while respecting copyright.</rationale>
+</example>
+```
+
+The bad example is as important as the good one — it shows the specific failure mode you're preventing, which is often a plausible response that happens to be wrong.
+
+## Strategic Repetition
+
+Repetition is a deliberate design tool, not sloppiness. In long prompts, a rule stated once may get diluted by surrounding context.
+
+**Repeat (2–3 locations, different framing):**
+- Safety boundaries
+- The 2–3 most important behavioral rules
+- Cross-cutting constraints that apply across multiple contexts
+
+**Don't repeat:**
+- Personality traits (once is enough)
+- Formatting preferences
+- General tone guidance
+
+**Heuristic:** If violating the rule would cause real harm or a terrible experience, repeat it. If it's stylistic, state it once.
+
+→ For how repetition interacts with token budgets, placement effects, and caching in long prompts, see [context-management.md](context-management.md).
+
+## Decision Frameworks
+
+When the agent needs judgment calls, provide a framework — not an exhaustive rule list.
+
+**Checklist pattern** — sequential with stop conditions:
+
+```
+## Step 0 — Does this need a visual at all?
+Most requests are conversational. Check first.
+
+## Step 1 — Is a specialized tool available?
+Scan connected tools. Category match → use it. Stop.
+
+## Step 2 — Did the person ask for a file?
+"file," "download," "save" → create file. Stop.
+
+## Step 3 — Default path
+No matches → inline rendering.
+```
+
+**Trigger pattern** — concrete matching criteria:
+
+```
+**Always use this tool when you see:**
+- Explicit references: "continue our conversation about..."
+- Temporal references: "what did we talk about yesterday"
+- Implicit signals:
+  - Past tense verbs suggesting prior exchanges
+  - Definite articles assuming shared knowledge
+```
+
+Both patterns beat "use the tool when appropriate" because they give the model concrete decision criteria.
+
+## Procedures vs Constraints
+
+Choose the right structure for the guidance you're giving. Neither is inherently better.
+
+**Use procedures when** the order genuinely matters — steps that must happen in sequence, every time, or the outcome breaks. A deployment checklist, a multi-stage data pipeline, a protocol with dependencies between steps. If step 3 can't happen before step 2, that's a procedure.
+
+```
+1. Run the test suite
+2. If tests pass, build the artifact
+3. Deploy to staging
+4. Run smoke tests against staging
+5. If smoke tests pass, promote to production
+```
+
+This is correct as a procedure because each step depends on the previous one. Rewriting it as constraints ("ensure tests pass", "verify staging health") loses the ordering that makes it work.
+
+**Use constraints when** the guidance is about *what matters*, not *what order to do it in*. Behavioral rules, quality standards, and goals where the agent should decide how to get there.
+
+```
+Plan before building. A missed dependency or wrong assumption
+caught during planning costs nothing — caught during implementation
+it means rework. Surface your plan to the user before writing code.
+```
+
+This is correct as a constraint because the agent should adapt *how* it plans to the specific task.
+
+**The failure modes are opposite:**
+- Procedures where constraints belong → brittle agents that follow the letter and miss the point
+- Constraints where procedures belong → agents that skip critical steps or reorder dependencies
+
+### When you're unsure
+
+If it's not clear from the prompt whether something should be procedural or flexible, ask. "Should these steps happen in this exact order every time, or is the order flexible?" is a better question than guessing wrong.
+
+### The middle ground: principles + examples
+
+When the guidance is flexible but the application isn't obvious, state the reasoning and ground it with an example:
+
+**Over-constrained:** "Always spawn exactly 3 explore agents before planning."
+**Too vague:** "Explore proportional to codebase complexity."
+**Sweet spot:** "Understand the scope of changes before committing to a plan — misunderstanding the codebase is the most expensive mistake. For example, if you're unsure how a subsystem works, spinning up 2–3 explore agents to map it out before writing a plan is usually worth the cost."
+
+The sweet spot teaches the principle, explains why it matters, and shows what good judgment looks like — while leaving the agent free to adapt.
+
+### Signs of wrong structure
+
+**Procedure masquerading as constraints:**
+- Steps that keep getting reordered or skipped, causing failures
+- You keep adding "make sure X happened before Y" patches
+
+**Constraints masquerading as procedure:**
+- Fixed counts where the right number depends on the situation
+- The prompt keeps growing as you patch failure modes with more rules
+- The model follows instructions faithfully but produces worse outcomes than a looser prompt would
+
+## Scoping & Progressive Disclosure
+
+**Include:** Rules specific to your agent's domain, constraints on available tools, edge cases from testing, behavioral patterns users will encounter.
+
+**Exclude:** Generic LLM knowledge, exhaustive third-party docs, frequently changing information (put in user context), rules for features the agent doesn't have.
+
+**Progressive disclosure:** List resources with short descriptions upfront, load detail on demand:
+
+```xml
+<available_resources>
+  <resource>
+    <name>pdf-creation</name>
+    <description>Use when creating PDF files</description>
+    <location>/path/to/detailed-instructions</location>
+  </resource>
+</available_resources>
+```
+
+This is the pattern behind Claude Code skills — descriptions loaded upfront, full instructions loaded on demand.
+
+## Common Mistakes
+
+- **Over-formatting** — heavily formatted system prompts produce heavily formatted responses
+- **Vague requirements** — "make a dashboard" with implicit expectations; state the features, constraints, and output format explicitly
+- **Instruction-stuffing** — trying to anticipate every edge case with exact steps; teach principles and let the model decide how to apply them
+- **Adding when you should delete** — bad output usually traces back to a prompt instruction pushing the model there. Find the cause and remove it before adding anything new. "Write normally" is not a fix; deleting the line that made it write abnormally is
+- **Negative instructions** — "don't do X" primes the failure mode; describe the target instead
+- **Instructions without motivation** — a bare rule only covers what it literally says; the "why" lets the model generalize
+- **Flat structure** — long prompts with no XML sections or headers; the model can't locate guidance
+- **XML-everything** — wrapping every paragraph; structural noise dilutes the signal
+- **Missing or misaligned examples** — "be helpful but not too eager" means nothing without a demonstration; an example that contradicts the instructions is worse than none
+- **Repeating everything** — if 80% of rules are repeated, repetition stops being a signal
+- **Behavioral rules in documents** — agent instructions in uploaded docs get treated as suggestions
+- **Static knowledge in system prompts** — facts that change (pricing, team members) belong in retrievable documents
+
+## Worked Application: Claude Code Components
+
+One real harness, mapped to the zones. The same mapping exercise applies to any agent system.
+
+| Component | Zone | Role framing | Key consideration |
+|-----------|------|-------------|-------------------|
+| Agents | Behavior | "You are X" — defines identity | 3rd person for traits, 2nd person for operations. |
+| Modes | Behavior | "You are X" — defines identity | `append` keeps standard identity; `replace` for full custom persona. |
+| Commands | Task | "Act as X" — temporary lens | Constraints or procedures depending on the task. Minimal tokens. |
+| Skills | Knowledge | No role — reference material | Progressive disclosure. Overview in SKILL.md, depth in reference files. |
+| CLAUDE.md | Knowledge | No role — project context | Guardrails and pointers. Constraints Claude would get wrong without. |
+| Rules | Behavior | No role — constraints only | Declarative constraints scoped by file pattern. |
+
+**Deeper guides for each component:**
+- Agents → [[multi-agent-orchestration]] for designing systems of cooperating agents
+- Commands → [[claude-authoring/commands]]
+- Skills → [[claude-authoring/skills]]
+- CLAUDE.md → [[claude-authoring/claude-md]]
+- Rules → [[claude-authoring/rules]]
+- Hooks (lifecycle automation around prompts) → [[claude-authoring/hooks]]
