@@ -1,6 +1,6 @@
 {
   "name": "crouter-official-marketplace",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "owner": {
     "name": "Silas Rhyneer",
     "email": "rhyneer.silas@gmail.com"
@@ -23,7 +23,7 @@
     {
       "name": "claude-authoring",
       "source": "./plugins/claude-authoring",
-      "version": "0.2.4",
+      "version": "0.2.5",
       "description": "Guides for authoring Claude Code artifacts — CLAUDE.md files, hooks, rules, skills, commands, and scripts.",
       "keywords": ["claude-code", "authoring", "claude-md", "hooks", "rules", "skills", "commands", "scripts"]
     },
