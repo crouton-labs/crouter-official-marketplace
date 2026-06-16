@@ -4,6 +4,9 @@ when-and-why-to-read: When the user wants to think through how to build somethin
 short-form: Socratic human-led interview to extract and pressure-test a system's technical design — architecture, scale, data, failure modes.
 system-prompt-visibility: name
 file-read-visibility: none
+gate:
+  kind:
+    imatches: '^(design|general)($|/)'
 ---
 
 # technical-design-interview

@@ -4,6 +4,9 @@ when-and-why-to-read: When you are stuck on a hard bug or need to verify a chang
 short-form: Core development skills — systematic debugging and runtime verification of changes.
 system-prompt-visibility: name
 file-read-visibility: none
+gate:
+  kind:
+    imatches: '^developer$'
 ---
 
 # Development

@@ -4,6 +4,9 @@ when-and-why-to-read: When the user wants to think through a product or technica
 short-form: Socratic design-discovery interviews — product-design and technical-design pressure-testing.
 system-prompt-visibility: name
 file-read-visibility: none
+gate:
+  kind:
+    imatches: '^(design|general)($|/)'
 ---
 
 # Design discovery

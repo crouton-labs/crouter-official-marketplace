@@ -4,6 +4,9 @@ when-and-why-to-read: When you are applying the product-design-interview skill a
 short-form: Deep-dive companion to the product-design-interview skill — worked examples and the full catalog the skill body points to.
 system-prompt-visibility: none
 file-read-visibility: none
+gate:
+  kind:
+    imatches: '^(design|general)($|/)'
 ---
 # product-design-interview — reference
 

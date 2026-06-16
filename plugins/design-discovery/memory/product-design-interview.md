@@ -4,6 +4,9 @@ when-and-why-to-read: When the user has product-design questions, wants to figur
 short-form: Socratic human-led interview to shape the ideal product experience (not technical design).
 system-prompt-visibility: name
 file-read-visibility: none
+gate:
+  kind:
+    imatches: '^(design|general)($|/)'
 ---
 
 # product-design-interview

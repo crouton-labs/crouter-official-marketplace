@@ -4,6 +4,9 @@ when-and-why-to-read: When you are stuck on a hard bug that resists quick fixes,
 short-form: Systematic debugging for hard bugs — rubber ducking, code tracing, hypothesis testing, logging.
 system-prompt-visibility: name
 file-read-visibility: none
+gate:
+  kind:
+    imatches: '^developer$'
 ---
 
 # Debugging Hard Bugs

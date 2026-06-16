@@ -4,6 +4,9 @@ when-and-why-to-read: When you have just created an implementation plan and need
 short-form: Validate an implementation plan against requirements and design — coverage, no ambiguities.
 system-prompt-visibility: name
 file-read-visibility: none
+gate:
+  kind:
+    imatches: '^(review|plan)($|/)'
 ---
 
 # Review Plan Against Requirements and Design

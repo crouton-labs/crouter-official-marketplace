@@ -4,6 +4,9 @@ when-and-why-to-read: When you are asked to verify a PR, confirm a fix works, or
 short-form: Verify a change works by running the app and observing behavior — PR review, manual testing, evidence.
 system-prompt-visibility: name
 file-read-visibility: none
+gate:
+  kind:
+    imatches: '^developer$'
 ---
 
 **Verification is runtime observation.** You build the app, run it,
@@ -116,6 +119,8 @@ the author doesn't have. Don't filter for "is this a bug." Filter for
 isolation doesn't mean the flow works — seams are where bugs hide.
 If users click buttons, test by clicking buttons, not by curling the
 API underneath.
+
+**Long-lived agents/brokers are part of the runtime surface.** If the change is an extension, prompt, provider hook, daemon-loaded module, or anything else loaded at process start, verification must say which running process loaded the new code and how you know. A fresh CLI smoke-load proves only fresh starts; it does not prove already-open chats/brokers. If the user will experience the change in an existing node, restart/revive that node or explicitly report stale-process exposure as unverified.
 
 ## Push on it
 

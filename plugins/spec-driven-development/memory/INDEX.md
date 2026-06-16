@@ -4,6 +4,9 @@ when-and-why-to-read: When you are running a spec-driven workflow — writing a 
 short-form: Spec-driven development — spec-writing plus review skills for requirements, design, and plan.
 system-prompt-visibility: name
 file-read-visibility: none
+gate:
+  kind:
+    imatches: '^(spec|plan|design|review)($|/)'
 ---
 
 # Spec-driven development

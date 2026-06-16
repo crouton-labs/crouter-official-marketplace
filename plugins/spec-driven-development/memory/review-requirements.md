@@ -4,6 +4,9 @@ when-and-why-to-read: When you have just created a requirements document and nee
 short-form: Validate requirements for EARS compliance, completeness, and consistency.
 system-prompt-visibility: name
 file-read-visibility: none
+gate:
+  kind:
+    imatches: '^(review|spec)($|/)'
 ---
 
 # Review Requirements

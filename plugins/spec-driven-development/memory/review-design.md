@@ -4,6 +4,9 @@ when-and-why-to-read: When you have just created a technical design and need it 
 short-form: Validate a technical design against requirements — coverage, feasibility, architectural soundness.
 system-prompt-visibility: name
 file-read-visibility: none
+gate:
+  kind:
+    imatches: '^(review|design)($|/)'
 ---
 
 # Review Design

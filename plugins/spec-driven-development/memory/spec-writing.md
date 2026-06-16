@@ -4,6 +4,9 @@ when-and-why-to-read: When you are starting a new feature and need to capture wh
 short-form: Define a feature through investigation and conversation — a behavior-focused spec before planning.
 system-prompt-visibility: name
 file-read-visibility: none
+gate:
+  kind:
+    imatches: '^spec($|/)'
 ---
 
 # Spec Writing

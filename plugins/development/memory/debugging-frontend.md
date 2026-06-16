@@ -4,6 +4,9 @@ when-and-why-to-read: When you are debugging a frontend issue and the debugging 
 short-form: Frontend-specific debugging techniques — component hierarchy, state, rendering.
 system-prompt-visibility: none
 file-read-visibility: none
+gate:
+  kind:
+    imatches: '^developer$'
 ---
 # Frontend Debugging
 

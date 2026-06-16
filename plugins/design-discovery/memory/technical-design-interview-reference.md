@@ -4,6 +4,9 @@ when-and-why-to-read: When you are applying the technical-design-interview skill
 short-form: Deep-dive companion to the technical-design-interview skill — worked examples and the full catalog the skill body points to.
 system-prompt-visibility: none
 file-read-visibility: none
+gate:
+  kind:
+    imatches: '^(design|general)($|/)'
 ---
 # technical-design-interview — reference
 
