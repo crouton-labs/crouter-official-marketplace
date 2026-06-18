@@ -18,7 +18,7 @@ Ask the user to describe their product at a high level. Accept any degree of spe
 
 Use **AskUserQuestion** to ask ALL design questions at once (4 questions total). For each question, provide 5–7 concrete options with rich descriptions.
 
-**Important:** Mix novel/unconventional directions with standard options. Don't just offer safe choices.
+**Important:** Mix novel/unconventional directions with standard options. Don't just offer safe choices. For each direction, name the **star of the show** — the typeface, object, image, motif, motion concept, or other seed that should command attention and tell the brand story.
 
 **Question 1 — Overall design language & vibe:**
 
@@ -55,7 +55,7 @@ Propose 5–7 emotional palettes with specific hex codes.
 
 **Question 4 — Typography & text personality:**
 
-Propose 5–7 typography systems.
+Propose 5–7 typography systems. Start each system with a heading/display font that embodies the site, then choose the supporting body, UI, and monospace fonts around that anchor. Offer font **combinations**, not isolated families; they may branch across families as long as every choice supports the anchor.
 
 - **Modern Sans Authority** — Headings: Inter/SF Pro, Body: System-ui, clean, professional, highly readable, tech-forward.
 - *(etc.)*
@@ -81,6 +81,12 @@ Before generating the final HTML, create a comprehensive markdown design specifi
 ## Design Philosophy
 [2–3 paragraphs synthesizing user choices into a cohesive vision]
 
+## Signature Visual Seed
+- Star of the show: [typeface/object/image/motif/etc.] — [why it embodies the brand story]
+- Visual rhymes: [repeated shapes, colors, textures, border treatments, shadows, motion cues, or other details across logo/buttons/backgrounds/images/etc.]
+- Depth & physicality: [3D forms, texture, glass, scroll motion, layering, or other tangible-digital treatments that support the star without competing with it]
+- Opacity hierarchy: [how opacity signals importance, with high-opacity primary content/actions and lower-opacity supporting context]
+
 ## Color System
 - Primary: [color] (#hex) — [usage description]
 - Secondary: [color] (#hex) — [usage description]
@@ -93,9 +99,9 @@ Before generating the final HTML, create a comprehensive markdown design specifi
   - Info: #[hex]
 
 ## Typography
-- Heading Font: [font name] — [where to use, sizing scale]
-- Body Font: [font name] — [where to use, sizing scale]
-- Monospace Font: [font name] — [where to use]
+- Heading/Display Anchor: [font name] — [why it embodies the site, where to use it, sizing scale]
+- Body Font: [font name] — [how it supports the heading anchor, where to use it, sizing scale]
+- UI/Monospace Fonts: [font names] — [how they support the anchor, where to use them]
 - Type Scale: [xs, sm, base, lg, xl, 2xl, etc.]
 - Line Heights: [heading vs body]
 - Font Weights: [which weights for what purpose]
@@ -142,7 +148,7 @@ Create a single self-contained HTML file.
 
 **Required sections:**
 
-1. **Design system overview** — color palette (hex codes), typography scale (families, sizes, weights), spacing system, border radius values, shadow system.
+1. **Design system overview** — color palette (hex codes), typography scale (families, sizes, weights), spacing system, border radius values, shadow system, signature visual seed, visual rhymes, depth/physicality rules, and opacity hierarchy.
 
 2. **Core components** — fully styled, interactive examples of buttons (all variants + states), forms (text, email, textarea, select, checkbox, radio), cards (basic, with image, with actions), navigation (header, mobile menu, breadcrumbs), alerts (success, error, warning, info), modals/dialogs, tables, lists, badges/tags, loading states, empty states. Skip components that won't apply to the product.
 
@@ -193,6 +199,10 @@ Create a single self-contained HTML file.
 - **No emojis ever** — use icons.
 - Describe complete aesthetic systems, not individual component details.
 - Always include 1–2 novel/unconventional options alongside standard choices.
+- Anchor every strong landing page or marketing surface around one star of the show — a typeface, object, image, motif, or motion idea that earns attention and carries the story — then make every other choice support it.
+- Build cohesion through visual rhyming: repeat small shapes, colors, textures, border details, shadows, image treatments, or motion cues across unrelated elements so the page feels intentionally unified.
+- Add depth by crossing tangible and digital qualities — 3D shapes, physical texture, glass, parallax/scroll motion, layered shadows — only when they make the interface feel real without distracting from the star.
+- Use opacity as hierarchy: high opacity for the most important content and actions, lower opacity for supporting or ambient material.
 - When the user is unsure, recommend based on product context with reasoning.
 - The final document should reflect ALL exploration choices made.
 - Interpret high-level choices into specific component implementations.
