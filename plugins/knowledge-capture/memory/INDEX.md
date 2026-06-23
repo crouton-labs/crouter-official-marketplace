@@ -2,7 +2,7 @@
 kind: knowledge
 when-and-why-to-read: When the user wants to think together, capture knowledge, or extract lessons from a session — collaborate, interview, breakthrough ideas, or save takeaways — open this dir because it holds those knowledge-capture skills.
 short-form: Knowledge-capture skills — collaborate, interview, epiphany (breakthrough), and learn (session takeaways).
-system-prompt-visibility: name
+system-prompt-visibility: preview
 file-read-visibility: none
 ---
 

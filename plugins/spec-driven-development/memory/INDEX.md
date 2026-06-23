@@ -2,7 +2,7 @@
 kind: knowledge
 when-and-why-to-read: When you are running a spec-driven workflow — writing a spec, or reviewing requirements, a design, or a plan — open this dir because it holds the spec-writing skill and the three review skills that gate each stage.
 short-form: Spec-driven development — spec-writing plus review skills for requirements, design, and plan.
-system-prompt-visibility: name
+system-prompt-visibility: preview
 file-read-visibility: none
 gate:
   kind:
