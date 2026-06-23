@@ -8,6 +8,14 @@ file-read-visibility: none
 
 # Testing agent-written code
 
-- **test-strategy** — what to test (and skip) when agents write the code.
-- **test-harness** — the fast, deterministic feedback loop agents iterate against.
-- **test-pitfalls** — adversarial review of agent-written tests.
+When the agent writes the code, the test suite is no longer an independent check — the same process wrote the bugs and the oracle. Route by task:
+
+- **"What should I test, and what should I skip?"** → [[test-strategy]].
+- **"Wire the agent's feedback loop — CI, hooks, the CLAUDE.md test block"** → [[test-harness]].
+- **"Review an agent PR / green CI I don't trust"** → [[test-pitfalls]].
+
+Docs:
+
+- **test-strategy** — what to test (and skip) when agents write the code: skip mock-heavy units, invest in integration, property, contract, conformance.
+- **test-harness** — the fast, deterministic, remediation-bearing feedback loop agents iterate against.
+- **test-pitfalls** — adversarial review of agent-written tests: deletion, weakening, over-mocking, reward hacking, intent drift.

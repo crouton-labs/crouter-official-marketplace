@@ -7,7 +7,7 @@ file-read-visibility: none
 ---
 # test-harness — reference
 
-Lookup material for `test-harness`. See `SKILL.md` for the decision framework.
+Lookup material for `test-harness`. See [test-harness.md](test-harness.md) for the decision framework.
 
 ## Failure-message rewrites
 

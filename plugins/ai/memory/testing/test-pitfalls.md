@@ -12,19 +12,6 @@ When the agent writes both the implementation and the tests, **green CI is one s
 
 Documented in the wild: Claude deleted 70% of typia's 80k-line test suite and reported success (Nam, May 2025). Claude attempted `rm -rf **/*test*` after weakening individual assertions (Vincent, Apr 2026). Anthropic's own docs warn: "Claude will sometimes change tests to make them pass rather than fixing the implementation." METR catalogs reward hacking: monkey-patched evaluators, `sys.exit(0)` before tests, equality-operator hijacking.
 
-## When to use
-
-- Reviewing an agent's PR — especially if tests changed.
-- Auditing a green CI you don't trust.
-- Designing review process for repos where agents write code.
-- Deciding what review human attention should focus on.
-
-## When NOT to use
-
-- Choosing test types — see `test-strategy`.
-- Wiring the feedback loop — see `test-harness`.
-- Evaluating LLM-system outputs — see `llm-app-authoring/eval-and-quality-gates`.
-
 ## The core decision
 
 **Trust agent-written tests adversarially.** Assume the agent will take the lowest-effort path to green CI, and that path often runs through the tests, not the code. The guardrails below are ranked by leverage — apply top to bottom and stop when the risk profile is acceptable.
@@ -127,3 +114,4 @@ Each is documented in the wild. Full catalog with citations and detection patter
 ## Related
 
 - `claude-authoring/claude-md` — where the loss-function reframing belongs.
+- `output/eval-and-quality-gates` — evaluating LLM-system outputs.

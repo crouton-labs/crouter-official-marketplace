@@ -360,7 +360,7 @@ z.string().refine(s => s !== "unknown" && s !== "N/A", "Must be a specific value
 
 **Symptom**: valid tokens, incomplete object, stream ends unexpectedly.
 **Cause**: `max_tokens` hit before generation completed.
-**Fix**: set `max_tokens` generously (2-3x your expected output). FSM-based frameworks (vLLM + XGrammar) can resume from a saved FSM state; in hosted APIs, retry is the only option.
+**Fix**: set `max_tokens` generously. FSM-based frameworks (vLLM + XGrammar) can resume from a saved FSM state; in hosted APIs, retry is the only option.
 
 ### 3. Reasoning degradation
 
@@ -374,7 +374,7 @@ z.string().refine(s => s !== "unknown" && s !== "N/A", "Must be a specific value
 ### 4. Constraint budget exceeded (Anthropic)
 
 **Symptom**: API error on schema submission, not on generation.
-**Cause**: >24 optional parameters or >16 union-typed parameters. Each optional field roughly doubles grammar state space; each union creates exponential compilation cost.
+**Cause**: >24 optional parameters or >16 union-typed parameters. Each union creates exponential compilation cost.
 **Fix**: flatten the schema (combine related optional fields into a single nullable description string), reduce union depth.
 
 ### 5. Infinite token loop

@@ -16,7 +16,7 @@ constraint → solution.
 
 ### Streaming & progressive rendering
 1. **Token streaming** — latency feels broken without feedback → any text/code gen → avoid when output is structured & not partially actionable, or it leaks internal monologue.
-2. **Skeleton/shimmer** — blank gap before first token → before first token / tool results / known-shape components → avoid if content arrives <300ms (flash).
+2. **Skeleton/shimmer** — blank gap before first token → before first token / tool results / known-shape components.
 3. **Streaming tool inputs** — tool calls opaque while args generate → show partial inputs + target skeleton (state model: input-streaming → input-available → output-available) → avoid for destructive tools (half-formed arg → early approve).
 4. **Generative/dynamic UI** — text is lossy for structured/interactive results → map tool output to components → avoid gratuitous componentizing of prose; sandbox untrusted UI.
 
@@ -50,7 +50,7 @@ constraint → solution.
 
 ### Background / async + handoff
 19. **Delegate-and-notify** — long tasks shouldn't block; babysitting defeats the point → fire-and-forget in a sandbox, notify on done/needs-you, hand back a summary not a transcript → avoid for short interactive or clarification-heavy tasks.
-20. **"Needs you" escalation / clarify-up-front** — confident catastrophic guesses under ambiguity → ask before starting + escalate on genuine ambiguity (healthy ~5–15%) → avoid over-asking in clear cases.
+20. **"Needs you" escalation / clarify-up-front** — confident catastrophic guesses under ambiguity → ask before starting + escalate on genuine ambiguity → avoid over-asking in clear cases.
 
 ### Multi-agent / parallel
 21. **Mission control / fan-out dashboard** — concurrent agents untrackable in chat → one list: status, last response, needs-you, inline reply, jump-in → avoid for single-agent.
@@ -65,7 +65,7 @@ constraint → solution.
 26. **Confidence / uncertainty surfacing** — automation bias → calibrated cue on variable/high-stakes/ambiguous output; should make users review low-confidence more → avoid on deterministic ops; uncalibrated is worse than none.
 
 ### Cost / budget
-27. **Tiered budget warnings + auto-compaction** — sudden mid-task limit failure destroys work → continuous meter, tiered ~70/85/90% with action → don't bury until failure or nag on trivial usage.
+27. **Tiered budget warnings + auto-compaction** — sudden mid-task limit failure destroys work → continuous meter, tiered with action → don't bury until failure or nag on trivial usage.
 28. **Run cost/time estimate** — delegating blind to spend/latency → est. before long runs + running tally + caps that halt → avoid metering free single-shots.
 
 ### Empty / error / recovery

@@ -71,7 +71,7 @@ tool = {
 }
 ```
 
-`input_examples` is a beta feature (Nov 2025). Improved complex parameter accuracy from **72% to 90%** in Anthropic's internal testing. Token cost: ~20–50 tokens for simple examples. Not compatible with `defer_loading` (tool search).
+`input_examples` is a beta feature (Nov 2025). Improved complex parameter accuracy from **72% to 90%** in Anthropic's internal testing. Not compatible with `defer_loading` (tool search).
 
 ### OpenAI Format (strict mode)
 
@@ -286,7 +286,6 @@ Return failures as tool execution errors in the result body, not as protocol-lev
 
 - BFCL v4 benchmark average: **3 tool choices per test** — most benchmarks massively underrepresent real-world tool counts
 - OpenAI considers <100 tools and <20 args per tool "in-distribution" for gpt-5.2
-- A 2025 study found accuracy degrades **85–91%** as catalog size approaches 128K tokens
 - Mitigation at scale: deferred loading (Anthropic), tool search tool, routing layers
 
 ### Natural Language Tools (2025, arXiv:2510.14453)

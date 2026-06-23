@@ -7,7 +7,7 @@ file-read-visibility: none
 ---
 # test-strategy — reference
 
-Lookup material for `test-strategy`. See `SKILL.md` for the decision framework.
+Lookup material for `test-strategy`. See [test-strategy.md](test-strategy.md) for the decision framework.
 
 ## Per-task default table
 
@@ -18,7 +18,7 @@ Lookup material for `test-strategy`. See `SKILL.md` for the decision framework.
 | Bugfix | Behavioral contract test that *would have caught it* | If you can't write that test, the bug isn't understood. |
 | Refactor (no behavior change) | Run existing integration suite; don't write new tests | If the agent is writing tests during a refactor, it's not a refactor. |
 | Cross-language reimplementation | Conformance suite | Same fixtures, both implementations, both must pass. |
-| LLM output / generated content | Approved fixtures + structural assertions + (optional) LLM-judge rubric | See `llm-app-authoring/eval-and-quality-gates`. |
+| LLM output / generated content | Approved fixtures + structural assertions + (optional) LLM-judge rubric | See `output/eval-and-quality-gates`. |
 | UI work | Playwright E2E on the user journey | Component-tree snapshots are anti-investment. |
 | Performance-sensitive code | Property test for correctness + benchmark with floor | Benchmarks belong in CI with explicit floors, not just dashboards. |
 | Schema / API contract change | Contract test + consumer-driven contract (Pact-style) | Catches breaking changes the agent didn't realize were breaking. |

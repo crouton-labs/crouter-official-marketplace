@@ -254,7 +254,7 @@ Claim: {claim}"""}],
     return verified / len(claims)
 ```
 
-**Threshold guidance:** Score below 0.8 indicates the answer contains claims not supported by the retrieved context — a RAG faithfulness failure.
+**Threshold guidance:** A low score indicates the answer contains claims not supported by the retrieved context — a RAG faithfulness failure.
 
 ---
 
@@ -330,7 +330,7 @@ async function runAssertions(
 }
 ```
 
-**Golden set growth rule:** Start with ~30 examples from real production traffic. Add an example every time a new failure mode is discovered. Stop expanding when your last 20 additions produced no new failure categories — you've found your distribution.
+**Golden set growth rule:** Start with examples from real production traffic. Add an example every time a new failure mode is discovered. Stop expanding when recent additions produce no new failure categories — you've found your distribution.
 
 ---
 
@@ -400,7 +400,7 @@ From Zheng et al. (2023) and the CALM framework (2024):
 - Measure retrieval and generation separately — most RAG failures are retrieval failures.
 
 **Summarization:**
-- NLI-based factual consistency: ROC-AUC 0.85 after finetuning (vs 0.56 naive). Reference-based approaches requiring gold summaries are impractical at scale.
+- NLI-based factual consistency. Reference-based approaches requiring gold summaries are impractical at scale.
 
 **Code generation:**
 - pass@k: generate k completions, check if any pass tests. Tests functional correctness, not text similarity.
@@ -417,7 +417,7 @@ From Zheng et al. (2023) and the CALM framework (2024):
 | Metric | Why it fails |
 |--------|-------------|
 | BLEU | "Poor correlation with human judgements" (Papineni et al. → real-world usage). Bottom of MT leaderboards. |
-| ROUGE | Can't capture factuality. 62.6% of papers using it provided no implementation details. |
+| ROUGE | Can't capture factuality. |
 | Perplexity | Measures model confidence, not output quality. |
 | Generic cosine similarity | Class distributions overlap too much for classification tasks. |
 | Likert scales (1-5) | Subjective, unactionable, inconsistent across annotators. |

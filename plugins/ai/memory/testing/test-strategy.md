@@ -10,20 +10,7 @@ file-read-visibility: none
 
 The constraint flipped. Authoring time was the budget for testing; now it's noise. Agents write tests cheaply, regenerate them on every refactor, and over-mock by reflex. The question is no longer *can we afford this test* — it's *does this test catch the bugs an agent ships*.
 
-Empirical floor: agent-written unit tests are mostly noise. Hora & Robbes (arXiv 2602.00409) — agents add mocks at 36% vs humans' 26%; 95% are plain `mock`. Meta ACH found 100%-coverage suites at 4% mutation score. arXiv 2602.07900 — test-writing is **uncorrelated with task solve rate** by McNemar test. Godmode found 92% of unguarded sessions ship inadequate coverage.
-
-## When to use
-
-- Planning a new test suite, or deciding what to delete from an old one.
-- Reviewing an agent PR and asking whether the tests are pulling weight.
-- Choosing a default test type for a new module.
-- Pushing back on "we need more unit tests" instincts.
-
-## When NOT to use
-
-- Testing **LLM systems themselves** (judges, RAG, prompt regressions) — see `llm-app-authoring/eval-and-quality-gates`.
-- Wiring the agent's feedback loop — see `test-harness`.
-- Designing guardrails against cheating — see `test-pitfalls`.
+Empirical floor: agent-written unit tests are mostly noise. Hora & Robbes (arXiv 2602.00409) — agents add mocks at 36% vs humans' 26%; 95% are plain `mock`. Meta ACH found 100%-coverage suites at 4% mutation score. arXiv 2602.07900 — test-writing is **uncorrelated with task solve rate** by McNemar test.
 
 ## The core decision
 
@@ -65,4 +52,4 @@ See [test-strategy-reference.md](test-strategy-reference.md) for the per-task de
 
 ## Related
 
-- `llm-app-authoring/eval-and-quality-gates` — testing LLM systems themselves (different problem).
+- `output/eval-and-quality-gates` — testing LLM systems themselves (different problem).

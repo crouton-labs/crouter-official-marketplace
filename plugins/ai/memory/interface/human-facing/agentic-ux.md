@@ -10,21 +10,6 @@ file-read-visibility: none
 
 The interface contract changed. Pre-agentic UX optimized the *execution* path — how fast a user drives the tool to a result. With an agent, execution is nearly free; the user's cost moved to the two ends: **specifying intent** and **verifying output**. Design the ends, not the middle. A chat box optimizes neither.
 
-Audience: future LLM agent sessions designing or reviewing agent-facing UX.
-
-## When to use
-
-- Designing how a human hands a goal to an agent, steers it mid-run, or signs off on its work.
-- Reviewing an agentic feature and asking "does the human actually stay in control / can they verify this".
-- Choosing an autonomy level, a confirmation policy, or where to put friction.
-- Pushing back on "just add a chat interface" or "make it fully autonomous".
-
-## When NOT to use
-
-- Concrete UI patterns (streaming, diffs, tool-call cards, alt-screen) — [agentic-ui](agentic-ui.md).
-- A CLI **consumed by** an agent (agent is the user) — [cli-design](../agent-facing/cli-design.md).
-- Orchestrating agents internally, not the human seam — [multi-agent-orchestration](../../orchestration/multi-agent-orchestration.md).
-
 ## The core reframe
 
 Agentic UX is **delegation**, not conversation. The job is not a good dialogue; it is that the user can (1) express intent without prose mastery, (2) see what the agent is doing and why, (3) verify the result cheaply, (4) intervene at any point, (5) recover when it is wrong. Optimize *time-to-verify*, not time-to-complete.
@@ -45,7 +30,7 @@ Agentic UX is **delegation**, not conversation. The job is not a good dialogue; 
 
 **7. The agent will be wrong — design for graceful failure and cheap recovery.** Bound the action space; prefer reversible actions; provide efficient correction (guided > freeform), checkpoints/undo, and an always-available kill switch that actually halts in-flight work. Set stopping conditions (max iterations, checkpoints, blockers). A well-handled failure *builds* trust.
 
-**8. Oversight does not scale linearly — design oversight, not control.** As autonomy and fleet size rise, approve *plans*, not step sequences; automate the watching (agents watching agents); keep the human practiced and in-context. Ironies of automation: more capable automation leaves the human the hardest cases after their skill and situational awareness have atrophied.
+**8. Oversight does not scale linearly — design oversight, not control.** As autonomy and fleet size rise, approve *plans*, not step sequences; automate the watching (agents watching agents — orchestrating the agents themselves, not the human seam, is [multi-agent-orchestration](../../orchestration/multi-agent-orchestration.md)); keep the human practiced and in-context. Ironies of automation: more capable automation leaves the human the hardest cases after their skill and situational awareness have atrophied.
 
 **9. Two user populations coexist: "show me the thinking" vs "let it rip."** Support both modes in one product; default by stakes (more legibility as consequence rises). Don't force the let-it-rip user through step approvals, or the inspector through a black box.
 

@@ -10,19 +10,6 @@ file-read-visibility: none
 
 The screen — or the terminal — is where the human reads what the agent is doing and decides whether to trust it. This is the pattern layer: *what to render and when*. The judgment layer (trust, autonomy, friction, the first principles) is the sibling [agentic-ux](agentic-ux.md); build on it, don't restate it.
 
-Audience: future LLM agent sessions building or reviewing agent-facing UI, web or terminal.
-
-## When to use
-
-- Building UI that shows an agent's work: streaming, reasoning, tool calls, diffs, plans, multi-agent.
-- Reviewing an agentic UI: "can the user see state, verify changes, and intervene".
-- Choosing chat vs canvas vs ambient vs dashboard; alt-screen TUI vs inline scrollback.
-
-## When NOT to use
-
-- The interaction model, trust, autonomy, friction policy — sibling [agentic-ux](agentic-ux.md) (read it first; this skill assumes it).
-- A CLI **consumed by** an agent (the agent is the user, not a human at a TTY) — [cli-design](../agent-facing/cli-design.md). The only shared seam is the TTY-vs-pipe duality below.
-
 ## The core decision
 
 **Pick the surface by interaction shape; don't default to chat.** Agentic work is a long internal monologue, not a back-and-forth — forcing it into a chat scroll buries the result and the controls. Four surfaces, coexisting (consensus is parallel, not winner-take-all):

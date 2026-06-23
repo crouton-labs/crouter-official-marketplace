@@ -41,9 +41,9 @@ Self-contained instructions are non-negotiable. Passing references to "the exist
 > "Look at how the existing middleware works and implement something similar for auth."
 
 **Good instruction:**
-> "Implement auth middleware per `context/requirements-auth.md` and `context/design-auth.md`. Reference `context/conventions.md` for middleware patterns. Write implementation to `src/middleware/auth.ts`. If you find design gaps or ambiguities, stop and report via `sisyphus report`."
+> "Implement auth middleware per `context/requirements-auth.md` and `context/design-auth.md`. Reference `context/conventions.md` for middleware patterns. Write implementation to `src/middleware/auth.ts`. If you find design gaps or ambiguities, stop and report via `<report-cmd>`."
 
-Every agent instruction needs: an objective, output format/location, scope boundaries, and a reporting protocol. [[Anthropic (2024) — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents)]
+Every agent instruction needs: an objective, output format/location, scope boundaries, and a reporting protocol. [Anthropic (2024) — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents)
 
 ---
 
@@ -51,9 +51,9 @@ Every agent instruction needs: an objective, output format/location, scope bound
 
 The most robust communication mechanism. Agents write structured artifacts to a shared filesystem rather than passing everything through conversation history.
 
-**Why not message passing?** Every hand-off through conversation history puts shared memory at risk. When one model's output exceeds another's context window, critical details vanish silently. [[Cemri et al. (2025) — Why Do Multi-Agent LLM Systems Fail?](https://arxiv.org/abs/2503.13657)]
+**Why not message passing?** Every hand-off through conversation history puts shared memory at risk. When one model's output exceeds another's context window, critical details vanish silently. [Cemri et al. (2025) — Why Do Multi-Agent LLM Systems Fail?](https://arxiv.org/abs/2503.13657)
 
-**Anthropic's approach**: "Subagent output goes to a filesystem to minimize miscommunication, and specialized agents can create outputs that persist independently." [[Anthropic (2025) — Multi-Agent Research System](https://www.anthropic.com/engineering/multi-agent-research-system)]
+**Anthropic's approach**: "Subagent output goes to a filesystem to minimize miscommunication, and specialized agents can create outputs that persist independently." [Anthropic (2025) — Multi-Agent Research System](https://www.anthropic.com/engineering/multi-agent-research-system)
 
 ```
 $SESSION_DIR/context/
@@ -121,9 +121,9 @@ orchestrator
 
 ## Pipeline with Critic Loops
 
-Linear pipelines without feedback are "fundamentally vulnerable" — a corrupted output propagates downstream unchecked, compounding at each stage. [[MAS-FIRE (2026) — Fault Injection](https://arxiv.org/html/2602.19843)]
+Linear pipelines without feedback are "fundamentally vulnerable" — a corrupted output propagates downstream unchecked, compounding at each stage. [MAS-FIRE (2026) — Fault Injection](https://arxiv.org/html/2602.19843)
 
-A critique-refinement loop after key stages neutralizes over 40% of cascading faults that cause catastrophic collapse in linear workflows. [[MAS-FIRE (2026)](https://arxiv.org/html/2602.19843)]
+A critique-refinement loop after key stages neutralizes over 40% of cascading faults that cause catastrophic collapse in linear workflows. [MAS-FIRE (2026)](https://arxiv.org/html/2602.19843)
 
 **Pattern: add a gate after each major stage**
 
@@ -146,7 +146,7 @@ graph.add_conditional_edges(
 
 ## Two-Layer Review: Validate Before Acting
 
-The Sisyphus review pattern filters noise before findings reach implementers:
+The two-layer review pattern filters noise before findings reach implementers:
 
 ```
 Phase 1: Parallel specialized reviewers
@@ -191,9 +191,9 @@ The living draft acts as persistent memory across researcher batches. Each resea
 |---|---|---|---|
 | File-based artifacts | High — persists across lifecycles | Full — agents write concurrently | Primary communication between agents |
 | Message queue | Medium — async, one-directional | Full | Agents flagging problems to orchestrator |
-| Shared state (LangGraph reducers) | High with mutex | Concurrent with locks | Deterministic execution graphs [[LangChain](https://www.langchain.com/langgraph)] |
-| Conversation handoff (Swarm) | Medium | None — one agent at a time | Customer service routing [[OpenAI](https://github.com/openai/swarm)] |
-| GroupChat (AutoGen) | Low — context pollution on long runs | Simulated via speaker selection | Debate/deliberation patterns [[Microsoft](https://arxiv.org/abs/2308.08155)] |
+| Shared state (LangGraph reducers) | High with mutex | Concurrent with locks | Deterministic execution graphs [LangChain](https://www.langchain.com/langgraph) |
+| Conversation handoff (Swarm) | Medium | None — one agent at a time | Customer service routing [OpenAI](https://github.com/openai/swarm) |
+| GroupChat (AutoGen) | Low — context pollution on long runs | Simulated via speaker selection | Debate/deliberation patterns [Microsoft](https://arxiv.org/abs/2308.08155) |
 
 Conversation-based communication (AutoGen GroupChat) creates coupling — all agents see all messages, leading to context pollution on long conversations. File-based artifacts naturally achieve selective context: agents read only what's relevant to their task.
 
@@ -201,9 +201,9 @@ Conversation-based communication (AutoGen GroupChat) creates coupling — all ag
 
 ## Token Budget: What Actually Drives Cost
 
-Multi-agent systems cost ~15x more in tokens than single-agent chat. Token usage explains 80% of performance variance. [[Anthropic (2025) — Multi-Agent Research System](https://www.anthropic.com/engineering/multi-agent-research-system)]
+Multi-agent systems cost ~15x more in tokens than single-agent chat. Token usage explains 80% of performance variance. [Anthropic (2025) — Multi-Agent Research System](https://www.anthropic.com/engineering/multi-agent-research-system)
 
-The biggest token consumer is usually tool outputs, not prompts. Shopify found tool outputs consume "100x more tokens than user messages." [[ZenML (2025) — 1,200 Production Deployments](https://www.zenml.io/blog/what-1200-production-deployments-reveal-about-llmops-in-2025)]
+The biggest token consumer is usually tool outputs, not prompts. Shopify found tool outputs consume "100x more tokens than user messages." [ZenML (2025) — 1,200 Production Deployments](https://www.zenml.io/blog/what-1200-production-deployments-reveal-about-llmops-in-2025)
 
 **Savings levers in priority order:**
 
@@ -211,15 +211,15 @@ The biggest token consumer is usually tool outputs, not prompts. Shopify found t
 2. **Prune tool outputs** — truncate large file reads, summarize search results before passing to next agent
 3. **Stateless orchestrator** — orchestrator gets a compressed state summary each cycle, not full history
 4. **Model matching** — workers on well-scoped tasks don't need Opus; Sonnet or Haiku suffice
-5. **Parallel tool calls** — reduces wall-clock time by up to 90% without reducing token cost, but saves the human's time
+5. **Parallel tool calls** — reduces wall-clock time without reducing token cost, but saves the human's time
 
-**Context beyond 200K tokens**: Use external memory. Agent summarizes completed work phases; the summary replaces the full history in the next cycle. [[Anthropic (2024) — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents)] For comprehensive context strategies, see [context-management](../prompting/context-management.md).
+**Context beyond 200K tokens**: Use external memory. Agent summarizes completed work phases; the summary replaces the full history in the next cycle. [Anthropic (2024) — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents) For comprehensive context strategies, see [context-management](../agent-context/context-management.md).
 
 ---
 
 ## Failure Mode Taxonomy (MASFT)
 
-From analysis of 1,600+ multi-agent traces, failures cluster in three categories. **37% are inter-agent coordination failures** — not individual LLM limitations. [[Cemri, Pan, Yang et al. (2025) — Why Do Multi-Agent LLM Systems Fail?](https://arxiv.org/abs/2503.13657)]
+From analysis of 1,600+ multi-agent traces, failures cluster in three categories. **37% are inter-agent coordination failures** — not individual LLM limitations. [Cemri, Pan, Yang et al. (2025) — Why Do Multi-Agent LLM Systems Fail?](https://arxiv.org/abs/2503.13657)
 
 **FC2: Inter-Agent Misalignment (37% of failures)**
 - Task derailment — agents overstep scope
@@ -227,7 +227,7 @@ From analysis of 1,600+ multi-agent traces, failures cluster in three categories
 - Ignored input — agents don't incorporate upstream output
 - Conversation reset — context lost at handoff
 
-Prompt improvements alone yield only +14% gains against these failures. They require structural solutions — explicit scope boundaries, file-based handoffs (no context loss), and validation gates before agents act on upstream work.
+They require structural solutions — explicit scope boundaries, file-based handoffs (no context loss), and validation gates before agents act on upstream work.
 
 **FC1: Specification Failures**
 - Disobeying role specification — agents overstep their mandate
@@ -265,12 +265,12 @@ Three agents reading the same design artifact and working on independent concern
 
 ## Operational Concerns
 
-**Monitoring**: Track per-agent token usage, wall-clock time, and success/failure rates. Production failure rates run 41-86.7% depending on task complexity. Budget for retries. [[Cemri et al. (2025)](https://arxiv.org/abs/2503.13657)]
+**Monitoring**: Track per-agent token usage, wall-clock time, and success/failure rates. Production failure rates run 41-86.7% depending on task complexity. Budget for retries. [Cemri et al. (2025)](https://arxiv.org/abs/2503.13657)
 
 **Debugging**: Preserve agent prompts, tool calls, and artifacts for post-mortem. When a cycle goes wrong, the rendered agent prompts are the first thing to check — most failures trace to missing context or vague scope in the instruction.
 
 **Rollback**: Cycle-boundary snapshots allow reverting to known-good state. If cycle 12 produces bad output, you can roll back to cycle 11's artifacts and respawn with revised agent instructions.
 
-**Graceful degradation**: Set circuit breakers on token cost and turn count. Define human handoff protocols before you need them — not during an incident. [[ZenML (2025)](https://www.zenml.io/blog/what-1200-production-deployments-reveal-about-llmops-in-2025)]
+**Graceful degradation**: Set circuit breakers on token cost and turn count. Define human handoff protocols before you need them — not during an incident. [ZenML (2025)](https://www.zenml.io/blog/what-1200-production-deployments-reveal-about-llmops-in-2025)
 
 **State concurrency**: Use a session-level mutex on shared state writes. Multiple agents writing to the same JSON file without locking causes read-modify-write races that corrupt state silently.

@@ -10,7 +10,7 @@ file-read-visibility: none
 
 Multi-agent systems are not an upgrade from single-agent. They're a different architecture with a different cost structure, failure profile, and operating envelope. The decision to use them should be deliberate, not aspirational.
 
-The research is unambiguous: multi-agent systems show **+81% improvement on parallelizable tasks and -70% degradation on sequential tasks** — the same architecture, opposite outcomes depending on decomposition. [[Google Research (2025)](https://research.google/blog/towards-a-science-of-scaling-agent-systems-when-and-why-agent-systems-work/)]
+The research is unambiguous: multi-agent systems show **+81% improvement on parallelizable tasks and -70% degradation on sequential tasks** — the same architecture, opposite outcomes depending on decomposition. [Google Research (2025)](https://research.google/blog/towards-a-science-of-scaling-agent-systems-when-and-why-agent-systems-work/)
 
 For implementation patterns and code, see [multi-agent-orchestration-reference.md](multi-agent-orchestration-reference.md).
 
@@ -23,7 +23,7 @@ Use multi-agent when the task has genuine parallelism — independent subtasks t
 - **Parallel quality**: Review alongside implementation (different concerns, same codebase)
 - **Role specialization**: Tasks requiring different expertise — security review vs. code quality vs. performance profiling
 
-The economic case requires high-value tasks. Multi-agent token cost runs ~15x higher than single-agent chat. [[Anthropic (2025) — How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system)]
+The economic case requires high-value tasks. Multi-agent token cost runs ~15x higher than single-agent chat. [Anthropic (2025) — How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system)
 
 ## When Multi-Agent Hurts
 
@@ -32,9 +32,9 @@ Don't use multi-agent for:
 - **Sequential tasks with shared reasoning state** — planning, feature design, anything where step N depends on step N-1's reasoning
 - **Simple, well-scoped tasks** — a single agent doesn't need coordination overhead
 - **High file overlap** — agents touching the same files will conflict
-- **Tasks where single-agent already hits ~45%+ accuracy** — above this threshold, adding agents yields diminishing or negative returns [[Google Research (2025)](https://research.google/blog/towards-a-science-of-scaling-agent-systems-when-and-why-agent-systems-work/)]
+- **Tasks where single-agent already hits ~45%+ accuracy** — above this threshold, adding agents yields diminishing or negative returns [Google Research (2025)](https://research.google/blog/towards-a-science-of-scaling-agent-systems-when-and-why-agent-systems-work/)
 
-Independent multi-agent systems without orchestrator validation **amplify errors 17.2x**. Centralized systems with orchestrators contain this to 4.4x. [[Google Research (2025)](https://research.google/blog/towards-a-science-of-scaling-agent-systems-when-and-why-agent-systems-work/)]
+Independent multi-agent systems without orchestrator validation **amplify errors 17.2x**. Centralized systems with orchestrators contain this to 4.4x. [Google Research (2025)](https://research.google/blog/towards-a-science-of-scaling-agent-systems-when-and-why-agent-systems-work/)
 
 ## Architecture Patterns
 
@@ -44,13 +44,13 @@ Independent multi-agent systems without orchestrator validation **amplify errors
 
 **Key constraint**: Orchestrator owns the quality bar. Workers don't decide if they're done — the orchestrator does.
 
-**Production evidence**: Anthropic's internal research system uses Opus as orchestrator with Sonnet subagents, outperforming single-agent Opus 4 by 90.2%. Typical spawn count: 3-5 subagents. [[Anthropic (2025)](https://www.anthropic.com/engineering/multi-agent-research-system)]
+**Production evidence**: Anthropic's internal research system uses Opus as orchestrator with Sonnet subagents, outperforming single-agent Opus 4 by 90.2%. Typical spawn count: 3-5 subagents. [Anthropic (2025)](https://www.anthropic.com/engineering/multi-agent-research-system)
 
 ### Pipeline (Sequential Chain)
 
 **Use when**: Natural sequential dependencies — plan → implement → review → validate.
 
-**Critical vulnerability**: Corrupted output from one stage compounds at each subsequent step. [[MAS-FIRE (2026)](https://arxiv.org/html/2602.19843)]
+**Critical vulnerability**: Corrupted output from one stage compounds at each subsequent step. [MAS-FIRE (2026)](https://arxiv.org/html/2602.19843)
 
 **Mitigation**: Never run 2+ sequential stages without a review gate. Critique-refinement cycles after key stages neutralize cascading faults.
 
@@ -58,7 +58,7 @@ Independent multi-agent systems without orchestrator validation **amplify errors
 
 **Use when**: Correctness matters more than speed — math reasoning, security review, plan validation.
 
-**Sisyphus review pattern** (two-layer filtering):
+**Two-layer review pattern** (two-layer filtering):
 ```
 review coordinator (opus)
   ├── reuse reviewer    (sonnet)
@@ -86,17 +86,15 @@ Prevents context exhaustion on sessions that run for hours. State persists via f
 
 ## The Coordination Tax
 
-Every handoff between agents is a risk point. The most common failure category in production multi-agent systems — **37% of all failures** — is inter-agent coordination breakdown, not individual LLM limitations. [[Cemri, Pan, Yang et al. (2025) — Why Do Multi-Agent LLM Systems Fail?](https://arxiv.org/abs/2503.13657)]
-
-Specific threshold: 16+ tools per agent creates disproportionate performance overhead.
+Every handoff between agents is a risk point. The most common failure category in production multi-agent systems — **37% of all failures** — is inter-agent coordination breakdown, not individual LLM limitations. [Cemri, Pan, Yang et al. (2025) — Why Do Multi-Agent LLM Systems Fail?](https://arxiv.org/abs/2503.13657)
 
 ## Common Failure Modes
 
 **1. Vague agent instructions** — "Look at the existing auth middleware" fails. "Implement auth middleware per `context/requirements-auth.md` and `context/design-auth.md`. Reference `context/conventions.md` for middleware patterns." works. Each agent instruction must be self-contained.
 
-**2. Spawning too many agents** — Early versions of Anthropic's research system spawned 50+ subagents for simple queries. Simple fact-finding: 1 agent. Direct comparisons: 2-4. Complex research: 10+. [[Anthropic (2025)](https://www.anthropic.com/engineering/multi-agent-research-system)]
+**2. Spawning too many agents** — Early versions of Anthropic's research system spawned 50+ subagents for simple queries. Simple fact-finding: 1 agent. Direct comparisons: 2-4. Complex research: 10+. [Anthropic (2025)](https://www.anthropic.com/engineering/multi-agent-research-system)
 
-**3. Framework over-engineering** — "The most successful implementations weren't using complex frameworks or specialized libraries." [[Anthropic (2024) — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents)]
+**3. Framework over-engineering** — "The most successful implementations weren't using complex frameworks or specialized libraries." [Anthropic (2024) — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents)
 
 ## Prompt Asymmetry: Orchestrators vs Workers
 

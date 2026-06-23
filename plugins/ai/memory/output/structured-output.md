@@ -49,7 +49,7 @@ Put a `reasoning` or `thinking` field **first** in your schema. LLMs generate ke
 - Specific field descriptions: "Full legal name including first and last" beats "The name". Specific descriptions reduced errors by up to 64.7% (PARSE).
 - String enums for constrained choices — reduces downstream cleaning by ~70% (PARSE).
 - `minimum`/`maximum`/`pattern` — neither Anthropic nor OpenAI enforces these at the grammar level. Validate post-generation.
-- Max 24 optional parameters (Anthropic hard limit). Each optional field roughly doubles grammar state space.
+- Max 24 optional parameters (Anthropic hard limit).
 - Recursive schemas not supported on Anthropic.
 
 These patterns apply directly to [tool-design](../interface/agent-facing/tool-design.md) — tool schemas are structured output schemas.

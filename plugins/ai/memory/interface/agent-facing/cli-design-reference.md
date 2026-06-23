@@ -150,7 +150,7 @@ Effects
 - `follow_up` tells the agent the recommended next call as a literal command string. Cheaper than the agent rederiving it from scratch.
 - Effects names every persistent change. Paths are informational — the agent reads via `crtr job`, not the filesystem directly.
 - No `--wait` flag on `claim`. If the agent wants to block, it composes: `claim` then `job result --wait`. The primitive stays simple; composition handles policy.
-- `claim` is a verb on `task` — the producer — and it *creates* a job; `crtr job` stays the producer-agnostic monitoring surface (logs/result/status/cancel). If a second producer of jobs appeared (a scheduler, a queue), it would compose with the same `crtr job` leaves rather than wedging its creation verbs into `job`. See *Creator verbs on the primitive* in SKILL.md.
+- `claim` is a verb on `task` — the producer — and it *creates* a job; `crtr job` stays the producer-agnostic monitoring surface (logs/result/status/cancel). If a second producer of jobs appeared (a scheduler, a queue), it would compose with the same `crtr job` leaves rather than wedging its creation verbs into `job`. See *Creator verbs on the primitive* in cli-design.md.
 
 ---
 
@@ -269,8 +269,8 @@ Effects
 | Pattern | Example | Guide section |
 |---|---|---|
 | Root structure | `crtr -h` | The tree |
-| Parent-level representation assembled from children | `crtr -h` listing + `Jobs:` block | Principle 16, Each node owns its parent-level representation |
-| Subtree-contributed dynamic block at root | `crtr -h` `Jobs:` line | Each node owns its parent-level representation |
+| Parent-level representation assembled from children | `crtr -h` listing + `<jobs>` block | Principle 16, Each node owns its parent-level representation |
+| Subtree-contributed dynamic block at root | `crtr -h` `<jobs>` block | Each node owns its parent-level representation |
 | Branch node with dynamic content | `crtr plan -h` | The tree, Dynamic `-h` |
 | Selection rubric | All branch listings | Principles 5, The tree |
 | Synchronous mutator | `crtr plan new` | The tree |

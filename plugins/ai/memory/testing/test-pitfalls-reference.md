@@ -7,7 +7,7 @@ file-read-visibility: none
 ---
 # test-pitfalls — reference
 
-Failure-mode catalog and audit greps for `test-pitfalls`. See `SKILL.md` for the decision framework.
+Failure-mode catalog and audit greps for `test-pitfalls`. See [test-pitfalls.md](test-pitfalls.md) for the decision framework.
 
 ## Failure mode catalog
 
@@ -54,8 +54,6 @@ arXiv 2602.07900: agent-written tests use print statements as "value-revealing" 
 ### Happy-path-only / skeleton tests
 
 One passing case per function. No edges, errors, or boundaries.
-
-Godmode analysis of 50 unguarded Claude Code sessions (Mar 24 2026): 38% no tests, 24% trivial "renders without crashing," 28% happy path only, 18% over-mocked — **92% inadequate**. https://getgodmode.dev/blog/claude-code-skips-tests.html
 
 **Detect**: review for error-path coverage. Property tests close this gap automatically.
 

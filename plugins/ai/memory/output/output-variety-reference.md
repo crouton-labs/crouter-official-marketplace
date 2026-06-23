@@ -32,7 +32,7 @@ function recordOutput(history: OutputEntry[], text: string, event: string): void
 }
 ```
 
-**Inject the most recent 10 into the prompt:**
+**Inject the most recent outputs into the prompt:**
 
 ```typescript
 function buildHistoryBlock(history: OutputEntry[]): string {
@@ -46,7 +46,7 @@ ${lines}
 }
 ```
 
-**Why 10 and not all 30?** Showing too many negative examples causes the model to over-attend to avoidance, producing stilted or overly cautious output. 10 is enough to block recent patterns while leaving creative space open. The full 30 are stored for analysis and potential similarity filtering.
+**Why not inject the full history?** Showing too many negative examples causes the model to over-attend to avoidance, producing stilted or overly cautious output. A small recent slice is enough to block recent patterns while leaving creative space open. The full history is stored for analysis and potential similarity filtering.
 
 ---
 
@@ -103,7 +103,7 @@ Structural constraint for this call: ${pickConstraint()}
 
 ## Example Pool Rotation
 
-Maintain a master list of 15-25 examples. Sample 3-5 per call.
+Maintain a master list of examples and sample a subset per call.
 
 ```typescript
 interface Example {
@@ -247,7 +247,7 @@ async function generateWithDedupe(
 }
 ```
 
-**Threshold guidance:** 0.6 Jaccard is a reasonable starting point for short sentences. Lower it (0.4-0.5) for stricter variety; raise it (0.7) if you're getting too many rejections.
+**Threshold guidance:** Lower the threshold for stricter variety; raise it if you're getting too many rejections.
 
 ---
 
@@ -257,12 +257,12 @@ async function generateWithDedupe(
 
 Periodically review your output history for patterns:
 
-- **Opening word frequency:** If >30% of outputs start with the same word, add it to constraints or bans
-- **Phrase clustering:** If the same 3-word phrase appears in >20% of outputs, ban it
+- **Opening word frequency:** If many outputs start with the same word, add it to constraints or bans
+- **Phrase clustering:** If the same short phrase recurs across outputs, ban it
 - **Structural repetition:** If outputs follow the same "statement. observation." pattern, add more structural constraints
 
 ### When Techniques Interact Badly
 
-- **Too many negative examples + strict constraint** → model freezes, produces generic filler. Fix: reduce negative examples to 5, or soften the constraint to "try to..."
+- **Too many negative examples + strict constraint** → model freezes, produces generic filler. Fix: reduce the number of negative examples, or soften the constraint to "try to..."
 - **Seed thought + content-specific constraint** → model tries to satisfy both and produces incoherent output. Fix: ensure seeds and constraints target different dimensions (seed = content flavor, constraint = structure)
-- **Large ban list + small output** → model runs out of "allowed" vocabulary. Fix: cap ban list at 15-20 terms, focusing on the most egregious repeat offenders
+- **Large ban list + small output** → model runs out of "allowed" vocabulary. Fix: cap the ban list, focusing on the most egregious repeat offenders

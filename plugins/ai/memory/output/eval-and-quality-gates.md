@@ -40,15 +40,15 @@ The method works. GPT-4 achieves **over 80% agreement with human experts** on MT
 - **Self-enhancement bias**: Claude-v1 rated its own outputs 25% higher than competitors'. Use a *different* model as judge than the model generating outputs — this eliminates self-enhancement bias completely.
 
 **When LLM-as-judge works:**
-- STEM and humanities tasks: 70-76% win rate in pairwise comparisons
-- Factuality checking on clear domains: 84-85% accuracy
+- STEM and humanities tasks (pairwise comparisons)
+- Factuality checking on clear domains
 - Binary pass/fail with rubrics: >90% human agreement achievable (Hamel Husain's Honeycomb case study, 3 iterations)
 
 **When it doesn't:**
-- Creative writing: LLMs pass creativity tests 3-10x less often than human writers
+- Creative writing: LLMs pass creativity tests less often than human writers
 - Hallucination detection: best models achieve only 58.5% accuracy on HaluEval
-- Fine-grained relevance ("highly relevant" vs "perfectly relevant"): 30-50% accuracy
-- Complex reasoning tasks: requires 70B+ parameter models; smaller models are brittle
+- Fine-grained relevance ("highly relevant" vs "perfectly relevant")
+- Complex reasoning tasks: smaller models are brittle
 
 **Implementation rule**: Use binary pass/fail, not Likert scales. Multi-point scales (1-5) produce noisy, unactionable data — annotators and judges don't agree on what "3" means. Binary forces clarity and enables precision/recall measurement. Hamel Husain: "people don't know what to do with a 3 or 4."
 
@@ -59,18 +59,18 @@ Treat prompts as versioned assets. A prompt change is a code change — it shoul
 **The four-component pipeline:**
 
 1. **Version control**: Store prompts in dedicated files, not embedded strings. Track in git.
-2. **Golden set**: Start with ~30 real production examples covering happy paths, edge cases, and known failures. Expand until no new failure modes emerge. Production traces are the best source.
+2. **Golden set**: Start with real production examples covering happy paths, edge cases, and known failures. Expand until no new failure modes emerge. Production traces are the best source.
 3. **Assertion suite**: Layer from cheap to expensive (structural → content → semantic → quality). Not every test needs an LLM judge.
 4. **CI gate**: Run on every PR that touches prompts or system prompt logic. Fail on regressions.
 
-The most common anti-pattern: jumping to LLM-based evaluation before building basic assertions. String matching and schema validation catch 60-70% of real failures and cost nothing.
+The most common anti-pattern: jumping to LLM-based evaluation before building basic assertions. String matching and schema validation catch real failures and cost nothing.
 
 ## Metrics That Are Theater
 
 These metrics appear in papers and dashboards but don't correlate with what matters:
 
-- **BLEU**: "Poor correlation with human judgements" — used in 95+ papers despite this evidence. Bottom of WMT22/WMT23 leaderboards for translation.
-- **ROUGE**: Can't capture factuality or faithfulness. 62.6% of papers using it provided no implementation details.
+- **BLEU**: "Poor correlation with human judgements." Bottom of WMT22/WMT23 leaderboards for translation.
+- **ROUGE**: Can't capture factuality or faithfulness.
 - **Perplexity as quality proxy**: Measures model confidence, not output quality. Low perplexity ≠ good output.
 - **Generic vector/n-gram similarity**: For classification tasks, positive and negative instance distributions overlap too much to be useful (Eugene Yan).
 - **Likert scales (1-5)**: Subjective, inconsistent across raters, actionable on neither 3 nor 4.
@@ -84,7 +84,7 @@ Match the metric to the task:
 | Task | Use | Don't Use |
 |------|-----|-----------|
 | RAG / Q&A | RAGAS faithfulness (0.95 human agreement), answer relevance | BLEU, ROUGE |
-| Summarization | NLI-based factual consistency (ROC-AUC 0.85) | ROUGE, BERTScore |
+| Summarization | NLI-based factual consistency | ROUGE, BERTScore |
 | Code generation | pass@k (execution-based), test suite pass rate | BLEU |
 | Classification | Precision, recall, F1, ROC-AUC | Vector similarity |
 | Translation | COMET, chrF | BLEU |
@@ -94,11 +94,6 @@ Match the metric to the task:
 ## Production Monitoring
 
 Static test suites catch regressions only if you run them. In production, you need continuous monitoring on real traffic.
-
-**Alerting thresholds** (from research):
-- Pass rate drops >5% below baseline over 24h: investigate
-- Latency >2x p99 baseline: check provider status
-- Toxicity rate increases at all: immediate investigation
 
 **Key insight**: Don't alert on individual sample failures. Alert on statistically significant drops in aggregate metrics.
 

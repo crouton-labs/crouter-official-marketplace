@@ -12,27 +12,14 @@ The agent doesn't want your code to be correct. It wants the loss function to dr
 
 Boris Cherny (Claude Code lead): verification gives "2-3x the quality of the final result." Mitchell Hashimoto: "Every AI mistake should result in a harness improvement, not just a fix."
 
-## When to use
-
-- Wiring CI, hooks, or pre-commit for an agent-driven repo.
-- Writing or auditing CLAUDE.md / AGENTS.md.
-- Debugging an agent that keeps re-trying the same failing test (doom loop).
-- Deciding which tests to wire into the inner vs outer loop.
-
-## When NOT to use
-
-- Choosing test *types* — see `test-strategy`.
-- Defending against cheating — see `test-pitfalls`.
-- Designing prompt evals — see `llm-app-authoring/eval-and-quality-gates`.
-
 ## The core decision
 
 **Optimize the feedback signal, not the test count.** A test the agent iterates against well has five properties; drop any one and the loop degrades. Most "the agent is bad at this codebase" complaints are harness complaints in disguise.
 
 ## The five properties
 
-1. **Fast.** Sub-second for the inner loop. Multi-minute runs force batching, which destroys causal attribution when something breaks. Prefer single-test invocation over full-suite.
-2. **Deterministic.** Flakes are catastrophic — the agent has no human prior to dismiss noise and iterates against it. Two flakes and it learns to disable; three and you're in a doom loop. Quarantine flakes immediately.
+1. **Fast.** Multi-minute runs force batching, which destroys causal attribution when something breaks. Prefer single-test invocation over full-suite.
+2. **Deterministic.** Flakes are catastrophic — the agent has no human prior to dismiss noise and iterates against it. Quarantine flakes immediately.
 3. **Isolated.** No shared state, no ordering deps, no globals. The agent runs tests in parallel, out of order, and one at a time interchangeably; if results depend on ordering, it learns the wrong thing.
 4. **Diff-friendly output.** Structured expected-vs-actual with paths into nested values. `pytest -vv`, Jest verbose, Rust `assert_eq!` are LLM-readable by default; bare `assertTrue(complexThing)` is not.
 5. **Remediation-bearing.** The failure tells the agent *what to do*, not just *what's wrong*. Highest-leverage harness change most teams have.
@@ -110,3 +97,4 @@ Hamel Husain: "Documentation tells the agent what to do. Telemetry tells it whet
 
 - `claude-authoring/claude-md` — writing the CLAUDE.md that holds the test command.
 - `claude-authoring/hooks` — Stop / PostToolUse hook patterns.
+- `output/eval-and-quality-gates` — designing prompt evals.

@@ -111,7 +111,6 @@ Each additional tool in the context window is a decision the model must make abo
 - **<10 tools**: Reliable selection across models
 - **10–100 tools**: Performance depends heavily on description quality (OpenAI considers this in-distribution for gpt-5.2)
 - **100+ tools**: Requires mitigation — tool search, deferred loading, routing layers
-- **At scale**: A 2025 study found accuracy degrades 85–91% as catalog size approaches 128K tokens
 
 For large tool sets, use Anthropic's deferred loading (`defer_loading`) — tools not loaded into context initially, retrieved by a search tool when needed. This is incompatible with `input_examples`.
 
