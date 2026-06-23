@@ -1,6 +1,6 @@
 {
   "name": "ai",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Skills for building with LLMs and designing for agents — prompt architecture, agent interface design (UI/UX/CLI/tools), multi-agent orchestration, LLM output quality, and agentic testing.",
   "source": "https://github.com/crouton-labs/crouter-official-marketplace",
   "owner": {
