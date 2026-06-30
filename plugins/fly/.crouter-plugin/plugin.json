@@ -1,0 +1,10 @@
+{
+  "name": "fly",
+  "version": "0.1.0",
+  "description": "Work with Fly.io from a shell — flyctl for launch/deploy/status/logs, Machines API access with Bearer tokens, and reference discovery through Fly.io docs, flyctl help, and Machines API docs.",
+  "source": "https://github.com/crouton-labs/crouter-official-marketplace",
+  "owner": {
+    "name": "Silas Rhyneer",
+    "email": "rhyneer.silas@gmail.com"
+  }
+}

@@ -61,6 +61,27 @@
       "version": "0.1.3",
       "description": "Socratic, crtr human-led design-discovery interviews — grill the user in question waves to shape the ideal product experience and to extract and pressure-test the technical design before building.",
       "keywords": ["design", "discovery", "interview", "socratic", "product-design", "ux", "experience", "architecture", "technical-design", "crtr-human", "elicitation", "requirements", "grillme"]
+    },
+    {
+      "name": "vercel",
+      "source": "./plugins/vercel",
+      "version": "0.1.0",
+      "description": "Work with Vercel from a shell — Vercel CLI for deploy/dev/logs, REST API access with Bearer tokens, and docs discovery through Vercel's llms.txt and references.",
+      "keywords": ["vercel", "deploy", "deployments", "cli", "rest-api", "llms-txt", "curl", "serverless", "edge", "nextjs"]
+    },
+    {
+      "name": "railway",
+      "source": "./plugins/railway",
+      "version": "0.1.0",
+      "description": "Work with Railway from a shell — Railway CLI for deploy/logs/environments, GraphQL API access with project or account tokens, and docs discovery through Railway's llms.txt and markdown references.",
+      "keywords": ["railway", "deploy", "deployments", "cli", "graphql", "api", "llms-txt", "curl", "environments", "paas"]
+    },
+    {
+      "name": "fly",
+      "source": "./plugins/fly",
+      "version": "0.1.0",
+      "description": "Work with Fly.io from a shell — flyctl for launch/deploy/status/logs, Machines API access with Bearer tokens, and reference discovery through Fly.io docs, flyctl help, and Machines API docs.",
+      "keywords": ["fly", "fly-io", "fly.io", "flyctl", "machines", "docker", "deploy", "edge", "curl", "openapi"]
     }
   ]
 }

@@ -1,0 +1,10 @@
+{
+  "name": "vercel",
+  "version": "0.1.0",
+  "description": "Work with Vercel from a shell — Vercel CLI for deploy/dev/logs, REST API access with Bearer tokens, and docs discovery through Vercel's llms.txt and references.",
+  "source": "https://github.com/crouton-labs/crouter-official-marketplace",
+  "owner": {
+    "name": "Silas Rhyneer",
+    "email": "rhyneer.silas@gmail.com"
+  }
+}
