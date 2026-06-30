@@ -1,0 +1,10 @@
+{
+  "name": "cloudflare",
+  "version": "0.1.0",
+  "description": "Work with Cloudflare from a shell — Wrangler + curl against the REST API, endpoint discovery from the OpenAPI spec, and the llms.txt doc index. The Code Mode pattern without MCP.",
+  "source": "https://github.com/crouton-labs/crouter-official-marketplace",
+  "owner": {
+    "name": "Silas Rhyneer",
+    "email": "rhyneer.silas@gmail.com"
+  }
+}

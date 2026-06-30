@@ -49,6 +49,13 @@
       "keywords": ["debugging", "runtime-verification", "pr-review", "agents", "explore", "planner", "programmer", "reviewer", "senior-advisor", "implementation"]
     },
     {
+      "name": "cloudflare",
+      "source": "./plugins/cloudflare",
+      "version": "0.1.0",
+      "description": "Work with Cloudflare from a shell — Wrangler + curl against the REST API, endpoint discovery from the OpenAPI spec, and the llms.txt doc index. The Code Mode pattern without MCP.",
+      "keywords": ["cloudflare", "wrangler", "workers", "pages", "r2", "kv", "d1", "dns", "api", "openapi", "llms-txt", "curl", "edge"]
+    },
+    {
       "name": "design-discovery",
       "source": "./plugins/design-discovery",
       "version": "0.1.3",
