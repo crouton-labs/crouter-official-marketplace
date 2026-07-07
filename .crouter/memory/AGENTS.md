@@ -1,5 +1,6 @@
 ---
 kind: knowledge
+name: crouter-official-marketplace
 when-and-why-to-read: When working in crouter-official-marketplace, this
   knowledge should be read because it is the project's operating guide.
 short-form: crouter-official-marketplace
