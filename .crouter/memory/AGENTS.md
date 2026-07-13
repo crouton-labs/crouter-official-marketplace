@@ -1,8 +1,7 @@
 ---
 kind: knowledge
 name: crouter-official-marketplace
-when-and-why-to-read: When working in crouter-official-marketplace, this
-  knowledge should be read because it is the project's operating guide.
+when-and-why-to-read: When working in crouter-official-marketplace, this knowledge should be read because its scope boundary and auto-bump versioning keep a change on the right side of the marketplace/core line and clear of hand-editing CI-owned versions.
 short-form: crouter-official-marketplace
 system-prompt-visibility: content
 file-read-visibility: content
