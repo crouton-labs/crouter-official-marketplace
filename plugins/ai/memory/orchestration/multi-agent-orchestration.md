@@ -4,6 +4,8 @@ when-and-why-to-read: When you are building multi-agent LLM workflows — design
 short-form: Design multi-agent LLM systems — orchestrator patterns, parallel coordination, pipelines, hierarchical delegation, failure handling.
 system-prompt-visibility: name
 file-read-visibility: none
+rationale: >-
+  Agents applied this guide's multi-lens and critic-loop examples as a default software workflow, producing review-of-review chains and repeated fresh validators even after a settled report. The guide must distinguish parallel evidence production from duplicated confidence-seeking.
 ---
 
 # Multi-Agent Orchestration
@@ -20,8 +22,8 @@ Use multi-agent when the task has genuine parallelism — independent subtasks t
 
 - **Parallel research**: Multiple domains investigated simultaneously, results synthesized
 - **Large codebases**: Independent modules, files, or subsystems that don't overlap
-- **Parallel quality**: Review alongside implementation (different concerns, same codebase)
-- **Role specialization**: Tasks requiring different expertise — security review vs. code quality vs. performance profiling
+- **Independent implementation units**: Disjoint modules or subsystems built against a settled contract
+- **Independent candidate solutions**: Multiple approaches produced without shared reasoning, when comparing alternatives is itself worth the coordination cost
 
 The economic case requires high-value tasks. Multi-agent token cost runs ~15x higher than single-agent chat. [Anthropic (2025) — How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system)
 
@@ -52,25 +54,13 @@ Independent multi-agent systems without orchestrator validation **amplify errors
 
 **Critical vulnerability**: Corrupted output from one stage compounds at each subsequent step. [MAS-FIRE (2026)](https://arxiv.org/html/2602.19843)
 
-**Mitigation**: Never run 2+ sequential stages without a review gate. Critique-refinement cycles after key stages neutralize cascading faults.
+**Mitigation**: Give every stage an objective exit criterion and place one independent review at a material-risk boundary. Review is not required between every pair of stages; repeated critic cycles are sequential coordination overhead unless each cycle is driven by a newly observed failure.
 
-### Debate / Critic
+### Independent Alternatives / Debate
 
-**Use when**: Correctness matters more than speed — math reasoning, security review, plan validation.
+**Use when**: The task admits genuinely independent candidate solutions and the choice between them is consequential — for example, hard math reasoning or a high-stakes architecture decision with several plausible approaches.
 
-**Two-layer review pattern** (two-layer filtering):
-```
-review coordinator (opus)
-  ├── reuse reviewer    (sonnet)
-  ├── quality reviewer  (sonnet)
-  ├── efficiency reviewer (sonnet)
-  └── security reviewer (opus) [conditional]
-After review:
-  ├── validation subagent 1  (opus, for bugs/security findings)
-  ├── validation subagent 2  (sonnet, everything else)
-  └── dismissal audit        (sonnet, samples dismissed findings)
-```
-Findings that don't survive validation get dropped before they reach the implementer. For detailed judge methodology, see [eval-and-quality-gates](../output/eval-and-quality-gates.md).
+Produce the candidates in parallel, compare them once against criteria declared before seeing the answers, and let one owner choose. This is not a default review pattern: several agents expressing confidence about the same artifact do not create independent evidence.
 
 ### Hierarchical Delegation
 
@@ -88,11 +78,25 @@ Prevents context exhaustion on sessions that run for hours. State persists via f
 
 Every handoff between agents is a risk point. The most common failure category in production multi-agent systems — **37% of all failures** — is inter-agent coordination breakdown, not individual LLM limitations. [Cemri, Pan, Yang et al. (2025) — Why Do Multi-Agent LLM Systems Fail?](https://arxiv.org/abs/2503.13657)
 
+Before spawning a child, apply three tests:
+
+1. **Independence** — can it start now without another child's output?
+2. **Distinct outcome** — does it own a proper subset or an independent candidate rather than repeating another agent's task?
+3. **New evidence** — will its result add facts, implementation, or executed proof that is not already settled?
+
+If any answer is no, serialize the dependency or keep the work in the current agent. Available capacity is not a reason to create work.
+
+## Review Is a Bounded Check
+
+For a substantive artifact, use one independent review assignment: one reviewer when the surface fits its window, or one bounded coordinator when coverage genuinely must split. Correctness, security, architecture, efficiency, and tests are lenses for that assignment, not an automatic reviewer roster. The coordinator partitions by units or lenses, not both, and owns synthesis.
+
+A delivered verdict is settled evidence. The owner fixes or dismisses findings and closes them with objective validation — acceptance criteria, targeted tests, build/typecheck, or a real-runtime probe. A second reviewer, validation-of-synthesis, dismissal audit, or repeat-until-clean critic adds opinion rather than evidence unless the fix introduced a genuinely new, previously unreviewed high-risk surface.
+
 ## Common Failure Modes
 
 **1. Vague agent instructions** — "Look at the existing auth middleware" fails. "Implement auth middleware per `context/requirements-auth.md` and `context/design-auth.md`. Reference `context/conventions.md` for middleware patterns." works. Each agent instruction must be self-contained.
 
-**2. Spawning too many agents** — Early versions of Anthropic's research system spawned 50+ subagents for simple queries. Simple fact-finding: 1 agent. Direct comparisons: 2-4. Complex research: 10+. [Anthropic (2025)](https://www.anthropic.com/engineering/multi-agent-research-system)
+**2. Spawning too many agents** — Early versions of Anthropic's research system spawned 50+ subagents for simple queries. Start with the smallest set implied by independent units and add another only when it owns uncovered work that can proceed now. [Anthropic (2025)](https://www.anthropic.com/engineering/multi-agent-research-system)
 
 **3. Framework over-engineering** — "The most successful implementations weren't using complex frameworks or specialized libraries." [Anthropic (2024) — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents)
 
@@ -104,19 +108,20 @@ Orchestrators and workers have opposite prompt requirements:
 |--------|-------------|--------|
 | Scope | Broad — sees the full session | Narrow — one specific task |
 | Ambition | High — sets the quality ceiling | Low — disciplined execution |
-| Primary failure | Too conservative | Scope creep |
+| Primary failure | Process expansion after the goal is already provable | Scope creep |
 | Context | Full session state | Task instruction + relevant files only |
 | Lifecycle | Killed and respawned each cycle | Runs to completion or failure |
 
-Orchestrator prompts need decision heuristics — concrete triggers for when to spawn research agents, when to add review gates, when to stop and reassess. Worker prompts need scope boundaries and a reporting protocol. See [multi-agent-orchestration-reference.md](multi-agent-orchestration-reference.md) for annotated examples of both.
+Orchestrator prompts need decision heuristics — concrete triggers for when independent work earns a child and when available evidence means stop. Worker prompts need scope boundaries and a reporting protocol. See [multi-agent-orchestration-reference.md](multi-agent-orchestration-reference.md) for annotated examples of both.
 
 ## Decision Framework
 
 | Task characteristic | Architecture | Why |
 |---|---|---|
 | Parallelizable subtasks | Orchestrator-worker | +81% on parallelizable tasks |
-| Sequential with feedback | Pipeline + critic loops | Catches 40% of cascading faults |
-| Correctness-critical | Debate/voting | Multiple perspectives, majority vote |
+| Sequential with feedback | Pipeline with objective stage gates | Avoids coordination where no parallelism exists |
+| Correctness-critical artifact | One independent review + executed validation | Critique finds flaws; behavior evidence closes them |
+| Independent candidate solutions | Bounded alternatives + one comparison | Parallelism produces distinct answers rather than repeated opinions |
 | Large scope (15+ files) | Hierarchical delegation | Sub-orchestrators manage complexity |
 | Simple/well-scoped | Single agent | Avoids 17.2x error amplification |
 | Long-running (hours) | Stateless orchestrator cycles | Prevents context exhaustion |

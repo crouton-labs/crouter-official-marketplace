@@ -4,6 +4,8 @@ when-and-why-to-read: When you are applying the multi-agent-orchestration skill 
 short-form: Deep-dive companion to the multi-agent-orchestration skill — worked examples and the full catalog the skill body points to.
 system-prompt-visibility: none
 file-read-visibility: none
+rationale: >-
+  Agents copied this reference's review gates, two-layer reviewer tree, and repeat-until-clean critic loop into ordinary software work, creating recursive review subtrees instead of new evidence. Worked examples must show bounded critique and objective closure.
 ---
 # Multi-Agent Orchestration Reference
 
@@ -91,9 +93,9 @@ This pattern prevents context exhaustion on long sessions. An orchestrator manag
 
 ```markdown
 # Decision Heuristics
-- "Am I guessing about something?" → Spawn a research agent first.
-- "Can one agent handle this?" → If no, decompose further before spawning.
-- "Have 2+ stages completed without critique?" → Stop implementing. Add a review gate.
+- "Can this child start now and produce a distinct outcome?" → If no, keep the dependency serial.
+- "Am I missing a current-state fact that blocks a decision?" → Spawn one bounded research assignment.
+- "Would this check produce evidence not already settled?" → If no, stop rather than seeking reassurance.
 - "Is this agent instruction self-contained?" → If no, rewrite it before spawning.
 ```
 
@@ -109,61 +111,39 @@ orchestrator
         ├── sub-planner: backend   (sonnet)
         ├── sub-planner: frontend  (sonnet)
         └── sub-planner: data      (sonnet)
-        [plan-lead synthesizes → validates with reviewers]
-        ├── review: code-smells     (sonnet)
-        ├── review: security        (opus)
-        └── review: requirements-coverage (sonnet)
+        [plan-lead synthesizes the integrated plan]
+        └── review: integrated plan (one independent assignment)
 ```
 
 **Key rule**: Sub-agents are invisible to the parent orchestrator. The coordinator agent is the abstraction boundary — it can spawn sub-agents via the Agent tool, but the orchestrator cannot reach past the coordinator to manage them directly. This prevents micromanagement and keeps scope boundaries clean.
 
 ---
 
-## Pipeline with Critic Loops
+## Pipeline with Evidence Gates
 
 Linear pipelines without feedback are "fundamentally vulnerable" — a corrupted output propagates downstream unchecked, compounding at each stage. [MAS-FIRE (2026) — Fault Injection](https://arxiv.org/html/2602.19843)
 
-A critique-refinement loop after key stages neutralizes over 40% of cascading faults that cause catastrophic collapse in linear workflows. [MAS-FIRE (2026)](https://arxiv.org/html/2602.19843)
-
-**Pattern: add a gate after each major stage**
+The correction is not a critic after every arrow. Give each stage an objective exit criterion, and spend independent review only at the artifact whose risk warrants it:
 
 ```
-explore → requirements → [REVIEW GATE] → design → [REVIEW GATE] → plan → implement → [REVIEW GATE] → validate
+explore → requirements → design → plan → implement → [ONE REVIEW PASS] → fix → [EXECUTED VALIDATION]
 ```
 
-The review gate doesn't have to be expensive — it can be a focused critic agent checking only for the failure modes that the previous stage is prone to. A requirements review checks completeness and EARS compliance. A design review checks architectural soundness and feasibility against requirements.
+An exit criterion checks the producer's output directly: requirement coverage is traceable, design constraints map to components, plan tasks map to files, implementation clears acceptance criteria. For a load-bearing plan or design, the one review pass may sit there instead of after implementation; it does not automatically repeat at every stage.
 
-```typescript
-// Conditional edge: retry or proceed based on critique
-graph.add_conditional_edges(
-  "reviewer",
-  (state: AgentState) => state.reviewNotes.includes("REJECT") ? "revise" : "proceed",
-  { revise: "planner", proceed: "implementer" }
-);
-```
+### Bounded review assignment
 
----
-
-## Two-Layer Review: Validate Before Acting
-
-The two-layer review pattern filters noise before findings reach implementers:
+The default is one reviewer reading the whole source artifact. When the surface cannot fit one window, use one coordinator with a child budget declared before launch. The coordinator chooses one partition axis — units or lenses — gives each child a non-overlapping base-level slice, and synthesizes the verdict itself. Reviewer children do not spawn reviewers, the coordinator does not delegate synthesis, and the owner does not validate the synthesis through another reviewer.
 
 ```
-Phase 1: Parallel specialized reviewers
-  ├── reuse-reviewer (sonnet)    — duplicate functionality
-  ├── quality-reviewer (sonnet)  — code quality
-  ├── efficiency-reviewer (sonnet) — performance
-  └── security-reviewer (opus)   — vulnerabilities
-
-Phase 2: Validation subagents (read-only, independent)
-  ├── validator-1 (opus)   — bugs and security findings
-  └── validator-2 (sonnet) — everything else
-
-Phase 3: Dismissal audit
-  └── audit (sonnet) — samples dismissed findings for false negatives
+review coordinator
+  ├── review slice A
+  ├── review slice B
+  └── review slice C
+coordinator → one severity-ordered verdict → owner disposition
 ```
 
-Findings that don't survive validation get dropped. This two-layer approach filters noise before anything reaches an implementer. Review agents are **read-only** — strict separation between finding and fixing.
+After findings are fixed or dismissed, execute the acceptance criteria or the failing paths the findings identified. If that evidence fails, fix the observed behavior and repeat the failed check. A clean second opinion is not an exit criterion; the first completed verdict is already the review evidence.
 
 ---
 
@@ -172,13 +152,12 @@ Findings that don't survive validation get dropped. This two-layer approach filt
 For complex research tasks, a living draft evolves with each researcher round rather than synthesizing at the end:
 
 ```
-1. Decompose question → 2-8 sub-questions based on scope
-2. Spawn researchers in parallel per sub-question
-3. After each batch: update living draft at context/research-{topic}.md
-4. Spawn critic: review draft for gaps and contradictions
-5. Critic gaps → push to front of question queue
-6. Repeat until critic finds no gaps
-7. Final synthesis: single-pass rewrite of living draft
+1. Decompose the question into an explicit inventory of independent sub-questions
+2. Spawn one researcher per sub-question that can proceed now
+3. After the batch, update `context/research-{topic}.md` and mark which inventory items have evidence
+4. Run another research batch only for named unanswered items, within a predeclared round or cost budget
+5. Optionally give the complete draft one independent critique pass; integrate its findings once
+6. Stop when the inventory is answered or the declared budget is reached, then perform one final synthesis rewrite
 ```
 
 The living draft acts as persistent memory across researcher batches. Each researcher writes to a separate file; the orchestrator/lead agent updates the draft. This avoids requiring any single agent to hold the full research context.
@@ -227,7 +206,7 @@ From analysis of 1,600+ multi-agent traces, failures cluster in three categories
 - Ignored input — agents don't incorporate upstream output
 - Conversation reset — context lost at handoff
 
-They require structural solutions — explicit scope boundaries, file-based handoffs (no context loss), and validation gates before agents act on upstream work.
+They require structural solutions — explicit scope boundaries, file-based handoffs (no context loss), and objective exit criteria before agents act on upstream work.
 
 **FC1: Specification Failures**
 - Disobeying role specification — agents overstep their mandate
@@ -255,11 +234,11 @@ These can't run in parallel — the implementer needs the design to exist first.
 ```
 agent-001: Implement auth middleware (reads context/design-auth.md)
 agent-002: Implement session store  (reads context/design-auth.md)
-agent-003: Review auth design       (reads context/design-auth.md, writes findings)
+agent-003: Implement token verifier (reads context/design-auth.md)
 ```
-Three agents reading the same design artifact and working on independent concerns. Review runs in parallel with implementation — parallel quality, not sequential overhead.
+Three agents read the same settled design and own disjoint implementation surfaces. Their outputs can land independently and are integrated once.
 
-**The independence test**: Can agent B start before agent A produces output? If yes, they're parallelizable. If agent B needs agent A's output to begin, serialize them and add a review gate between.
+**The independence test**: Can agent B start before agent A produces output, and does it produce a distinct deliverable? If yes, they are parallelizable. If agent B needs agent A's output, serialize them and check the producer against its objective exit criterion before continuing.
 
 ---
 
