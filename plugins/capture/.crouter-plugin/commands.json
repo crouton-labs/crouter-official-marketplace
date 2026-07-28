@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "mounts": [
+    {
+      "parent": [],
+      "node": {
+        "kind": "branch",
+        "name": "capture",
+        "description": "transparent alias for the external `capture` CLI",
+        "whenToUse": "you need to drive a real browser — screenshot, measure rendered geometry, capture a HAR or accessibility tree, or run JS against a live page.",
+        "passthrough": {
+          "bin": "capture",
+          "installHint": "Install the Capture CLI: npm install -g @crouton-kit/capture"
+        },
+        "rootEntry": {
+          "concept": "browser automation for agents via the external Capture CLI (CDP screenshots, HAR, a11y, JS-exec, and site libs)",
+          "description": "forwards verbatim to the external `capture` binary",
+          "whenToUse": "a claim depends on what a real browser renders. When it depends on rendered geometry, clipping, overflow, stacking or nominal box intersection, computed style, or distance, read `crtr capture measure -h` \u2014 screenshots and accessibility trees orient but do not establish rendered structure."
+        },
+        "summary": "transparent alias for the external `capture` CLI — every argument forwards verbatim",
+        "model": "This branch owns no schema of its own: it execs `capture` with whatever args follow, inherits stdio, and propagates its exit code. Run `crtr capture -h` for capture's real command tree.",
+        "children": []
+      }
+    }
+  ]
+}

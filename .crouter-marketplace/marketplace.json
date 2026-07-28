@@ -82,6 +82,13 @@
       "version": "0.1.0",
       "description": "Work with Fly.io from a shell — flyctl for launch/deploy/status/logs, Machines API access with Bearer tokens, and reference discovery through Fly.io docs, flyctl help, and Machines API docs.",
       "keywords": ["fly", "fly-io", "fly.io", "flyctl", "machines", "docker", "deploy", "edge", "curl", "openapi"]
+    },
+    {
+      "name": "capture",
+      "source": "./plugins/capture",
+      "version": "0.1.0",
+      "description": "Mounts `crtr capture` as a transparent passthrough to the external Capture CLI (@crouton-kit/capture) \u2014 CDP screenshots, measurement, HAR, a11y, JS-exec, and site libs.",
+      "keywords": ["capture", "browser", "cdp", "screenshot", "measure", "har", "a11y", "ui-validation", "chrome", "passthrough"]
     }
   ]
 }
