@@ -13,6 +13,7 @@ Where context lives in an agent system, and how to write what goes in each place
 - **"Fix/write this system prompt"** → [[prompting-effectively]] (the craft) + [[system-prompts]] (what belongs there, placement mechanics).
 - **"Build an agent with these capabilities"** → [[context-placement-channels]] (which channel each piece belongs in).
 - **"The input/window is too big"** → [[context-management]] (budgets, placement effects, caching, compression).
+- **"Write or prune an AGENTS.md / CLAUDE.md"** → [[agents-and-claude-md]].
 - **"Audit an existing agent's prompt"** → [[review-prompt]].
 
 Docs:
@@ -20,5 +21,6 @@ Docs:
 - **context-placement-channels** — the spine: every place context can live (system prompt, tools, CLI disclosure, output-as-pointer, memory pointers, on-read injection, first message, task messages, env blocks, hooks) and what each is uniquely good for.
 - **prompting-effectively** — the writing craft: zones, tone registers, escalation ladder, subtract-before-you-add, positive framing, examples, decision frameworks.
 - **system-prompts** — the behavior channel specifically: front-door principle, what belongs/doesn't, primacy, instruction hierarchy, caching.
+- **agents-and-claude-md** — the always-loaded instruction-file genre: the cut test, what belongs, when→do→why directives, root vs nested, when to escalate off the file.
 - **context-management** — token budgets, RAG, caching, compression, long context.
 - **review-prompt** — reconstruct and review an existing agent's assembled prompt.

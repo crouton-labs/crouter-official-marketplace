@@ -31,7 +31,7 @@ This file is the spec. **`cli-design-reference.md` (sibling) is the spec applied
 
 7. **Noun-verb structure. Verbs always last.** `tool plan new`, not `tool new plan`. For deeper trees, nest more nouns: `tool plan task list` reads cleanly. An agent's reasoning composes noun-first ("I need to do something to a plan") and then picks the verb. Verb-first forces selection without an object in hand.
 
-8. **5–7 children per node, hard cap.** Past that, the selection space stops fitting in working context. The fix is always the same: introduce a sub-noun. If you have 12 verbs on one noun, you have two nouns hiding.
+8. **Keep child sets small; 5–7 is a soft signal, not a hard cap.** The reason to stay toward the lower end is context economy and progressive disclosure: every child adds an always-paid selection row, and a broad sibling set makes the agent compare more possibilities before it can reach the detail it needs. Crossing seven should trigger a cohesion and token-cost review, not an automatic restructure. Introduce a sub-noun only when it forms a meaningful concept that makes selection cheaper overall; an extra level with no real distinction spends more context and navigation than it saves.
 
 9. **Effects are part of the contract.** Anything the world remembers after invocation — state changes, spawned processes, persisted files — is declared at the leaf.
 
@@ -89,11 +89,15 @@ A branch renders as a `<command>` block — its own `-h` description on the wrap
 
 ### Node sizing
 
-A node with 5–7 children fits in working context. Past that, selection rubrics stop differentiating — too many similar lines. Always split into sub-nouns:
+Aim toward 5–7 children because every row is paid whenever the parent is read, and progressive disclosure works only when the parent narrows the next decision instead of presenting another broad catalog. Seven is a review threshold, not a validity boundary: a slightly larger set of short, orthogonal siblings may cost less than inventing another branch, while a smaller set with long or overlapping rubrics may already be too broad.
 
-Wrong: `tool task claim, done, list, show, abandon, retry, restart, archive, export, import`.
+When a node grows, evaluate the actual selection cost: total help tokens, overlap among the choices, and whether the agent can discard most children from their names and rubrics alone. Split only when the children contain coherent sub-concepts that reduce that cost after accounting for the extra navigation level.
 
-Right: `tool task lifecycle {claim, done, abandon, retry}` and `tool task inspect {show, list, export}`.
+Likely split: `tool task claim, done, list, show, abandon, retry, restart, archive, export, import` contains meaningful lifecycle and inspection groups.
+
+Better: `tool task lifecycle {claim, done, abandon, retry}` and `tool task inspect {show, list, export}`.
+
+Not a useful split: wrapping two already-distinct leaves in a new noun solely to bring the parent below seven.
 
 ### Each node owns its parent-level representation
 
@@ -119,7 +123,7 @@ When the root `-h` is auto-loaded into the agent's context (see [When the agent 
 - *Positional argument* — at most one per leaf, used only when the leaf has an obvious primary target (a plan id, a task id, a file path). When in doubt, use a flag.
 - *Flags* — long-form only (`--task-id`, `--limit`). No short aliases. Boolean flags take no value (`--follow`), set to true when present. Repeatable flags (`--tag foo --tag bar`) appear as arrays in the leaf's input schema.
 - *Stdin* — reserved for piped content blobs (a document body, a prompt, raw text). If the leaf accepts stdin, the schema names it `stdin` alongside the flags and states what kind of content is expected.
-- *Structured input* — when a parameter is itself structured (an object, a heterogeneous array), accept it as a path to a JSON file: `--context-file PATH`. The leaf's `-h` states the file's JSON shape.
+- *Structured input* — choose the cheapest reliable transport for the payload agents will normally supply. A small bounded object or predicate that naturally fits one shell argument may be inline JSON; requiring a temporary file for it adds an action and artifact without improving selection. Large, deep, multiline, or heterogeneous payloads take a JSON file path such as `--context-file PATH`. Pick one canonical form per parameter rather than exposing both by default, and state the exact JSON shape in the leaf's `-h`.
 
 **Output.** The result is rendered *for the model*: light XML blocks around markdown, written as a continuation of the agent's prompt. Each command names its result block (`<spawned>`, `<pushed>`, `<feed>`); scalars (ids, statuses, counts) ride as attributes, prose and lists fill the body. Field order is the leaf's output schema — deterministic.
 
@@ -155,6 +159,10 @@ Next: Retry with one of the listed values, or omit to include all statuses.
 ```
 
 `code` is a stable string the agent can branch on. The body states what was received against what was expected; `Next:` is the road sign. The `--json` mirror carries the same `error`/`message`/`received`/`field`/`next` fields — same recovery information, just unrendered.
+
+**Validation is complete, never first-failure.** One invocation gets at most one validation error, and that error names *every* violated constraint — all missing required parameters, the stdin contract, every bad value — in a single response. Drip-feeding (throw on the first missing flag, let the retry discover the second) turns one correction into a round trip per field; the agent "converges" through a sequence of errors that a single complete report would have collapsed. If the parser can know it, the first error states it.
+
+**Schema-class errors mandate the `-h` read.** A missing/unknown-parameter or malformed-invocation error is *proof the agent invoked without the contract in context* (principle 2 failed upstream). Its `Next:` therefore instructs — `Run \`tool noun verb -h\` and read the schema before re-issuing` — it does not offer the one-field patch as the primary remedy. Handing the agent just the missing flag invites another blind guess at whatever the schema also said that the agent never read (a stdin contract, a coupled parameter, a constraint on the value). Semantic errors on an otherwise well-formed invocation (an invalid enum value, a not-found id) keep the direct correction as `Next:`; the schema was evidently read, the value was wrong.
 
 Internal failures — panics, unhandled exceptions — never reach the agent raw. Wrap as `{"error": "internal", ...}` with a stable code. Full traces gate behind an explicit debug invocation, not stderr leakage.
 
@@ -223,7 +231,7 @@ Each is a real failure mode.
 - **Auto-launching pagers, interactive prompts, TTY-detection-dependent behavior.** There is no terminal; these hang the agent.
 - **Aliases.** Same operation under multiple names forces the agent to memorize three things for one operation. Pick one canonical name.
 - **Short flag aliases.** `-t` for `--task-id` saves a human three keystrokes; for an agent it doubles the name surface — two strings to remember for one parameter, two strings to grep across docs. Long-form only.
-- **Inline structured values.** `--filter '{"status":"open"}'` breaks under shell quoting. Structured parameters take a file path; the leaf's `-h` documents the file's shape.
+- **Mismatched structured transport.** Forcing a large nested payload through shell-quoted inline JSON makes invocation fragile; forcing a tiny predicate through a temporary file adds needless work and residue. Choose the canonical transport from the payload's normal size and shape, then document that shape at the leaf.
 - **Color, TTY detection, terminal-width truncation.** No reader needs any of it. Truncation silently corrupts machine consumption.
 - **Fuzzy-match "did you mean" suggestions.** If the agent reached an invalid invocation, the discovery layer failed. Suggestions paper over the bug.
 - **Unstable output order.** Random or insertion-order results break diffs and resumable pagination. Sort by a stable field.
