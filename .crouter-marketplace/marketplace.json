@@ -1,6 +1,6 @@
 {
   "name": "crouter-official-marketplace",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "owner": {
     "name": "Silas Rhyneer",
     "email": "rhyneer.silas@gmail.com"
@@ -86,7 +86,7 @@
     {
       "name": "capture",
       "source": "./plugins/capture",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "description": "Mounts `crtr capture` as a transparent passthrough to the external Capture CLI (@crouton-kit/capture) \u2014 CDP screenshots, measurement, HAR, a11y, JS-exec, and site libs.",
       "keywords": ["capture", "browser", "cdp", "screenshot", "measure", "har", "a11y", "ui-validation", "chrome", "passthrough"]
     }
