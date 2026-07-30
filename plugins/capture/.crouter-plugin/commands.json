@@ -7,7 +7,7 @@
         "kind": "branch",
         "name": "capture",
         "description": "transparent alias for the external `capture` CLI",
-        "whenToUse": "you need to drive a real browser — screenshot, measure rendered geometry, capture a HAR or accessibility tree, or run JS against a live page.",
+        "whenToUse": "you need to drive a real browser — screenshot, measure rendered geometry, capture a HAR or accessibility tree, or run JS against a live page. The browser is one crtr launches itself, carrying none of the user's logins: use `crtr device` instead when the page needs their session or the task is to act inside a web app on their behalf.",
         "passthrough": {
           "bin": "capture",
           "installHint": "Install the Capture CLI: npm install -g @crouton-kit/capture"
@@ -15,10 +15,10 @@
         "rootEntry": {
           "concept": "browser automation for agents via the external Capture CLI (CDP screenshots, HAR, a11y, JS-exec, and site libs)",
           "description": "forwards verbatim to the external `capture` binary",
-          "whenToUse": "a claim depends on what a real browser renders. When it depends on rendered geometry, clipping, overflow, stacking or nominal box intersection, computed style, or distance, read `crtr capture measure -h` \u2014 screenshots and accessibility trees orient but do not establish rendered structure."
+          "whenToUse": "a claim depends on what a real browser renders. When it depends on rendered geometry, clipping, overflow, stacking or nominal box intersection, computed style, or distance, read `crtr capture measure -h` \u2014 screenshots and accessibility trees orient but do not establish rendered structure. This drives a browser crtr launches itself and holds none of the user's sessions \u2014 to act inside the user's own logged-in browser use `crtr device`, and to read a public page for its content rather than its rendering use `crtr search`."
         },
         "summary": "transparent alias for the external `capture` CLI — every argument forwards verbatim",
-        "model": "This branch owns no schema of its own: it execs `capture` with whatever args follow, inherits stdio, and propagates its exit code. Run `crtr capture -h` for capture's real command tree.",
+        "model": "This branch owns no schema of its own: it execs `capture` with whatever args follow, inherits stdio, and propagates its exit code. Run `crtr capture -h` for capture's real command tree. Every browser it drives is a fresh one crtr launched, so anything requiring the user's login belongs on `crtr device` instead.",
         "children": []
       }
     }
