@@ -10,9 +10,9 @@ file-read-visibility: none
 
 When the agent writes the code, the test suite is no longer an independent check — the same process wrote the bugs and the oracle. Route by task:
 
-- **"What should I test, and what should I skip?"** → [[test-strategy]].
-- **"Wire the agent's feedback loop — CI, hooks, the CLAUDE.md test block"** → [[test-harness]].
-- **"Review an agent PR / green CI I don't trust"** → [[test-pitfalls]].
+- **"What should I test, and what should I skip?"** → [[ai/testing/test-strategy]].
+- **"Wire the agent's feedback loop — CI, hooks, the CLAUDE.md test block"** → [[ai/testing/test-harness]].
+- **"Review an agent PR / green CI I don't trust"** → [[ai/testing/test-pitfalls]].
 
 Docs:
 

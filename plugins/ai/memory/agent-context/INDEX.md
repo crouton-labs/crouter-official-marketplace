@@ -10,11 +10,11 @@ file-read-visibility: none
 
 Where context lives in an agent system, and how to write what goes in each place. Route by task:
 
-- **"Fix/write this system prompt"** → [[prompting-effectively]] (the craft) + [[system-prompts]] (what belongs there, placement mechanics).
-- **"Build an agent with these capabilities"** → [[context-placement-channels]] (which channel each piece belongs in).
-- **"The input/window is too big"** → [[context-management]] (budgets, placement effects, caching, compression).
-- **"Write or prune an AGENTS.md / CLAUDE.md"** → [[agents-and-claude-md]].
-- **"Audit an existing agent's prompt"** → [[review-prompt]].
+- **"Fix/write this system prompt"** → [[ai/agent-context/prompting-effectively]] (the craft) + [[ai/agent-context/system-prompts]] (what belongs there, placement mechanics).
+- **"Build an agent with these capabilities"** → [[ai/agent-context/context-placement-channels]] (which channel each piece belongs in).
+- **"The input/window is too big"** → [[ai/agent-context/context-management]] (budgets, placement effects, caching, compression).
+- **"Write or prune an AGENTS.md / CLAUDE.md"** → [[ai/agent-context/agents-and-claude-md]].
+- **"Audit an existing agent's prompt"** → [[ai/agent-context/review-prompt]].
 
 Docs:
 

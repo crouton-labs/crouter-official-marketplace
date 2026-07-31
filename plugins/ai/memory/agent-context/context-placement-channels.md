@@ -24,7 +24,7 @@ The obvious channel, and the trap: every tool's name, description, and parameter
 **Heuristic: a CLI beats tools almost every time.** For pure agent performance, a CLI with progressive disclosure outperforms a tool catalog — the agent pays for capability documentation only when it reaches for the capability. Tools win only when system constraints force them: the agent has no shell/exec access, or the harness can't run commands. That is a constraint of the platform, not a reason to prefer tools.
 
 ### CLI with progressive disclosure
-The antidote to tool bloat. The agent knows one thing always (the command exists, one line of when-to-use); everything else discloses on demand: `cmd -h` → subcommand list → `cmd sub -h` → full contract. Arbitrarily deep capability at near-zero standing cost. Design the `-h` ladder as deliberately as you'd design the tool schema — it *is* the documentation channel. → [[cli-design]].
+The antidote to tool bloat. The agent knows one thing always (the command exists, one line of when-to-use); everything else discloses on demand: `cmd -h` → subcommand list → `cmd sub -h` → full contract. Arbitrarily deep capability at near-zero standing cost. Design the `-h` ladder as deliberately as you'd design the tool schema — it *is* the documentation channel. → [[ai/interface/agent-facing/cli-design]].
 
 **Failure mode:** help text written for humans (prose walls, no schemas) — the agent guesses instead of reading; or a flat namespace where discovery costs more than the standing tool definitions would have.
 
@@ -39,7 +39,7 @@ Never make a tool return everything when it can return a handle. Three shapes:
 2. **Keys + preview + how to read more** — return the high-level structure and a sample, with explicit instructions for retrieving the rest.
 3. **Pointer to logs for async work** — a long-running operation returns immediately with where its output is streaming; the agent checks in on its own schedule.
 
-This converts output from pushed (full payload in context, now) to pulled (in context only if consulted). Pairs with the job-handle pattern in [[cli-design]].
+This converts output from pushed (full payload in context, now) to pulled (in context only if consulted). Pairs with the job-handle pattern in [[ai/interface/agent-facing/cli-design]].
 
 ### Memory / knowledge pointers (pulled)
 Reference documents the agent fetches by name. The disclosure ladder: the always-loaded surface carries at most a *name* or a one-line *routing statement* ("when {circumstance}, read this because {payoff}"); the body costs nothing until read. This is where knowledge, playbooks, and reference material belong — never in the system prompt.

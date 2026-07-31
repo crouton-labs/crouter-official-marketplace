@@ -16,7 +16,7 @@ The most important architectural decision: what goes where.
 **Behavior zone** (system prompt, agents, modes):
 - Identity, personality, tone
 - Constraints and hard rules
-- Tool usage policies (→ [[tool-design]] covers designing the tools themselves)
+- Tool usage policies (→ [[ai/interface/agent-facing/tool-design]] covers designing the tools themselves)
 - Decision frameworks ("when X, do Y")
 - Formatting preferences
 
@@ -329,7 +329,7 @@ One real harness, mapped to the zones. The same mapping exercise applies to any 
 | Rules | Behavior | No role — constraints only | Declarative constraints scoped by file pattern. |
 
 **Deeper guides for each component:**
-- Agents → [[multi-agent-orchestration]] for designing systems of cooperating agents
+- Agents → [[ai/orchestration/multi-agent-orchestration]] for designing systems of cooperating agents
 - Commands → [[claude-authoring/commands]]
 - Skills → [[claude-authoring/skills]]
 - CLAUDE.md → [[claude-authoring/claude-md]]

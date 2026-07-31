@@ -10,10 +10,10 @@ file-read-visibility: none
 
 What an LLM emits, and how to make it reliable, varied, and human. Route by task:
 
-- **"Get reliable typed JSON / extract structured data"** → [[structured-output]] (constrained decoding, schema design).
-- **"Build evals or a CI quality gate"** → [[eval-and-quality-gates]] (LLM-as-judge, regression tests, metrics that work).
-- **"Outputs feel samey across repeated calls"** → [[output-variety]] (negative examples, constraint/seed rotation).
-- **"Strip AI-writing tells from prose"** → [[sounding-human]].
+- **"Get reliable typed JSON / extract structured data"** → [[ai/output/structured-output]] (constrained decoding, schema design).
+- **"Build evals or a CI quality gate"** → [[ai/output/eval-and-quality-gates]] (LLM-as-judge, regression tests, metrics that work).
+- **"Outputs feel samey across repeated calls"** → [[ai/output/output-variety]] (negative examples, constraint/seed rotation).
+- **"Strip AI-writing tells from prose"** → [[ai/output/sounding-human]].
 
 Docs:
 
