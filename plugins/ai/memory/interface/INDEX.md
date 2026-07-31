@@ -10,10 +10,10 @@ file-read-visibility: none
 
 The surfaces around an LLM: what an agent drives (agent-facing) and what an agent shows a human (human-facing). Route by task:
 
-- **"Design a CLI an agent drives"** → [[agent-facing/cli-design]] (subcommand tree, `-h` disclosure, prompt-shaped stdout, structured errors) + worked example [[agent-facing/cli-design-reference]].
-- **"Design a function-calling / MCP tool"** → [[agent-facing/tool-design]] (descriptions, schemas, granularity, errors) + patterns/citations [[agent-facing/tool-design-reference]].
-- **"Build or review the UI an agent shows a human"** → [[human-facing/agentic-ui]] (surface choice, streaming, review gates, steering; web + TUI) — read [[human-facing/agentic-ux]] first for the judgment layer.
-- **"Decide autonomy, trust, friction, or oversight for human–agent interaction"** → [[human-facing/agentic-ux]] (the first principles: articulation barrier, automation×control, trust calibration).
+- **"Design a CLI an agent drives"** → [[ai/interface/agent-facing/cli-design]] (subcommand tree, `-h` disclosure, prompt-shaped stdout, structured errors) + worked example [[ai/interface/agent-facing/cli-design-reference]].
+- **"Design a function-calling / MCP tool"** → [[ai/interface/agent-facing/tool-design]] (descriptions, schemas, granularity, errors) + patterns/citations [[ai/interface/agent-facing/tool-design-reference]].
+- **"Build or review the UI an agent shows a human"** → [[ai/interface/human-facing/agentic-ui]] (surface choice, streaming, review gates, steering; web + TUI) — read [[ai/interface/human-facing/agentic-ux]] first for the judgment layer.
+- **"Decide autonomy, trust, friction, or oversight for human–agent interaction"** → [[ai/interface/human-facing/agentic-ux]] (the first principles: articulation barrier, automation×control, trust calibration).
 
 Docs:
 
