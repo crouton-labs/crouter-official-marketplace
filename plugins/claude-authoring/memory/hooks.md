@@ -30,10 +30,11 @@ Pick the smallest handler that can make the decision:
 |---------|-------------|
 | **command** | Logic is deterministic — regex check, file exists, env var set. |
 | **prompt** | A single-turn judgment needs no file access. |
-| **agent** | The decision needs investigation with tools. |
+| **agent** | **Experimental.** The decision needs investigation with tools. |
 | **http** | Logic lives in a shared external service. |
+| **mcp_tool** | The handler should invoke a tool exposed by an MCP server. |
 
-Default to `command`. Escalate only when the simpler handler cannot make the required decision; agent handlers add real latency.
+Default to `command`. Escalate only when the simpler handler cannot make the required decision; agent handlers add real latency. For production checks, use a `command` hook whenever it can express the check instead of the experimental `agent` handler.
 
 ## Output and Decision Control
 
@@ -53,7 +54,7 @@ See [[claude-authoring/hooks-reference]] for the complete configuration example 
 
 ## Matchers
 
-Use `|` to target multiple tools: `"matcher": "Write|Edit|MultiEdit"`. MCP tools match as `mcp__servername__toolname`. Omit the matcher to catch every occurrence of an event. Consult the [official matcher reference](https://code.claude.com/docs/en/hooks#matcher-patterns) for event-specific matcher rules.
+Use `|` to target multiple tools: `"matcher": "Write|Edit|MultiEdit"`. MCP tools from ordinary configured servers match as `mcp__servername__toolname`; tools from plugin-bundled servers match as `mcp__plugin_<plugin>_<server>__<tool>`. Omit the matcher to catch every occurrence of an event. Consult the [official matcher reference](https://code.claude.com/docs/en/hooks#matcher-patterns) for event-specific matcher rules.
 
 ## Skill- and Agent-Scoped Hooks
 

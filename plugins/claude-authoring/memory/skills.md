@@ -23,19 +23,20 @@ skill-name/
     └── validate.py
 ```
 
-## Required Frontmatter
+## Skill Frontmatter
+
+`name` is optional and defaults to the skill directory name. `description` is recommended and drives automatic discovery; when it is omitted, Claude Code uses the first paragraph of the skill body. Include keywords users would naturally say and front-load the key use case. The combined `description` and `when_to_use` listing text must be at most 1,536 characters.
 
 ```yaml
-name: skill-name
-description: What it does. Specific capabilities. Use when [trigger scenarios].
+# The directory name supplies the optional name.
+description: Extract text and tables from PDF files, fill forms, and merge documents.
+when_to_use: Working with PDFs, forms, or document extraction.
 ```
 
-The `description` field drives automatic discovery. Include keywords users would naturally say. Front-load the key use case — descriptions longer than 250 characters get truncated in the skill listing.
-
 **Bad**: `Helps with documents`
-**Good**: `Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDFs, forms, or document extraction.`
+**Good**: `Extract text and tables from PDF files, fill forms, and merge documents.`
 
-## Optional Frontmatter
+## Other Optional Frontmatter
 
 | Field | Purpose |
 |-------|---------|
@@ -144,6 +145,10 @@ Research $ARGUMENTS thoroughly: find files, read code, summarize findings.
 ```
 
 With `context: fork`, SKILL.md content becomes the task prompt for a fresh subagent. Only meaningful for skills with explicit instructions — reference-only skills will return empty. The inverse pattern (custom subagent that preloads skills as reference) lives in the subagent definition, not here.
+
+## Extended Thinking
+
+Include `ultrathink` anywhere in skill content to request deeper reasoning when the skill runs.
 
 ## When to Use Skills vs Other Tools
 
