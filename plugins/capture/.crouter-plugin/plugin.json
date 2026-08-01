@@ -3,6 +3,9 @@
   "version": "0.1.2",
   "description": "Mounts `crtr capture` as a transparent passthrough to the external Capture CLI (@crouton-kit/capture) — CDP screenshots, measurement, HAR, a11y, JS-exec, and site libs.",
   "commands": ".crouter-plugin/commands.json",
+  "transport": {
+    "kind": "exec"
+  },
   "source": "https://github.com/crouton-labs/crouter-official-marketplace",
   "owner": {
     "name": "Silas Rhyneer",
