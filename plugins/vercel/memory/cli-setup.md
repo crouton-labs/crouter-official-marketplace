@@ -81,7 +81,7 @@ See [[vercel/doc-references]] for the full Project Configuration reference — m
 ## Project linking and team scope
 
 - `vercel link` connects the current directory to a Vercel project, writing `.vercel/project.json` (project ID + org/team ID). Most commands without an explicit target operate on this linked project — `vercel pull`/`vercel env`/`vercel logs` all read it.
-- In CI or a fresh checkout there is no `.vercel/` directory yet; either run `vercel link --yes` first or pass `--cwd`/explicit flags so the command isn't ambiguous about which project it targets.
+- In CI or a fresh checkout there is no `.vercel/` directory yet; link the intended project non-interactively with `vercel link --yes --team <team-id> --project <project-name-or-id>`.
 - Team-owned resources: pass `--scope <team-slug-or-id>` on CLI commands, or append `?teamId=<id>` on REST API calls (see [[vercel/api-access]]).
 
 ## Discovering commands
