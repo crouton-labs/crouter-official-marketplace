@@ -1,6 +1,6 @@
 ---
 kind: knowledge
-when-and-why-to-read: When the user asks to design a website or product UI, or wants a design system / design-document.html generated, this skill should be read because it runs an interactive workflow that gathers requirements, explores preferences, and produces a comprehensive design document with component examples.
+when-and-why-to-read: When the user asks to design a website or product UI, or wants a design system / design-document.html generated, this knowledge should be read because it runs an interactive workflow that gathers requirements, explores preferences, and produces a comprehensive design document with component examples.
 short-form: Interactive product-design workflow — gather requirements, explore preferences, generate a design document with components.
 system-prompt-visibility: name
 file-read-visibility: none
@@ -16,7 +16,7 @@ Ask the user to describe their product at a high level. Accept any degree of spe
 
 ## Step 2: Design exploration (single multi-question round)
 
-Use **AskUserQuestion** to ask ALL design questions at once (4 questions total). For each question, provide 5–7 concrete options with rich descriptions.
+Use `crtr human ask` to present ALL design questions in one decision deck (4 questions total). For each question, provide 5–7 concrete options with rich descriptions.
 
 **Important:** Mix novel/unconventional directions with standard options. Don't just offer safe choices. For each direction, name the **star of the show** — the typeface, object, image, motif, motion concept, or other seed that should command attention and tell the brand story.
 
@@ -62,7 +62,7 @@ Propose 5–7 typography systems. Start each system with a heading/display font 
 
 ## Step 3: Clarifying questions
 
-Ask any remaining questions in a second AskUserQuestion call:
+Ask any remaining questions in a second `crtr human ask` decision deck:
 
 - Brand requirements (existing colors, fonts, logos, guidelines)
 - Accessibility needs (WCAG level, screen reader support, keyboard navigation)

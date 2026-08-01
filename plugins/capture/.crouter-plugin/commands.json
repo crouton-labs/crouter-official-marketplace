@@ -15,7 +15,7 @@
         "rootEntry": {
           "concept": "browser automation for agents via the external Capture CLI (CDP screenshots, HAR, a11y, JS-exec, and site libs)",
           "description": "forwards verbatim to the external `capture` binary",
-          "whenToUse": "a claim depends on what a real browser renders. When it depends on rendered geometry, clipping, overflow, stacking or nominal box intersection, computed style, or distance, read `crtr capture measure -h` \u2014 screenshots and accessibility trees orient but do not establish rendered structure. The browser is one crtr launches, holding none of the user's logins \u2014 for their session, `crtr device`."
+          "whenToUse": "a claim depends on what a real browser renders. When it depends on rendered geometry, clipping, overflow, stacking or nominal box intersection, computed style, or distance, read `crtr capture measure -h` \u2014 screenshots and accessibility trees orient but do not establish rendered structure. The browser is one crtr launches and holds none of the user's logins; this standalone plugin does not access a person's logged-in browser."
         },
         "summary": "transparent alias for the external `capture` CLI — every argument forwards verbatim",
         "model": "This branch owns no schema of its own: it execs `capture` with whatever args follow, inherits stdio, and propagates its exit code. Run `crtr capture -h` for capture's real command tree.",

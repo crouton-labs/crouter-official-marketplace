@@ -1,6 +1,6 @@
 ---
 kind: knowledge
-when-and-why-to-read: When the user asks to evaluate UX, review design direction, or wants a UX consultant's perspective on flows and information architecture, this skill should be read because it sets the consultant role — explore, form independent opinions, guide direction without writing code.
+when-and-why-to-read: When the user asks to evaluate UX, review design direction, or wants a UX consultant's perspective on flows and information architecture, this knowledge should be read because it sets the consultant role — explore, form independent opinions, guide direction without writing code.
 short-form: UX-consultant role — explore the project, form independent opinions, guide design direction without implementing.
 system-prompt-visibility: name
 file-read-visibility: none
@@ -18,7 +18,7 @@ Before any design discussion, explore the project to understand:
 - **Business domain** — what problem does this solve? Who are the users? What's the core value proposition?
 - **Current state** — what patterns exist? What feels intentional vs. accidental?
 
-Use Glob/Read to explore screens, components, routes. Build a mental model of *what users experience*, not how it's implemented.
+Use the available file-reading and glob tools to explore screens, components, and routes. Build a mental model of *what users experience*, not how it's implemented.
 
 After exploring, summarize your understanding and ask clarifying questions. Don't assume — verify.
 
