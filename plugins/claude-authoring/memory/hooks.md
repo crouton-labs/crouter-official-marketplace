@@ -1,81 +1,72 @@
 ---
 kind: knowledge
-when-and-why-to-read: When you are creating, debugging, or planning Claude Code hooks — for guardrails, context injection, quality gates, notifications, or automation — this skill should be read because it covers the lifecycle events, handler types, and decision-control patterns.
-short-form: Claude Code hooks — lifecycle events, handler types, decision control, guardrail/injection patterns.
+when-and-why-to-read: When you are creating, debugging, or planning Claude Code hooks for guardrails, context injection, quality gates, notifications, or automation, this authoring guide should be read because it matches the enforcement mechanism and output contract to the lifecycle event.
+short-form: Claude Code hooks — lifecycle automation, handler selection, event-specific output, and configuration patterns.
 system-prompt-visibility: name
 file-read-visibility: none
 ---
 
 # Claude Code Hooks
 
-Hooks are deterministic handlers that fire at lifecycle events. Unlike instructions, hooks **cannot be ignored** — they block, inject, or modify at the system level.
+Claude Code hooks are deterministic handlers that fire at lifecycle events. Unlike instructions, they can enforce a decision, inject context, or run automation.
 
-## When to Use Hooks vs Other Tools
+## When to Use Hooks vs Other Artifacts
 
-- **Hooks**: Must happen every time, no exceptions (guardrails, formatting, enforcement)
-- **Rules/CLAUDE.md**: Advisory guidance Claude should follow (conventions, preferences)
-- **Skills**: On-demand reference material (knowledge, methodology)
+- **Claude Code hooks**: A guardrail or automation must run at a lifecycle boundary.
+- **Claude Code rules or `CLAUDE.md`**: Advisory conventions and project context.
+- **Claude Code skills**: On-demand reference material, methodology, or workflows.
 
-## Hook Events
+## Events and Configuration
 
-Hooks fire at three points in execution: before the user or agent acts (`UserPromptSubmit`, `PreToolUse`), after the system acts (`PostToolUse`, `Stop`), and during agent lifecycle transitions (`SubagentStart`, `TaskCompleted`). Session bookend events (`SessionStart`, `SessionEnd`) handle setup and teardown. See [hooks-reference.md](hooks-reference.md) for the full event list with blocking/injection capabilities per event.
+Hook events span session setup and teardown, prompt submission and expansion, tool execution, subagents and tasks, compaction, worktrees, and MCP elicitation. Event timing, matcher semantics, and accepted output vary by event; use the [official hooks reference](https://code.claude.com/docs/en/hooks) as the current event inventory and consult [[claude-authoring/hooks-reference]] before implementing one.
+
+A hook configuration nests an event, a matcher group, and one or more handlers. The complete valid shape and scoped-hook form are in [[claude-authoring/hooks-reference]].
 
 ## Handler Types
 
-Pick based on how complex the decision is:
+Pick the smallest handler that can make the decision:
 
 | Handler | Use when... |
 |---------|-------------|
-| **command** | Logic is deterministic — regex check, file exists, env var set. Fastest. |
-| **prompt** | Decision requires judgment but no file access — "is this prompt asking for secrets?" |
-| **agent** | Decision requires investigation — read files, run commands, check state. |
-| **http** | Hook logic lives outside the machine — shared enforcement service, cross-team policy. |
+| **command** | Logic is deterministic — regex check, file exists, env var set. |
+| **prompt** | A single-turn judgment needs no file access. |
+| **agent** | The decision needs investigation with tools. |
+| **http** | Logic lives in a shared external service. |
 
-Default to `command`. Escalate to `prompt` only when a shell script can't encode the judgment. Use `agent` sparingly — it spawns a subagent and adds real latency.
+Default to `command`. Escalate only when the simpler handler cannot make the required decision; agent handlers add real latency.
 
-## Decision Control
+## Output and Decision Control
 
-All hook output must be wrapped in `hookSpecificOutput` with the matching `hookEventName`. **`hookEventName` is required** — without it, Claude Code silently drops the payload.
+Command-hook stdin, stdout, stderr, exit codes, and structured return fields are event-specific. `StopFailure`, for example, ignores output and exit codes. When an event accepts a structured decision, return `hookSpecificOutput` with the matching `hookEventName`; the event reference defines which fields that event accepts.
 
 ```json
 {
   "hookSpecificOutput": {
     "hookEventName": "PreToolUse",
-    "additionalContext": "injected text"
+    "permissionDecision": "deny",
+    "permissionDecisionReason": "Destructive command blocked"
   }
 }
 ```
 
-See [hooks-reference.md](hooks-reference.md) for the full per-event return value spec (`permissionDecision`, `updatedInput`, `decision: "block"`, etc.).
+See [[claude-authoring/hooks-reference]] for the complete configuration example and event-specific control fields.
 
 ## Matchers
 
-Use `|` to target multiple tools: `"matcher": "Write|Edit|MultiEdit"`. MCP tools match as `mcp__servername__toolname`. Omit matcher to catch all tools for that event.
-
-See [hooks-reference.md](hooks-reference.md) for full matcher syntax including SessionStart variants.
+Use `|` to target multiple tools: `"matcher": "Write|Edit|MultiEdit"`. MCP tools match as `mcp__servername__toolname`. Omit the matcher to catch every occurrence of an event. Consult the [official matcher reference](https://code.claude.com/docs/en/hooks#matcher-patterns) for event-specific matcher rules.
 
 ## Skill- and Agent-Scoped Hooks
 
-Hooks can be declared in `SKILL.md` or agent frontmatter to scope them to that skill/agent only — useful for guardrails that shouldn't apply globally. Uses the same matcher/handler format as `hooks.json`, nested under `hooks:` in frontmatter. See [hooks-reference.md](hooks-reference.md) for a full example.
+Claude Code hooks can be declared in `SKILL.md` or agent frontmatter to scope them to that external artifact. This is useful for guardrails that should not apply globally; see [[claude-authoring/hooks-reference]] for the nested configuration.
 
 ## Common Patterns
 
-See [hooks-patterns.md](hooks-patterns.md) for comprehensive examples organized by category:
-- Guardrails and enforcement
-- Context injection
-- Quality gates (auto-format, lint, test)
-- Notifications and alerts
-- Logging and auditing
-- Auto-approval workflows
-- Input modification and sandboxing
-- Git workflow automation
-- Session management
-- Agent team coordination
+[[claude-authoring/hooks-patterns]] collects examples for guardrails, context injection, quality gates, notifications, logging, Git workflows, session management, and agent-team coordination.
 
 ## Best Practices
 
-- **Async for slow operations**: Set `"async": true` for hooks that shouldn't block (tests, notifications)
-- **Timeouts**: Default is 60s for sync hooks. Set explicit timeouts for fast hooks.
-- **Idempotency**: Hooks may fire multiple times. Guard against duplicate processing.
-- **Stop hook loops**: Always check `stop_hook_active` to prevent infinite continuation loops.
-- **Minimal hooks.json**: One concern per hook. Compose multiple small hooks rather than one monolith.
+- **Async for slow operations**: Set `"async": true` for hooks that should not block.
+- **Timeouts**: Set explicit timeouts for fast hooks.
+- **Idempotency**: Hooks may fire multiple times; guard against duplicate processing.
+- **Stop hook loops**: Check `stop_hook_active` before forcing continuation.
+- **One concern per handler**: Compose small hooks instead of creating a monolith.

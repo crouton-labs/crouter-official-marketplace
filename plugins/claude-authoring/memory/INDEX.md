@@ -8,9 +8,9 @@ file-read-visibility: none
 
 # Authoring Claude Code artifacts
 
-- **claude-md** — effective CLAUDE.md files.
-- **commands** — slash commands.
-- **hooks** — lifecycle hooks.
-- **rules** — file-scoped .claude/rules/*.md.
-- **scripts-and-tooling** — bin/ tools and automation.
-- **skills** — SKILL.md files.
+- [[claude-authoring/claude-md]] — effective CLAUDE.md files.
+- [[claude-authoring/commands]] — Claude Code slash commands.
+- [[claude-authoring/hooks]] — Claude Code lifecycle hooks.
+- [[claude-authoring/rules]] — file-scoped `.claude/rules/*.md` files.
+- [[claude-authoring/scripts-and-tooling]] — bin/ tools and automation.
+- [[claude-authoring/skills]] — Claude Code `SKILL.md` files.

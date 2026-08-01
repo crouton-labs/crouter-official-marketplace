@@ -1,6 +1,6 @@
 ---
 kind: knowledge
-when-and-why-to-read: When you are building CLI tools or scripts that augment Claude Code — bin/ executables, automation scripts, hook handlers — this skill should be read because it covers creating agent-facing tooling that abstracts repeated workflows.
+when-and-why-to-read: When you are building CLI tools or scripts that augment Claude Code — bin/ executables, automation scripts, or hook handlers — this authoring guide should be read because it keeps repeated workflows out of agent context while preserving actionable output.
 short-form: Create CLI tools and scripts that augment Claude Code — bin/ executables, automation, hook handlers.
 system-prompt-visibility: name
 file-read-visibility: none
@@ -22,8 +22,8 @@ Scripts abstract away multi-step sequences, complex computation, and ceremony th
 |----------|-----------|----------|
 | `bin/` on PATH | Agent calls via Bash | General-purpose CLI tools |
 | `scripts/` | Agent calls via Bash | Project-specific automation |
-| `hooks/` scripts | Called by hooks.json | Lifecycle handlers (guards, formatters, loggers) |
-| `skills/*/scripts/` | Bundled with SKILL.md | Deterministic computation a skill needs |
+| `hooks/` scripts | Called by Claude Code hook configuration | Lifecycle handlers (guards, formatters, loggers) |
+| `skills/*/scripts/` | Bundled with a Claude Code `SKILL.md` | Deterministic computation a skill needs |
 | `.mcp.json` + MCP servers | Claude calls as native tools | API wrappers, database access |
 
 ## Design Principles for Agent-Facing CLIs

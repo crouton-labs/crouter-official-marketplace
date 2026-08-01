@@ -1,6 +1,6 @@
 ---
 kind: knowledge
-when-and-why-to-read: When you are creating a Claude Code slash command — one that sets mode, constraints, or a workflow invoked via /command-name — this skill should be read because it covers the command file format and conventions.
+when-and-why-to-read: When you are creating a Claude Code slash command — one that sets mode, constraints, or a workflow invoked via `/command-name` — this authoring guide should be read because it keeps command prompts focused on the behavior that differs from Claude's defaults.
 short-form: Write Claude Code slash commands — mode-setting, constraints, workflows, frontmatter.
 system-prompt-visibility: name
 file-read-visibility: none
@@ -10,7 +10,7 @@ file-read-visibility: none
 
 Commands specify **constraints and mode**, not instructions. Claude already knows how to do most things — commands tell it what to do differently.
 
-**Commands and skills are the same thing now.** `.claude/commands/deploy.md` and `.claude/skills/deploy/SKILL.md` both produce `/deploy` and use the same frontmatter. Existing `commands/` files keep working. Prefer skills when you need bundled scripts, reference files, or per-skill hooks — see the skills-authoring skill for the full feature set.
+Claude Code keeps `.claude/commands/deploy.md` working as a legacy command format. For a new bundled artifact, use `.claude/skills/deploy/SKILL.md`; [[claude-authoring/skills]] covers that format and the migration decision.
 
 ## Structure
 
@@ -58,25 +58,13 @@ Most commands should be **user-only** or **agent-only** — rarely both.
 | Field | Purpose |
 |-------|---------|
 | `model` | Override model (haiku for cheap, opus for capability) |
-| `effort` | Override effort level: `low`, `medium`, `high`, `max` |
+| `effort` | Override effort level; available levels depend on the model |
 | `argument-hint` | Document expected args for autocomplete |
 | `paths` | Glob patterns — only activate when working with matching files |
 | `context: fork` | Run in an isolated subagent context |
 | `agent` | Subagent type when `context: fork` is set (`Explore`, `Plan`, etc.) |
 | `hooks` | Command-scoped hooks (same format as `hooks.json`, nested in frontmatter) |
 | `shell` | `bash` (default) or `powershell` for inline shell execution |
-
-## Commands vs Skills
-
-Functionally identical — same frontmatter, same invocation. Choose the file layout:
-
-| Single `.md` in `commands/` | Directory in `skills/` |
-|-----------------------------|------------------------|
-| Quick prompts, single file | Needs bundled scripts or reference files |
-| Existing muscle memory | Per-skill hooks via `hooks:` frontmatter |
-| <200 lines | Progressive disclosure across multiple `.md` files |
-
-If a command needs to grow supporting files or bundled scripts, convert it to a skill directory.
 
 ## Anti-Patterns
 

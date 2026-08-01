@@ -1,131 +1,60 @@
 ---
 kind: knowledge
-when-and-why-to-read: When you are applying the hooks skill and follow its pointers to worked examples, the full catalog, or the annotated reference, this reference should be read because it holds the deep-dive material the skill body links to.
-short-form: Deep-dive companion to the hooks skill — worked examples and the full catalog the skill body points to.
+when-and-why-to-read: When you are implementing a Claude Code hook and need its configuration shape or event-specific output behavior, this reference guide should be read because it prevents a valid handler from being registered or interpreted incorrectly.
+short-form: Claude Code hook configuration and event-specific output reference.
 system-prompt-visibility: none
 file-read-visibility: none
 ---
-# Claude Code Hooks — Reference
 
-## Hook Events
+# Claude Code Hooks — Configuration and Output Reference
 
-**Session lifecycle**
-| Event | Fires When | Can Block? | Can Inject Context? |
-|-------|-----------|-----------|-------------------|
-| `SessionStart` | Session begins/resumes/compacts | No | Yes |
-| `InstructionsLoaded` | After CLAUDE.md and system instructions load | No | Yes |
-| `SessionEnd` | Session terminates | No | No |
-| `ConfigChange` | settings.json or config reloads mid-session | No | No |
-| `CwdChanged` | Working directory changes | No | No |
+The [official Claude Code hooks reference](https://code.claude.com/docs/en/hooks) is the source of truth for the current event inventory, input schemas, matcher behavior, and accepted output. Consult the relevant event section rather than inferring one event's return contract from another.
 
-**Prompt and tool flow**
-| Event | Fires When | Can Block? | Can Inject Context? |
-|-------|-----------|-----------|-------------------|
-| `UserPromptSubmit` | User submits prompt | Yes | Yes |
-| `PreToolUse` | Before tool executes | Yes | Yes |
-| `PermissionRequest` | Permission dialog appears | Yes (auto-allow) | No |
-| `PermissionDenied` | User denies a permission request | No | Yes |
-| `PostToolUse` | After tool succeeds | No | Yes |
-| `PostToolUseFailure` | After tool fails | No | Yes |
-| `FileChanged` | File modified outside Claude's tools | No | Yes |
-| `Stop` | Claude finishes responding | Yes (continue) | Yes |
-| `StopFailure` | Claude stops due to error | No | Yes |
-| `Notification` | Notification sent | No | No |
+## Configuration Shape
 
-**Subagents and teams**
-| Event | Fires When | Can Block? | Can Inject Context? |
-|-------|-----------|-----------|-------------------|
-| `SubagentStart` | Subagent spawns | No | Yes |
-| `SubagentStop` | Subagent finishes | Yes (continue) | Yes |
-| `TeammateIdle` | Teammate about to idle | Yes (continue) | Yes |
-| `TaskCreated` | Task added to task list | No | Yes |
-| `TaskCompleted` | Task marked complete | Yes (reject) | Yes |
-
-**Compaction and worktrees**
-| Event | Fires When | Can Block? | Can Inject Context? |
-|-------|-----------|-----------|-------------------|
-| `PreCompact` | Before context compaction | No | No |
-| `PostCompact` | After compaction finishes | No | Yes |
-| `WorktreeCreate` | New worktree created | No | No |
-| `WorktreeRemove` | Worktree removed | No | No |
-
-**Elicitation (MCP interactive prompts)**
-| Event | Fires When | Can Block? | Can Inject Context? |
-|-------|-----------|-----------|-------------------|
-| `Elicitation` | MCP server requests user input | No | No |
-| `ElicitationResult` | User responds to elicitation | No | Yes |
-
-## Handler Types
-
-**command** — Shell script. Receives JSON on stdin, returns via exit code + stdout/stderr.
-- Exit 0: allow (stdout = JSON with control fields)
-- Exit 2: block (stderr = feedback message)
-
-**http** — POST request to a URL. Handler config takes `url` (required), `headers` (optional, supports `$VAR` interpolation), `allowedEnvVars` (whitelist for interpolation), `timeout` (default 30s). Response body is the same JSON shape as command hooks. Use for centralized hook services or cross-machine enforcement.
+A hook configuration nests the event name under `hooks`, then a matcher group, then the handler array. This `PreToolUse` example blocks matching Bash commands:
 
 ```json
 {
-  "type": "http",
-  "url": "http://localhost:8080/hooks/pre-tool-use",
-  "headers": { "Authorization": "Bearer $MY_TOKEN" },
-  "allowedEnvVars": ["MY_TOKEN"],
-  "timeout": 30
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/guard.sh"
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 
-**prompt** — Single-turn LLM evaluation. Fast, no tool access. Good for nuanced decisions.
+Use this shape in Claude Code settings or a host-native plugin's `hooks/hooks.json`. A matcher group may contain multiple handlers.
 
-**agent** — Multi-turn subagent with tool access. Can read files, run commands, investigate. Most powerful but slowest.
+## Command Output
 
-## Decision Control
+Command hooks receive event JSON on stdin. Claude Code interprets exit codes, stdout, stderr, and JSON output according to the event. `StopFailure` is a special case: its output and exit code are ignored.
 
-All hook output must be wrapped in `hookSpecificOutput` with the matching `hookEventName`:
+For an event that accepts structured control, return `hookSpecificOutput` and set `hookEventName` to that event. For example, `PreToolUse` can deny a tool call:
 
 ```json
 {
   "hookSpecificOutput": {
     "hookEventName": "PreToolUse",
-    "additionalContext": "injected text"
+    "permissionDecision": "deny",
+    "permissionDecisionReason": "Destructive command blocked"
   }
 }
 ```
 
-**`hookEventName` is required** — without it, Claude Code silently drops the payload.
-
-**PreToolUse** handlers can return:
-- `permissionDecision: "allow" | "deny" | "ask" | "defer"` — override permission system
-- `updatedInput: {...}` — transparently modify tool parameters
-- `additionalContext: "..."` — inject text into Claude's context
-
-`"defer"` is only valid in headless mode (`claude -p`). It pauses execution and exits with `stop_reason: "tool_deferred"` so the calling process can handle the tool call (e.g. `AskUserQuestion` from an SDK harness) and resume via `claude -p --resume <session-id>`. Ignored with a warning in interactive sessions.
-
-**PostToolUse** handlers can return:
-- `additionalContext: "..."` — inject text into Claude's context after tool execution
-
-**Stop / SubagentStop / TeammateIdle / TaskCompleted** handlers can return:
-- `decision: "block"` with `reason: "..."` — force continuation
-
-**PermissionRequest** handlers can return:
-- `behavior: "allow" | "deny" | "ask"` — auto-approve or reject
-- `updatedPermissions: [...]` — apply persistent permission rules
-
-## Matchers
-
-```json
-{
-  "event": "PreToolUse",
-  "matcher": "Bash|Edit|Write",
-  "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/guard.mjs"
-}
-```
-
-- `|` separates multiple tool names: `Write|Edit|MultiEdit`
-- MCP tools: `mcp__servername__toolname` or `mcp__servername__*`
-- SessionStart matchers: `resume`, `clear`, `compact`
+The [PreToolUse reference](https://code.claude.com/docs/en/hooks#pretooluse) defines its available fields. Other event pages define their own output behavior.
 
 ## Skill- and Agent-Scoped Hooks
 
-Hooks can be declared inside `SKILL.md` or agent frontmatter so they only fire while that skill/agent is active. Useful for scoped guardrails that shouldn't apply globally.
+Claude Code skills and agents can carry the same configuration under frontmatter `hooks:`:
 
 ```yaml
 ---
@@ -137,12 +66,7 @@ hooks:
       hooks:
         - type: command
           command: "${CLAUDE_SKILL_DIR}/scripts/confirm-deploy.sh"
-  PostToolUse:
-    - matcher: "Write|Edit"
-      hooks:
-        - type: command
-          command: "${CLAUDE_SKILL_DIR}/scripts/validate.sh"
 ---
 ```
 
-Same matcher/handler format as `hooks.json`, just nested under `hooks:` in frontmatter.
+Use scoped hooks when the enforcement belongs only to that Claude Code skill or agent, rather than every project event.

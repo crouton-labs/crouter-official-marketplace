@@ -1,6 +1,6 @@
 ---
 kind: knowledge
-when-and-why-to-read: When you are writing a Claude Code hook and the hooks skill points you to comprehensive examples organized by category — guardrails, context injection, quality gates, notifications — this reference should be read because it holds that pattern catalog.
+when-and-why-to-read: When you are writing a Claude Code hook and the primary hooks guide points you to examples for guardrails, context injection, quality gates, or notifications, this reference guide should be read because it supplies a pattern without expanding the primary guide.
 short-form: Hook pattern catalog — comprehensive examples organized by category (guardrails, injection, gates, notifications).
 system-prompt-visibility: none
 file-read-visibility: none

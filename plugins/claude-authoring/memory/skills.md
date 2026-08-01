@@ -1,23 +1,23 @@
 ---
 kind: knowledge
-when-and-why-to-read: When you are creating a SKILL.md for Claude Code — on-demand reference, methodology, or workflow guidance — this skill should be read because it covers the skill file format and bundling conventions.
+when-and-why-to-read: When you are creating a Claude Code `SKILL.md` — on-demand reference, methodology, or workflow guidance — this authoring guide should be read because it keeps bundled guidance discoverable without bloating project context.
 short-form: Write SKILL.md files for Claude Code — on-demand reference, methodology, bundling.
 system-prompt-visibility: name
 file-read-visibility: none
 ---
 
-# Writing Skills
+# Writing Claude Code Skills
 
-Skills are on-demand reference material Claude loads when relevant — not every session. They're ideal for methodology, domain knowledge, and complex workflows that would bloat CLAUDE.md.
+Claude Code skills are on-demand reference material Claude loads when relevant — not every session. They are appropriate for methodology, domain knowledge, and complex workflows that would bloat `CLAUDE.md`.
 
-**Commands are now skills.** `.claude/commands/deploy.md` and `.claude/skills/deploy/SKILL.md` both produce `/deploy` and use the same frontmatter. Existing `commands/` files keep working, but new work should go in `skills/` — skills can bundle supporting files, scripts, and per-skill hooks that commands cannot.
+Claude Code retains `.claude/commands/deploy.md` as a legacy format. Put new bundled artifacts in `.claude/skills/deploy/SKILL.md`, where they can include supporting files, scripts, and skill-scoped hooks. [[claude-authoring/commands]] covers command-specific frontmatter and migration details.
 
 ## Structure
 
 ```
 skill-name/
 ├── SKILL.md              # Required: overview and navigation
-├── skills-reference.md          # Optional: detailed docs
+├── reference.md         # Optional: detailed docs
 ├── examples.md           # Optional: usage examples
 └── scripts/              # Optional: bundled utilities
     └── validate.py
@@ -42,7 +42,7 @@ The `description` field drives automatic discovery. Include keywords users would
 | `argument-hint` | Autocomplete hint for expected args: `[issue-number]` |
 | `allowed-tools` | Restrict available tools (space-separated or YAML list) |
 | `model` | Override model (opus/sonnet/haiku) |
-| `effort` | Override effort level: `low`, `medium`, `high`, `max` (Opus 4.6 only) |
+| `effort` | Override effort level; available levels depend on the model |
 | `context: fork` | Run in isolated subagent context |
 | `agent` | Agent type when forked: `Explore`, `Plan`, `general-purpose`, or custom |
 | `user-invocable: false` | Hide from slash menu (agent-only) |
@@ -90,7 +90,7 @@ The litmus test: **does this teach judgment or describe an API?**
 
 A skill helps someone who doesn't know *what to do* — it provides decision frameworks, heuristics, and principles they can reason from. A reference manual helps someone who already knows what to do but forgot *how* — it provides API surfaces, tables, and exhaustive listings.
 
-If your SKILL.md reads like a man page, you've written a reference doc wearing a skill's clothes. Extract the reference material to `skills-reference.md` and rewrite SKILL.md around the decisions.
+If your `SKILL.md` reads like a man page, separate the reference material into a companion file and rewrite the skill around the decisions.
 
 **Skill markers:**
 - Teaches a framework for thinking about a class of problems
@@ -104,7 +104,7 @@ If your SKILL.md reads like a man page, you've written a reference doc wearing a
 - Tables and code examples dominate
 - No decision frameworks
 
-Most skills need both — SKILL.md for the judgment layer, `skills-reference.md` for the lookup layer. The mistake is combining them.
+Most Claude Code skills need both — `SKILL.md` for the judgment layer and a companion reference file for lookup. The mistake is combining them.
 
 ## Writing for Token Efficiency
 
@@ -113,7 +113,7 @@ LLM reasoning degrades as context grows — research shows meaningful accuracy d
 **Budget ~150 lines for SKILL.md.** This forces density.
 
 - Lead with the decision, not the mechanism. "When you need X" before "how X works."
-- If a section exceeds 20 lines without teaching judgment, move it to `skills-reference.md`.
+- If a section exceeds 20 lines without teaching judgment, move it to a companion reference file.
 - Tables are expensive — a 3-line prose summary often teaches the same thing as a 25-row table.
 - Example reasoning chains > example outputs. Show *how to think*, not *what to produce*.
 - One well-placed "don't" prevents more bad behavior than three paragraphs of explanation.
@@ -145,16 +145,12 @@ Research $ARGUMENTS thoroughly: find files, read code, summarize findings.
 
 With `context: fork`, SKILL.md content becomes the task prompt for a fresh subagent. Only meaningful for skills with explicit instructions — reference-only skills will return empty. The inverse pattern (custom subagent that preloads skills as reference) lives in the subagent definition, not here.
 
-## Extended Thinking
-
-Include the word `ultrathink` anywhere in the skill content to enable extended thinking when the skill runs.
-
 ## When to Use Skills vs Other Tools
 
-- **Skills**: Complex methodology, detailed reference, domain knowledge, workflows
-- **Rules**: Auto-applied constraints for matching files — declarative, not procedural
-- **CLAUDE.md**: Universal project context — short, always-loaded
-- **Hooks**: Deterministic enforcement that cannot be ignored
+- **Claude Code skills**: Complex methodology, detailed reference, domain knowledge, workflows
+- **Claude Code rules**: Auto-applied constraints for matching files — declarative, not procedural
+- **CLAUDE.md**: Universal project context — short, always loaded
+- **Claude Code hooks**: Deterministic enforcement
 
 ## Best Practices
 

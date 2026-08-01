@@ -1,6 +1,6 @@
 ---
 kind: knowledge
-when-and-why-to-read: When you are creating or updating .claude/rules/*.md files — auto-applied constraints scoped by file pattern — this skill should be read because it covers how to write file-scoped conventions and guidance.
+when-and-why-to-read: When you are creating or updating `.claude/rules/*.md` files — auto-applied constraints scoped by file pattern — this authoring guide should be read because it keeps file-specific guidance precise without bloating project-wide context.
 short-form: Write .claude/rules/*.md — auto-applied, path-scoped constraints and conventions.
 system-prompt-visibility: name
 file-read-visibility: none
@@ -8,7 +8,7 @@ file-read-visibility: none
 
 # Writing Rules
 
-Rules are constraints Claude follows automatically when working with matching files. They live in `.claude/rules/` or a plugin's `rules/` directory.
+Claude Code rules are constraints Claude follows automatically when working with matching files. They live in `.claude/rules/`.
 
 ## Structure
 
@@ -43,15 +43,15 @@ Rules without `paths` load every session. Rules with `paths` only load when Clau
 
 ## When to Use Rules vs Other Tools
 
-- **Rules**: File-type-specific conventions that are advisory (Claude should follow but there's no hard enforcement)
+- **Claude Code rules**: File-type-specific conventions that are advisory
 - **CLAUDE.md**: Universal project context loaded every session
-- **Hooks**: Must be enforced deterministically — cannot be ignored
-- **Skills**: Reference material loaded on-demand, not automatically
+- **Claude Code hooks**: Must be enforced deterministically
+- **Claude Code skills**: Reference material loaded on demand, not automatically
 
 ## Anti-Patterns
 
-- Procedural instructions (use commands or skills instead)
+- Procedural instructions (use Claude Code commands or skills instead)
 - Rules that apply to every file type (use CLAUDE.md or omit `paths`)
 - Duplicating CLAUDE.md content
 - Over-broad path patterns that match unrelated files
-- Rules longer than ~30 lines (split into multiple files or use a skill)
+- Rules longer than ~30 lines (split into multiple files or use a Claude Code skill)

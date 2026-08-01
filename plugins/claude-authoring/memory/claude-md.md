@@ -1,6 +1,6 @@
 ---
 kind: knowledge
-when-and-why-to-read: When you are creating, updating, or auditing a CLAUDE.md file for a project or directory, this skill should be read because it gives the practices for writing one that actually constrains and contextualizes the agent.
+when-and-why-to-read: When you are creating, updating, or auditing a CLAUDE.md file for a project or directory, this authoring guide should be read because it keeps the project front door focused on constraints that change agent behavior.
 short-form: Best practices for writing effective CLAUDE.md files — constraints, codebase context, gotchas.
 system-prompt-visibility: name
 file-read-visibility: none
@@ -34,7 +34,7 @@ Prioritize in order:
 - Short declarative bullets > paragraphs
 - Never write "Never X" without the preferred alternative
 - When referencing other docs, pitch *when/why* to read them (e.g., "For FooError, see docs/foo.md")
-- If guidance exceeds ~5 lines, it belongs in a skill or rule instead
+- If guidance exceeds ~5 lines, move it to a Claude Code skill or rule instead
 
 ## Root vs Subdirectory
 
@@ -49,9 +49,9 @@ Don't repeat parent CLAUDE.md content. Don't explain what's obvious from the dir
 
 ## When to Use Something Else
 
-- **>5 lines of domain knowledge** → Skill (loaded on-demand, not every session)
-- **File-type-specific constraints** → Rule with `paths` frontmatter
-- **Deterministic enforcement** → Hook (can't be ignored)
+- **>5 lines of domain knowledge** → Claude Code skill (loaded on demand, not every session)
+- **File-type-specific constraints** → Claude Code rule with `paths` frontmatter
+- **Deterministic enforcement** → Claude Code hook (cannot be ignored)
 
 ## Auditing Existing CLAUDE.md
 
