@@ -1,38 +1,35 @@
 ---
 kind: knowledge
-when-and-why-to-read: When the user is stuck or asks for a breakthrough, fresh thinking, or out-of-the-box ideas on a problem, this skill should be read because it spawns four parallel advisors with conflicting lenses and synthesizes them into actionable insight.
-short-form: Breakthrough thinking — spawn 4 conflicting-lens advisors in parallel, then synthesize into actionable insight.
+when-and-why-to-read: When the user is stuck or asks for a breakthrough, fresh thinking, or out-of-the-box ideas on a problem, this skill should be read because independent advisor perspectives expose non-obvious approaches worth testing.
+short-form: Breakthrough thinking — use independent advisor lenses when they will broaden the insight, then synthesize actionable approaches.
 system-prompt-visibility: name
 file-read-visibility: none
 ---
 
 # Epiphany — breakthrough thinking via parallel advisors
 
-You are a breakthrough thinking orchestrator. Generate genuinely novel approaches by running parallel advisors with conflicting lenses, then synthesize their output into actionable insight.
+Generate genuinely novel approaches by bringing independent advisor perspectives into tension, then synthesize their output into actionable insight.
 
-If the user has not stated the problem clearly, ask once for a one-paragraph problem statement before spawning advisors. Don't dispatch four `opus` agents on a vague target.
+If the user has not stated the problem clearly, ask once for a one-paragraph problem statement before seeking advice.
 
-## Phase 1: Diverge (parallel)
+## Phase 1: Diverge
 
-Spawn 4 advisors as parallel Task agents — `subagent_type: "general-purpose"`, `model: "opus"`. Each gets the exact problem and a single lens assignment. Advisors must NOT know about each other's lenses.
+When independent judgment will materially broaden the thinking, create managed advisor children with `crtr node new --kind advisor`. Give each child the exact problem and one focused lens; let the current node and model policy choose how many advisors are warranted. Keep the assignments independent so each perspective can challenge the others.
 
-Assign these lenses:
+Useful lenses include:
 
-1. **Constraint Inverter** — Identify the 3 biggest assumed constraints. For each: what if it were an advantage instead? Build a solution that *requires* the constraint.
+- **Constraint inversion** — Treat assumed constraints as possible advantages and explore a solution that depends on one.
+- **Domain transplant** — Find a structural analog in an unrelated field and adapt its proven approach.
+- **Problem dissolution** — Challenge whether this is the right problem and look for an approach that makes it irrelevant.
+- **Adversarial architecture** — Consider what a smart critic would propose after dismantling the obvious solutions.
 
-2. **Domain Transplanter** — Find the closest structural analog in a completely unrelated field (biology, economics, game theory, etc.). Import that field's proven solution and adapt it.
-
-3. **Problem Dissolver** — Challenge whether this is the right problem. Ladder up 3 levels of abstraction. Find an approach that makes the original problem irrelevant.
-
-4. **Adversarial Architect** — Design the approach your smartest critic would propose after dismantling every "obvious" solution. What survives skepticism?
-
-Each advisor prompt must end with: *"Present your single strongest insight in under 200 words. If your answer feels safe or conventional, you failed — push harder."*
+Ask each advisor for its strongest concrete insight and why it changes the problem.
 
 ## Phase 2: Synthesize
 
 After all advisors return:
 
-- Identify overlapping principles across the 4 responses.
+- Identify overlapping principles across the returned advice.
 - Find tensions or contradictions — these are where the real insight lives.
 - Combine fragments into 2–3 hybrid approaches that no single lens produced.
 
@@ -50,4 +47,4 @@ For each hybrid approach:
 - If an advisor returns generic or predictable output, note the failure and extract what you can — don't pad it.
 - The final output is the 2–3 hybrids. Not a transcript of advisor responses.
 - Favor approaches that dissolve the problem over ones that power through it.
-- This skill is expensive — each advisor is a separate `opus` run. Don't invoke for problems where conventional thinking would clearly work.
+- Use parallel advice when it can change the direction; conventional problems may need no advisor delegation.

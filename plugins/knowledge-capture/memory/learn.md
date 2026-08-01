@@ -1,16 +1,16 @@
 ---
 kind: knowledge
-when-and-why-to-read: When the user asks to capture lessons, save what was learned, or update a project knowledge file from this conversation, this skill should be read because it extracts the session's key takeaways into a learned-skills file.
-short-form: Extract key takeaways from the session and save them to a learned-skills file.
+when-and-why-to-read: When the user asks to capture lessons, save what was learned, or update durable knowledge from this conversation, this skill should be read because it preserves the session's non-obvious takeaways in the right memory scope.
+short-form: Extract key takeaways from the session and save them as durable memory.
 system-prompt-visibility: name
 file-read-visibility: none
 ---
 
 # Capturing session takeaways
 
-Reflect on the current conversation and extract key takeaways relevant to the user's stated focus. Save them to the file the user specifies.
+Reflect on the current conversation and extract key takeaways relevant to the user's stated focus. Save durable takeaways through the crouter memory substrate.
 
-If the user has not given both a **focus** (what to extract) and an **output file** (where to save), ask once. Without an output path there is nowhere to write.
+If the user has not given both a **focus** (what to extract) and the intended **memory scope** (node, project, profile, or user), ask once. The scope decides who can use the takeaway later.
 
 ## What to save
 
@@ -43,4 +43,4 @@ Never auto-save silently. Propose the takeaways and ask the user to confirm:
 >
 > Should I save these?"
 
-After the user confirms, write to the specified file. If the file already exists, merge with existing content rather than overwriting — keep prior takeaways unless they contradict what was just learned.
+After the user confirms, run `crtr memory write -h` and use its current routing guidance to find the existing document or create the narrowest durable document that reaches future readers. Update an existing document in place when it covers the same truth; replace superseded guidance rather than preserving conflicting versions.

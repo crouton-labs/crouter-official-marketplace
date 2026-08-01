@@ -19,10 +19,9 @@ Don't answer — ask. Replace "why?" with "what makes you say that?" (same depth
 
 ## Run it through crtr human
 
-- Build a deck JSON file, then `crtr human ask --context-file <path>`. The kickoff returns instantly and **never blocks** — the human answers on their own time and the result is pushed to your inbox. Don't busy-wait or poll; end your turn or keep working, you'll be woken with the answer.
-- One wave = one deck (`interactions[]`). Each question: a `title` (the topic, not the decision), a `subtitle` (the one-line ask), 2–4 *real* `options` as starting points, and `allowFreetext: true` — experience calls are judgment calls, always let them answer in their own words.
+- Build a deck JSON file, then run `crtr human ask --context-file <path>`. The kickoff returns instantly and queues the ticket in the humanloop inbox; nothing opens automatically. The human answers on their own time and the answer is pushed to your inbox. Do not busy-wait or poll; end your turn or keep working until the inbox wakes you.
+- One wave = one deck (`interactions[]`). Each question needs a short `title`, a `subtitle` stating the decision, recommendation, and stakes, 2–4 *real* `options` as starting points, and `allowFreetext: true` — experience calls are judgment calls, so let people answer in their own words.
 - Frame every question as a concrete **moment**, never an abstraction. *"A new user lands on the empty dashboard — what's the one thing they should feel pulled to do?"* beats *"What are your UX goals?"*.
-- Match answers back by `id`, never by index — the human can skip questions.
 - Deck JSON shape, a worked wave, the reflect-back mechanism, and the full lens catalog live in [product-design-interview-reference.md](product-design-interview-reference.md).
 
 ## Pick 3–4 lenses, not all of them
@@ -44,7 +43,7 @@ After each wave, mirror understanding before asking more — lead the next deck 
 
 ## Close with the picture, then a coverage check
 
-Before finalizing, ask one coverage question — *"Anything we circled but didn't land? Anything deliberately off the table?"*. When they confirm it's covered, write the **experience picture**: the user & their moment, the target feeling, the hero path (the one flow 80% will take), what's explicitly out of scope, open questions, and the single concrete next step.
+Before finalizing, ask one coverage question — *"Anything we circled but didn't land? Anything deliberately off the table?"*. When they confirm it's covered, write the **experience picture** to `$CRTR_CONTEXT_DIR/design-<subject>.md`: the user & their moment, the target feeling, the hero path (the one flow 80% will take), what's explicitly out of scope, open questions, and the single concrete next step. Hand the exact artifact path to a managed `design` node with `crtr node new --kind design` when architectural design is next, or a `spec` node with `crtr node new --kind spec` when the behavior still needs acceptance criteria.
 
 ## Failure modes
 
@@ -58,6 +57,5 @@ Before finalizing, ask one coverage question — *"Anything we circled but didn'
 
 ## Related
 
-- `claude-humanloop/humanloop` — deck authoring philosophy (title/subtitle/body pyramid, real options, progressive disclosure).
-- `crtr human -h` — the ask/notify/review surface this skill drives.
-- `crtr/design`, `crtr/spec` — where a settled picture goes to become an artifact.
+- `crtr human -h` — the current ask, notify, and review handoff surface.
+- `crtr node new --kind design` or `crtr node new --kind spec` — managed follow-on nodes that receive the experience-picture artifact path.

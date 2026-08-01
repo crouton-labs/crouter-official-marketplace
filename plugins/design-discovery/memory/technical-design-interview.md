@@ -19,10 +19,9 @@ Don't design — elicit. Replace "why?" with "what makes that a hard requirement
 
 ## Run it through crtr human
 
-- Build a deck JSON file, then `crtr human ask --context-file <path>`. The kickoff returns instantly and **never blocks** — the human answers on their own time, the result is pushed to your inbox. Don't poll; end your turn or keep working.
-- One wave = one deck (`interactions[]`). Each question: `title` (topic), `subtitle` (the one-line ask), 2–4 *real* `options` as starting points, `allowFreetext: true`. Always allow freetext — technical answers carry caveats.
+- Build a deck JSON file, then run `crtr human ask --context-file <path>`. The kickoff returns instantly and queues the ticket in the humanloop inbox; nothing opens automatically. The human answers on their own time and the answer is pushed to your inbox. Do not poll; end your turn or keep working until the inbox wakes you.
+- One wave = one deck (`interactions[]`). Each question needs a short `title`, a `subtitle` stating the decision, recommendation, and stakes, 2–4 *real* `options` as starting points, and `allowFreetext: true`. Always allow freetext — technical answers carry caveats.
 - Anchor questions in concrete numbers and scenarios, never abstractions. *"At 10x today's writes, all hitting in a morning burst — does the store still hold?"* beats *"How should we handle scale?"*.
-- Match answers back by `id`, never by index — the human can skip.
 - Deck JSON shape, a worked technical wave, the reflect-back mechanism, and the full lens catalog live in [technical-design-interview-reference.md](technical-design-interview-reference.md).
 
 ## Pick 3–4 lenses, not all of them
@@ -44,7 +43,7 @@ After each wave, mirror understanding before asking more — lead the next deck 
 
 ## Close with the picture, then hand off
 
-Before finalizing, ask one coverage question — *"Anything we circled but didn't land? Any constraint I haven't heard?"*. When they confirm, write the **technical picture**: the invariants & requirements, the load shape, the data model & owners, the external dependencies, the failure modes and their handling, the forced tradeoffs *and which way you chose*, open risks, and the next step. Then hand off: feed this to `crtr/design` to produce the design artifact, or seed a `crtr/spec` effort. This interview does not replace the design — it makes one writable.
+Before finalizing, ask one coverage question — *"Anything we circled but didn't land? Any constraint I haven't heard?"*. When they confirm, write the **technical picture** to `$CRTR_CONTEXT_DIR/design-<subject>.md`: the invariants & requirements, the load shape, the data model & owners, the external dependencies, the failure modes and their handling, the forced tradeoffs *and which way you chose*, open risks, and the next step. Hand the exact artifact path to a managed `design` node with `crtr node new --kind design` to turn it into a design artifact, or to a `spec` node with `crtr node new --kind spec` when the behavior still needs acceptance criteria. This interview does not replace the design — it makes one writable.
 
 ## Failure modes
 
@@ -59,5 +58,5 @@ Before finalizing, ask one coverage question — *"Anything we circled but didn'
 
 ## Related
 
-- `crtr/design`, `crtr/spec` — where the elicited picture goes to become an artifact.
-- `claude-humanloop/humanloop` — deck authoring philosophy.
+- `crtr human -h` — the current ask, notify, and review handoff surface.
+- `crtr node new --kind design` or `crtr node new --kind spec` — managed follow-on nodes that receive the technical-picture artifact path.

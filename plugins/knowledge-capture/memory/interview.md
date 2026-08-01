@@ -41,7 +41,7 @@ Ask: *"Should we continue or proceed to compilation?"*
 
 ## Phase 4: Save document
 
-Compile responses into structured markdown. By convention, save to `<relevant-name>-interview.md` in the current working directory unless the user specifies otherwise.
+Compile responses into structured markdown and save the interview artifact to `$CRTR_CONTEXT_DIR/<relevant-name>-interview.md` unless the user chooses a different path in the node context directory.
 
 - Preserve the user's original language — do not polish it into your voice.
 - Group related content together regardless of the order it was discussed.

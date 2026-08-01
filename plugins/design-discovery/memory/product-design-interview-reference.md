@@ -20,7 +20,7 @@ A wave is one deck written to a JSON file, then kicked off:
 crtr human ask --context-file /tmp/wave1.json
 ```
 
-Kickoff returns instantly with `{job_id, dir, follow_up}` and **never blocks**. The human's TUI opens in a detached tmux pane; their answer is pushed to your inbox when they finish. End your turn or keep working — you'll be woken. Do not poll `follow_up` in a loop.
+Kickoff returns instantly with `{job_id, dir, follow_up}` and **never blocks**. It queues a ticket in the humanloop inbox; nothing opens automatically. The human opens the inbox on their own time, and their answer is pushed to your inbox when they finish. End your turn or keep working — you'll be woken. Do not poll `follow_up` in a loop.
 
 Deck schema (humanloop):
 
@@ -31,7 +31,7 @@ Deck schema (humanloop):
     {
       "id": "first-feeling",
       "title": "First moment",
-      "subtitle": "A brand-new user just signed up and lands on an empty workspace. What's the one thing they should feel pulled to do?",
+      "subtitle": "Choose the first action for a new user; I recommend creating a real thing immediately, because the first minute determines whether onboarding feels compelling.",
       "body": "We're shaping the day-1 experience.\n\n## Why it matters\nThe first 60 seconds decide whether they ever come back. One clear pull beats five options.",
       "options": [
         {"id": "create",  "label": "Create their first real thing immediately"},
@@ -46,9 +46,9 @@ Deck schema (humanloop):
 }
 ```
 
-Per-interaction fields that matter: `id` (short, meaningful — you match answers on it), `title` (the topic, ≤4 words), `subtitle` (the actual one-line ask), `body` (optional ELI12 framing; directive-flavored markdown — see `termrender doc -h`), `options[]` (2–4 genuine alternatives as starting points), `allowFreetext`/`freetextLabel`, `multiSelect`, and `kind` (one of `notify`, `validation`, `decision`, `context`, `error`).
+Per-interaction fields that matter: `id` (short and meaningful), `title` (the topic, ≤4 words), `subtitle` (a one-line decision, recommendation, and stakes), `body` (optional plain-language framing and tradeoffs; directive-flavored markdown — see `termrender doc -h`), `options[]` (2–4 genuine alternatives as starting points), `allowFreetext`/`freetextLabel`, `multiSelect`, and `kind` (one of `notify`, `decision`, `context`, `error`).
 
-Collect: answers arrive in your inbox as a resolution. The `responses[]` array carries `{id, selectedOptionId?, freetext?}`. Look up by `id` — the human can skip, so `responses` may be shorter than `interactions`.
+Collect: the answer is pushed to your inbox when the human responds. Interpret it against the wave's concrete questions; do not poll for it.
 
 ## The reflect-back pattern
 
@@ -62,10 +62,10 @@ Lead each wave after the first with a `kind:"context"` interaction that mirrors 
       "id": "synthesis",
       "kind": "context",
       "title": "Where we are",
-      "subtitle": "Confirming what I heard before we go deeper",
+      "subtitle": "Confirm the day-one assumptions; I recommend treating fast creation as proved and daily use as unconfirmed, because the next questions depend on that boundary.",
       "body": "## What I understand\n- Day-1 pull = create a real thing fast (proven — you chose it)\n- Power users live here daily (guess — not yet confirmed)\n\n## Assumptions I'm treating as true\n- Empty state is the make-or-break moment\n\n## Risk → this wave\n- If creation needs setup first, the 'fast' promise breaks. Asking about that now."
     },
-    { "id": "setup-cost", "title": "Setup cost", "subtitle": "Before a new user can create their first real thing, what's the minimum they must do?", "options": [ {"id":"none","label":"Nothing — instant"}, {"id":"one","label":"One choice"}, {"id":"few","label":"A few steps"} ], "allowFreetext": true }
+    { "id": "setup-cost", "title": "Setup cost", "subtitle": "Choose the minimum setup before first creation; I recommend none, because every extra step weakens the fast-creation promise.", "options": [ {"id":"none","label":"Nothing — instant"}, {"id":"one","label":"One choice"}, {"id":"few","label":"A few steps"} ], "allowFreetext": true }
   ]
 }
 ```

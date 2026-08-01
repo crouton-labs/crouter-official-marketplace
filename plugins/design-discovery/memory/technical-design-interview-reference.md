@@ -10,7 +10,7 @@ gate:
 ---
 # technical-design-interview — reference
 
-Lookup layer for the [technical-design-interview.md](technical-design-interview.md) judgment: deck mechanics, a worked technical wave, the reflect-back pattern, and the full lens catalog. The crtr human deck mechanics are identical to the experience sibling — see `design-discovery/product-design-interview` reference and `claude-humanloop/humanloop` for the full deck philosophy. The lens catalog below is what's specific here.
+Lookup layer for the [technical-design-interview.md](technical-design-interview.md) judgment: deck mechanics, a worked technical wave, the reflect-back pattern, and the full lens catalog. The crtr human deck mechanics are shared with [product-design-interview-reference.md](product-design-interview-reference.md); the lens catalog below is specific to technical discovery.
 
 ## crtr human deck mechanics (recap)
 
@@ -20,7 +20,7 @@ A wave is one deck written to a JSON file, then kicked off:
 crtr human ask --context-file /tmp/wave1.json
 ```
 
-Kickoff returns instantly with `{job_id, dir, follow_up}` and **never blocks**. The answer is pushed to your inbox when the human finishes. Don't poll. Match answers by `id` (the human can skip, so `responses[]` may be shorter than `interactions`).
+Kickoff returns instantly with `{job_id, dir, follow_up}` and **never blocks**. It queues a ticket in the humanloop inbox; nothing opens automatically. The answer is pushed to your inbox when the human finishes. Do not poll.
 
 Worked wave 1 — a new write-heavy store:
 
@@ -31,7 +31,7 @@ Worked wave 1 — a new write-heavy store:
     {
       "id": "invariant",
       "title": "Hard invariant",
-      "subtitle": "What must NEVER happen to a captured record, even during a crash or deploy?",
+      "subtitle": "Choose the record invariant; I recommend never losing an acknowledged write, because a crash must not break the user's trust.",
       "body": "Pinning the correctness boundary before we pick a mechanism.\n\n## Why\nThe invariant decides whether we can relax durability for speed later.",
       "options": [
         {"id": "no-loss",  "label": "Never lose an acknowledged write"},
@@ -45,7 +45,7 @@ Worked wave 1 — a new write-heavy store:
     {
       "id": "load",
       "title": "Load shape",
-      "subtitle": "At 10x today, is it a steady stream or a morning burst — and how many writers at once?",
+      "subtitle": "Choose the 10x load shape; I recommend planning for bursty concurrent writers until evidence says otherwise, because capacity choices depend on the peak.",
       "options": [
         {"id": "steady-1",  "label": "Steady, single writer"},
         {"id": "steady-n",  "label": "Steady, many concurrent writers"},
@@ -68,10 +68,10 @@ Lead each later wave with a `kind:"context"` interaction that mirrors understand
       "id": "synthesis",
       "kind": "context",
       "title": "Where we are",
-      "subtitle": "Confirming the load-bearing facts before going deeper",
+      "subtitle": "Confirm the load-bearing facts; I recommend treating the no-loss invariant and bursty writes as settled, because the next tradeoff depends on them.",
       "body": "## Confirmed\n- Invariant: never lose an acknowledged write\n- Load: bursty, many concurrent writers (10x = ~2k/s peak)\n\n## Treating as true (guess)\n- Reads are rare and tolerate staleness\n\n## Risk → this wave\n- Concurrent writers + no-loss forces a durability/throughput tradeoff. Asking which way now."
     },
-    { "id": "tradeoff", "title": "Durability vs throughput", "subtitle": "Under burst, do we ack only after durable write (slower, safe) or ack-then-persist (faster, a crash window loses recent writes)?", "options": [ {"id":"durable","label":"Ack after durable"}, {"id":"fast","label":"Ack then persist"} ], "allowFreetext": true }
+    { "id": "tradeoff", "title": "Durability vs throughput", "subtitle": "Choose when to acknowledge a bursty write; I recommend after durable storage, because acknowledged writes must survive a crash.", "options": [ {"id":"durable","label":"Ack after durable"}, {"id":"fast","label":"Ack then persist"} ], "allowFreetext": true }
   ]
 }
 ```
