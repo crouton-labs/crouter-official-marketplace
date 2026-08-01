@@ -7,6 +7,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: marketplace-release-main
+  cancel-in-progress: false
+
 jobs:
   bump:
     runs-on: ubuntu-latest
@@ -14,29 +18,72 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          ref: main
+          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Determine bump kind from commit message
-        id: kind
+      - name: Validate marketplace source
+        run: node .github/scripts/validate-marketplace.mjs
+
+      - name: Determine unreleased range and bump kind
+        id: range
         env:
-          MSG: ${{ github.event.head_commit.message }}
+          EVENT_BEFORE: ${{ github.event.before }}
+          EVENT_SHA: ${{ github.sha }}
         run: |
-          if printf '%s' "$MSG" | grep -qE '^[a-z]+(\(.+\))?!:' \
-             || printf '%s' "$MSG" | grep -q 'BREAKING CHANGE'; then
+          set -euo pipefail
+          ZERO=0000000000000000000000000000000000000000
+          EMPTY_TREE=$(git hash-object -t tree /dev/null)
+
+          git cat-file -e "${EVENT_SHA}^{commit}"
+          if [ "$EVENT_BEFORE" = "$ZERO" ]; then
+            event_range="$EMPTY_TREE..$EVENT_SHA"
+            initial_push=true
+          else
+            git cat-file -e "${EVENT_BEFORE}^{commit}"
+            git merge-base --is-ancestor "$EVENT_BEFORE" "$EVENT_SHA"
+            event_range="$EVENT_BEFORE..$EVENT_SHA"
+            initial_push=false
+          fi
+          git merge-base --is-ancestor "$EVENT_SHA" HEAD || {
+            echo "The pushed commit is not on current main; refusing to release a stale range." >&2
+            exit 1
+          }
+
+          release_base=$(git tag --merged HEAD --list 'v*' --sort=-version:refname | sed -n '1p')
+          if [ -n "$release_base" ]; then
+            range="$release_base..HEAD"
+            initial_push=false
+          else
+            range="$event_range"
+          fi
+
+          if [ "$initial_push" = true ]; then
+            git log --format='%B%n' "$EVENT_SHA" > "$RUNNER_TEMP/commit-messages"
+          else
+            git log --format='%B%n' "$range" > "$RUNNER_TEMP/commit-messages"
+          fi
+          if grep -qE '^[[:alnum:]][[:alnum:]-]*(\([^)]*\))?!:|^BREAKING[ -]CHANGE:' "$RUNNER_TEMP/commit-messages"; then
             kind=major
-          elif printf '%s' "$MSG" | grep -qE '^feat(\(.+\))?:'; then
+          elif grep -qE '^feat(\([^)]*\))?:' "$RUNNER_TEMP/commit-messages"; then
             kind=minor
           else
             kind=patch
           fi
-          echo "kind=$kind" >> "$GITHUB_OUTPUT"
+
+          echo "Event range: $event_range"
+          echo "Unreleased range: $range"
           echo "Bump kind: $kind"
+          echo "range=$range" >> "$GITHUB_OUTPUT"
+          echo "initial_push=$initial_push" >> "$GITHUB_OUTPUT"
+          echo "kind=$kind" >> "$GITHUB_OUTPUT"
 
       - name: Bump versions
         id: bump
         env:
-          KIND: ${{ steps.kind.outputs.kind }}
+          RANGE: ${{ steps.range.outputs.range }}
+          INITIAL_PUSH: ${{ steps.range.outputs.initial_push }}
+          KIND: ${{ steps.range.outputs.kind }}
         run: |
           set -euo pipefail
           MARKETPLACE=.crouter-marketplace/marketplace.json
@@ -53,19 +100,30 @@ jobs:
           }
 
           read_version() {
-            # Read top-level "version" without reflowing the file.
             grep -m1 -E '^[[:space:]]{0,2}"version":' "$1" \
               | sed -E 's/.*"version":[[:space:]]*"([^"]+)".*/\1/'
           }
 
-          if git rev-parse HEAD^ >/dev/null 2>&1; then
-            changed_plugins=$(git diff --name-only HEAD^ HEAD -- 'plugins/*' \
-              | awk -F/ 'NF>=2 {print $2}' | sort -u)
-            marketplace_changed=$(git diff --name-only HEAD^ HEAD -- "$MARKETPLACE")
-          else
-            changed_plugins=""
-            marketplace_changed=""
-          fi
+          changed_files() {
+            if [ "$INITIAL_PUSH" = true ]; then
+              git diff-tree --root --no-commit-id --name-only -r "$RANGE" -- "$@"
+            else
+              git diff --name-only "$RANGE" -- "$@"
+            fi
+          }
+
+          changed_status() {
+            if [ "$INITIAL_PUSH" = true ]; then
+              git diff-tree --root --no-commit-id --name-status -r "$RANGE" -- "$@"
+            else
+              git diff --name-status "$RANGE" -- "$@"
+            fi
+          }
+
+          changed_plugins=$(changed_files plugins \
+            | awk -F/ 'NF >= 2 && $1 == "plugins" { print $2 }' \
+            | sort -u)
+          marketplace_changed=$(changed_files "$MARKETPLACE")
 
           bumped=0
           while IFS= read -r name; do
@@ -75,7 +133,7 @@ jobs:
               echo "skip $name: no plugin.json"
               continue
             fi
-            status=$(git diff --name-status HEAD^ HEAD -- "$pfile" | head -1 | cut -f1 || true)
+            status=$(changed_status "$pfile" | awk 'NR == 1 { print $1 }')
             if [ "$status" = "A" ]; then
               echo "skip $name: plugin.json newly added"
               continue
@@ -112,5 +170,5 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "chore: release v${NEW_VERSION}"
-          git tag "v${NEW_VERSION}"
+          git tag -a "v${NEW_VERSION}" -m "Release v${NEW_VERSION}"
           git push --follow-tags
