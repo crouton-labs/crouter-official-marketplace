@@ -8,7 +8,7 @@ file-read-visibility: none
 
 # Knowledge capture
 
-- **collaborate** — peer thinking, no artifacts.
-- **interview** — structured Q&A saved as markdown.
-- **epiphany** — parallel conflicting-lens advisors for breakthroughs.
-- **learn** — distill session takeaways to a knowledge file.
+- [[knowledge-capture/collaborate]] — peer thinking, no artifacts.
+- [[knowledge-capture/interview]] — structured Q&A saved as markdown.
+- [[knowledge-capture/epiphany]] — parallel conflicting-lens advisors for breakthroughs.
+- [[knowledge-capture/learn]] — distill session takeaways to a knowledge file.

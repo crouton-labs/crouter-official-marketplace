@@ -22,7 +22,7 @@ Don't design — elicit. Replace "why?" with "what makes that a hard requirement
 - Build a deck JSON file, then run `crtr human ask --context-file <path>`. The kickoff returns instantly and queues the ticket in the humanloop inbox; nothing opens automatically. The human answers on their own time and the answer is pushed to your inbox. Do not poll; end your turn or keep working until the inbox wakes you.
 - One wave = one deck (`interactions[]`). Each question needs a short `title`, a `subtitle` stating the decision, recommendation, and stakes, 2–4 *real* `options` as starting points, and `allowFreetext: true`. Always allow freetext — technical answers carry caveats.
 - Anchor questions in concrete numbers and scenarios, never abstractions. *"At 10x today's writes, all hitting in a morning burst — does the store still hold?"* beats *"How should we handle scale?"*.
-- Deck JSON shape, a worked technical wave, the reflect-back mechanism, and the full lens catalog live in [technical-design-interview-reference.md](technical-design-interview-reference.md).
+- Deck JSON shape, a worked technical wave, the reflect-back mechanism, and the full lens catalog live in [[design-discovery/technical-design-interview-reference]].
 
 ## Pick 3–4 lenses, not all of them
 
@@ -35,7 +35,7 @@ A lens is a way of seeing what's otherwise invisible; each generates a concrete 
 - **Failure modes & blast radius** — what breaks, what cascades, where the single points of failure are. Push every answer to "and if that dies mid-operation?".
 - **Forced tradeoffs** — the choices you can't have both ways (consistency vs availability, latency vs cost, simple-now vs flexible-later). Your job is to make the choice explicit, not paper over it.
 
-Pressure-test with: **pre-mortem** ("it's 6 months later and this fell over in prod — what was the cause?"), **inversion** ("what would you do to *guarantee* this fails?"), **minimal version** ("what's the smallest thing that solves 80%?"), and **operability** ("when it breaks at 3am, what tells you, and what do you look at?"). Full catalog with phrasings: [technical-design-interview-reference.md](technical-design-interview-reference.md).
+Pressure-test with: **pre-mortem** ("it's 6 months later and this fell over in prod — what was the cause?"), **inversion** ("what would you do to *guarantee* this fails?"), **minimal version** ("what's the smallest thing that solves 80%?"), and **operability** ("when it breaks at 3am, what tells you, and what do you look at?"). Full catalog with phrasings: [[design-discovery/technical-design-interview-reference]].
 
 ## Reflect back between waves
 

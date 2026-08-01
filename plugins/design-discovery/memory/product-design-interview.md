@@ -22,7 +22,7 @@ Don't answer — ask. Replace "why?" with "what makes you say that?" (same depth
 - Build a deck JSON file, then run `crtr human ask --context-file <path>`. The kickoff returns instantly and queues the ticket in the humanloop inbox; nothing opens automatically. The human answers on their own time and the answer is pushed to your inbox. Do not busy-wait or poll; end your turn or keep working until the inbox wakes you.
 - One wave = one deck (`interactions[]`). Each question needs a short `title`, a `subtitle` stating the decision, recommendation, and stakes, 2–4 *real* `options` as starting points, and `allowFreetext: true` — experience calls are judgment calls, so let people answer in their own words.
 - Frame every question as a concrete **moment**, never an abstraction. *"A new user lands on the empty dashboard — what's the one thing they should feel pulled to do?"* beats *"What are your UX goals?"*.
-- Deck JSON shape, a worked wave, the reflect-back mechanism, and the full lens catalog live in [product-design-interview-reference.md](product-design-interview-reference.md).
+- Deck JSON shape, a worked wave, the reflect-back mechanism, and the full lens catalog live in [[design-discovery/product-design-interview-reference]].
 
 ## Pick 3–4 lenses, not all of them
 
@@ -35,7 +35,7 @@ A lens is a way of seeing what's otherwise invisible; each one generates a concr
 - **The anti-experience** — what should this explicitly NOT feel like? What status-quo are you beating? Naming the enemy sharpens the target.
 - **The cut line** — the smallest version that still delivers the feeling. Guards the core against scope creep drowning it.
 
-Pressure-test with: **pre-mortem** ("they tried it once and never came back — why?"), **the one-sentence pitch** ("how would a user describe this to a friend?"), and **subtraction** ("what could we remove to make it better?"). Full catalog with question phrasings: [product-design-interview-reference.md](product-design-interview-reference.md).
+Pressure-test with: **pre-mortem** ("they tried it once and never came back — why?"), **the one-sentence pitch** ("how would a user describe this to a friend?"), and **subtraction** ("what could we remove to make it better?"). Full catalog with question phrasings: [[design-discovery/product-design-interview-reference]].
 
 ## Reflect back between waves
 

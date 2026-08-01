@@ -11,5 +11,5 @@ gate:
 
 # Design discovery
 
-- **product-design-interview** — shape how a product/feature should feel.
-- **technical-design-interview** — extract and pressure-test a system's technical design.
+- [[design-discovery/product-design-interview]] — shape how a product/feature should feel.
+- [[design-discovery/technical-design-interview]] — extract and pressure-test a system's technical design.
