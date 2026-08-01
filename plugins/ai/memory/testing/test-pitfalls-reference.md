@@ -7,7 +7,7 @@ file-read-visibility: none
 ---
 # test-pitfalls — reference
 
-Failure-mode catalog and audit greps for `test-pitfalls`. See [test-pitfalls.md](test-pitfalls.md) for the decision framework.
+Failure-mode catalog and audit greps for `test-pitfalls`. See [[ai/testing/test-pitfalls]] for the decision framework.
 
 ## Failure mode catalog
 

@@ -10,7 +10,7 @@ file-read-visibility: none
 
 Context is a finite budget. How you allocate it — and where you place things within it — determines quality as much as what you put in. More context isn't always better. This skill covers the mechanics of transformer attention, the tradeoffs in retrieval and compression, and the patterns that hold up in production.
 
-For implementation patterns and code examples, see [context-management-reference.md](context-management-reference.md).
+For implementation patterns and code examples, see [[ai/agent-context/context-management-reference]].
 
 ## The Attention Economics Model
 
@@ -97,7 +97,7 @@ Prompt caching has zero quality impact and significant cost impact. Cache-friend
 
 Anthropic requires marking blocks with `"cache_control": {"type": "ephemeral"}`. OpenAI caches automatically for prompts 1,024+ tokens. Anthropic's explicit control is more powerful; OpenAI's is zero-config.
 
-Production case studies: Thomson Reuters Labs (60% cost reduction), YUV.AI (70% cost reduction). See also [system-prompts](system-prompts.md) for how prompt slot placement affects cache hit rates.
+Production case studies: Thomson Reuters Labs (60% cost reduction), YUV.AI (70% cost reduction). See also [[ai/agent-context/system-prompts]] for how prompt slot placement affects cache hit rates.
 
 Known Anthropic cache invalidation triggers: changing `tool_choice`, toggling web search/citations, modifying thinking parameters.
 

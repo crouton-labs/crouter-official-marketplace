@@ -7,7 +7,7 @@ file-read-visibility: none
 ---
 # Context Management Reference
 
-Implementation patterns, code examples, and citations. This supplements the overview in [context-management.md](context-management.md).
+Implementation patterns, code examples, and citations. This supplements the overview in [[ai/agent-context/context-management]].
 
 ---
 

@@ -11,9 +11,9 @@ A CLI consumed only by an agent is a different artifact from one used by a human
 
 This guide treats the single-reader-is-an-agent case as the design target. Human ergonomics are absent intentionally, not by oversight.
 
-This file is the spec. **`cli-design-reference.md` (sibling) is the spec applied** — a fully worked, annotated CLI (the fictional `crtr` runtime) with every pattern below instantiated and each design choice called out. Read it when you need a concrete instance of any rule here: root/branch/leaf shape, dynamic `-h`, long-running spawns, pagination, streaming output. Design from the principles; consult `cli-design-reference.md` for what a correct realization looks like.
+This file is the spec. **[[ai/interface/agent-facing/cli-design-reference]] (sibling) is the spec applied** — a fully worked, annotated CLI (the fictional `agentctl` runtime) with every pattern below instantiated and each design choice called out. Read it when you need a concrete instance of any rule here: root/branch/leaf shape, dynamic `-h`, long-running spawns, pagination, streaming output. Design from the principles; consult [[ai/interface/agent-facing/cli-design-reference]] for what a correct realization looks like.
 
-**Sibling surface.** This skill is one of two ways to expose capability to an agent: the shell-driven CLI. For capability the agent calls as a structured tool (function calling / MCP), see [tool-design](tool-design.md). The theory is shared — selection is the work, errors carry recovery, focused over broad, output is minimally sufficient — but the delivery mechanics differ (subcommand tree + `-h` + stdout here; JSON schema + descriptions there). This skill owns the CLI mechanics; don't re-derive the shared theory from it when designing a tool-call.
+**Sibling surface.** This skill is one of two ways to expose capability to an agent: the shell-driven CLI. For capability the agent calls as a structured tool (function calling / MCP), see [[ai/interface/agent-facing/tool-design]]. The theory is shared — selection is the work, errors carry recovery, focused over broad, output is minimally sufficient — but the delivery mechanics differ (subcommand tree + `-h` + stdout here; JSON schema + descriptions there). This skill owns the CLI mechanics; don't re-derive the shared theory from it when designing a tool-call.
 
 ## Principles
 

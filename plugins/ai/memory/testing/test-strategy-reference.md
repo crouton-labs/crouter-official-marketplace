@@ -7,7 +7,7 @@ file-read-visibility: none
 ---
 # test-strategy — reference
 
-Lookup material for `test-strategy`. See [test-strategy.md](test-strategy.md) for the decision framework.
+Lookup material for `test-strategy`. See [[ai/testing/test-strategy]] for the decision framework.
 
 ## Per-task default table
 

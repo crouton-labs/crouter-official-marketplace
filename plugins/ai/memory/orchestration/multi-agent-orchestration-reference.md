@@ -9,7 +9,7 @@ rationale: >-
 ---
 # Multi-Agent Orchestration Reference
 
-Implementation patterns for multi-agent systems. This supplements [multi-agent-orchestration.md](multi-agent-orchestration.md).
+Implementation patterns for multi-agent systems. This supplements [[ai/orchestration/multi-agent-orchestration]].
 
 ---
 
@@ -192,7 +192,7 @@ The biggest token consumer is usually tool outputs, not prompts. Shopify found t
 4. **Model matching** — workers on well-scoped tasks don't need Opus; Sonnet or Haiku suffice
 5. **Parallel tool calls** — reduces wall-clock time without reducing token cost, but saves the human's time
 
-**Context beyond 200K tokens**: Use external memory. Agent summarizes completed work phases; the summary replaces the full history in the next cycle. [Anthropic (2024) — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents) For comprehensive context strategies, see [context-management](../agent-context/context-management.md).
+**Context beyond 200K tokens**: Use external memory. Agent summarizes completed work phases; the summary replaces the full history in the next cycle. [Anthropic (2024) — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents) For comprehensive context strategies, see [[ai/agent-context/context-management]].
 
 ---
 

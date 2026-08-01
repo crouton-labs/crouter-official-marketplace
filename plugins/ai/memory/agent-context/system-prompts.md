@@ -7,14 +7,14 @@ file-read-visibility: none
 ---
 # System Prompts
 
-The system prompt is the behavior channel: who the agent is, the constraints that must hold on every turn, and the routing layer to everything else. Pair this with [prompting-effectively.md](prompting-effectively.md) for the writing craft (tone registers, framing, examples); this doc covers what belongs in the system prompt and the mechanics of why placement there works. For API patterns, caching math, and worked examples, see [system-prompts-reference.md](system-prompts-reference.md).
+The system prompt is the behavior channel: who the agent is, the constraints that must hold on every turn, and the routing layer to everything else. Pair this with [[ai/agent-context/prompting-effectively]] for the writing craft (tone registers, framing, examples); this doc covers what belongs in the system prompt and the mechanics of why placement there works. For API patterns, caching math, and worked examples, see [[ai/agent-context/system-prompts-reference]].
 
 ## What Belongs
 
-- **Identity** — role, personality, values. "You are X" and third-person trait framing belong here and only here (→ [prompting-effectively.md](prompting-effectively.md) Tone Registers).
+- **Identity** — role, personality, values. "You are X" and third-person trait framing belong here and only here (→ [[ai/agent-context/prompting-effectively]] Tone Registers).
 - **Hard constraints** — what to refuse, lane boundaries, the genuine non-negotiables.
 - **Decision frameworks** — "when X, do Y" routing for judgment calls the agent will face repeatedly.
-- **Tool/capability policy** — when to reach for what (the *policy*; the capability docs themselves live behind progressive disclosure → [context-placement-channels.md](context-placement-channels.md)).
+- **Tool/capability policy** — when to reach for what (the *policy*; the capability docs themselves live behind progressive disclosure → [[ai/agent-context/context-placement-channels]]).
 - **Formatting defaults** — stated once, lightly; over-formatted prompts bleed into over-formatted output.
 
 **The front-door principle:** a system prompt is a front door, not a manual. Every directive that needs depth takes the shape "when X, do Y, because Z" — where Y is a *pointer* (a command to run, a doc to read), not inlined content. The model generalizes from the *because*; the depth stays out of the always-loaded surface. A system prompt that inlines its manual doesn't degrade gracefully — past a point the model starts ignoring instructions wholesale, including the critical ones.

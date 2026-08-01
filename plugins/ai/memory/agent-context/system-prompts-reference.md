@@ -7,7 +7,7 @@ file-read-visibility: none
 ---
 # System Prompts — Reference
 
-Patterns, code, and evidence for the decisions described in [system-prompts.md](system-prompts.md).
+Patterns, code, and evidence for the decisions described in [[ai/agent-context/system-prompts]].
 
 ---
 

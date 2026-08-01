@@ -8,7 +8,7 @@ file-read-visibility: none
 
 # Designing UI for agentic interaction
 
-The screen — or the terminal — is where the human reads what the agent is doing and decides whether to trust it. This is the pattern layer: *what to render and when*. The judgment layer (trust, autonomy, friction, the first principles) is the sibling [agentic-ux](agentic-ux.md); build on it, don't restate it.
+The screen — or the terminal — is where the human reads what the agent is doing and decides whether to trust it. This is the pattern layer: *what to render and when*. The judgment layer (trust, autonomy, friction, the first principles) is the sibling [[ai/interface/human-facing/agentic-ux]]; build on it, don't restate it.
 
 ## The core decision
 
@@ -32,7 +32,7 @@ Whichever surface: **separate process from result** (dual-pane or collapsible pr
 
 ## Web layer
 
-Generative/dynamic UI (tool output → components, not text walls), inline citations with hover preview, suggestion chips for capability onboarding, editable plan/todo surfaces, mission-control for async/multi-agent, budget/token meters with tiered warnings. A common component vocabulary has converged: Reasoning, Tool, Task, Plan, Sources, Checkpoint, Queue, Artifact. Full catalog — 30 patterns, each problem → use → avoid: [agentic-ui-reference.md](agentic-ui-reference.md).
+Generative/dynamic UI (tool output → components, not text walls), inline citations with hover preview, suggestion chips for capability onboarding, editable plan/todo surfaces, mission-control for async/multi-agent, budget/token meters with tiered warnings. A common component vocabulary has converged: Reasoning, Tool, Task, Plan, Sources, Checkpoint, Queue, Artifact. Full catalog — 30 patterns, each problem → use → avoid: [[ai/interface/human-facing/agentic-ui-reference]].
 
 ## Terminal layer
 
@@ -43,7 +43,7 @@ Generative/dynamic UI (tool output → components, not text walls), inline citat
 - **Accessibility is a first-class mode.** Color never carries meaning alone (pair with `+`/`-`, `✓`/`✗`, labels); honor `NO_COLOR`; offer animation-off / reduced-motion and a non-alt-screen path for screen readers (constant repaint re-announces every frame).
 - **Completion notification when the human looked away** — terminal bell → OSC 9/777 desktop notification (forwards over SSH), conservative default, user-configurable.
 
-Full catalog — 20 patterns, each constraint → solution — and the alt-screen decision matrix: [agentic-ui-reference.md](agentic-ui-reference.md).
+Full catalog — 20 patterns, each constraint → solution — and the alt-screen decision matrix: [[ai/interface/human-facing/agentic-ui-reference]].
 
 ## Failure modes
 
@@ -57,4 +57,4 @@ Full catalog — 20 patterns, each constraint → solution — and the alt-scree
 
 ## Related
 
-- `web/frontend/design-website`, `web/frontend/role-ui-ux` — general (non-agentic) web design system + UX consultancy (cross-plugin).
+- If the separately installed `web` plugin is available, use its `web/frontend/design-website` and `web/frontend/role-ui-ux` docs for general (non-agentic) web design system and UX consultancy guidance.

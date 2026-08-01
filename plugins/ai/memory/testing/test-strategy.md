@@ -48,7 +48,7 @@ The reasoning: agents are good at internal consistency (the test and the code ag
 
 ## Decision quick-reference
 
-See [test-strategy-reference.md](test-strategy-reference.md) for the per-task default table and the greppable anti-pattern list for audits.
+See [[ai/testing/test-strategy-reference]] for the per-task default table and the greppable anti-pattern list for audits.
 
 ## Related
 

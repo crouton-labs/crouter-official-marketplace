@@ -7,7 +7,7 @@ file-read-visibility: none
 ---
 # Writing Effective Prompts
 
-Effective prompts have structure. This skill is the architecture of prompting: where each kind of instruction belongs, and how to make a *system* of prompts (commands, agents, modes, skills, API system prompts) reliable and maintainable. For worked examples and the full annotated catalog behind every principle below, see [prompting-effectively-reference.md](prompting-effectively-reference.md).
+Effective prompts have structure. This skill is the architecture of prompting: where each kind of instruction belongs, and how to make a *system* of prompts (commands, agents, modes, skills, API system prompts) reliable and maintainable. For worked examples and the full annotated catalog behind every principle below, see [[ai/agent-context/prompting-effectively-reference]].
 
 ## The Two Zones
 
@@ -33,7 +33,7 @@ The most important architectural decision: what goes where.
 
 System prompt content gets treated as foundational identity. Task-zone content layers on top — it *redirects* the agent without replacing who it is. Knowledge gets treated as reference material. Mixing these up creates agents that treat their own rules as optional suggestions, or user-turn prompts that fight the system prompt for control of identity.
 
-→ For the orthogonal harness-level question — which channel of the agent system an instruction or piece of context should live in at all — see [context-placement-channels.md](context-placement-channels.md); for the system prompt specifically, [system-prompts.md](system-prompts.md).
+→ For the orthogonal harness-level question — which channel of the agent system an instruction or piece of context should live in at all — see [[ai/agent-context/context-placement-channels]]; for the system prompt specifically, [[ai/agent-context/system-prompts]].
 
 ## XML for Instruction Domains
 
@@ -45,7 +45,7 @@ Use XML tags to separate concern domains (identity, safety, tools, formatting). 
 
 Over-formatted system prompts bleed into over-formatted responses — use the lightest formatting that makes content clear.
 
-(XML also structures *output* and *input documents*, not just instructions — multi-document inputs, response sections, grounding quotes, long-context placement. That's a different use; see [prompting-effectively-reference.md](prompting-effectively-reference.md) → User Message Architecture, which is the single home for long-context technique.)
+(XML also structures *output* and *input documents*, not just instructions — multi-document inputs, response sections, grounding quotes, long-context placement. That's a different use; see [[ai/agent-context/prompting-effectively-reference]] → User Message Architecture, which is the single home for long-context technique.)
 
 ## Tone Registers
 
@@ -190,7 +190,7 @@ Repetition is a deliberate design tool, not sloppiness. In long prompts, a rule 
 
 **Heuristic:** If violating the rule would cause real harm or a terrible experience, repeat it. If it's stylistic, state it once.
 
-→ For how repetition interacts with token budgets, placement effects, and caching in long prompts, see [context-management.md](context-management.md).
+→ For how repetition interacts with token budgets, placement effects, and caching in long prompts, see [[ai/agent-context/context-management]].
 
 ## Decision Frameworks
 
@@ -328,10 +328,6 @@ One real harness, mapped to the zones. The same mapping exercise applies to any 
 | CLAUDE.md | Knowledge | No role — project context | Guardrails and pointers. Constraints Claude would get wrong without. |
 | Rules | Behavior | No role — constraints only | Declarative constraints scoped by file pattern. |
 
-**Deeper guides for each component:**
+**Deeper guides:**
 - Agents → [[ai/orchestration/multi-agent-orchestration]] for designing systems of cooperating agents
-- Commands → [[claude-authoring/commands]]
-- Skills → [[claude-authoring/skills]]
-- CLAUDE.md → [[claude-authoring/claude-md]]
-- Rules → [[claude-authoring/rules]]
-- Hooks (lifecycle automation around prompts) → [[claude-authoring/hooks]]
+- Claude Code components → If the separately installed `claude-authoring` plugin is available, use it for commands, skills, CLAUDE.md, rules, and hooks.

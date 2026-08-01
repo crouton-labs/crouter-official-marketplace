@@ -14,7 +14,7 @@ Multi-agent systems are not an upgrade from single-agent. They're a different ar
 
 The research is unambiguous: multi-agent systems show **+81% improvement on parallelizable tasks and -70% degradation on sequential tasks** — the same architecture, opposite outcomes depending on decomposition. [Google Research (2025)](https://research.google/blog/towards-a-science-of-scaling-agent-systems-when-and-why-agent-systems-work/)
 
-For implementation patterns and code, see [multi-agent-orchestration-reference.md](multi-agent-orchestration-reference.md).
+For implementation patterns and code, see [[ai/orchestration/multi-agent-orchestration-reference]].
 
 ## When Multi-Agent Helps
 
@@ -112,7 +112,7 @@ Orchestrators and workers have opposite prompt requirements:
 | Context | Full session state | Task instruction + relevant files only |
 | Lifecycle | Killed and respawned each cycle | Runs to completion or failure |
 
-Orchestrator prompts need decision heuristics — concrete triggers for when independent work earns a child and when available evidence means stop. Worker prompts need scope boundaries and a reporting protocol. See [multi-agent-orchestration-reference.md](multi-agent-orchestration-reference.md) for annotated examples of both.
+Orchestrator prompts need decision heuristics — concrete triggers for when independent work earns a child and when available evidence means stop. Worker prompts need scope boundaries and a reporting protocol. See [[ai/orchestration/multi-agent-orchestration-reference]] for annotated examples of both.
 
 ## Decision Framework
 

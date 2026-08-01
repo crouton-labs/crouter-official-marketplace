@@ -7,7 +7,7 @@ file-read-visibility: none
 ---
 # Structured Output Reference
 
-Implementation patterns, provider details, and failure modes for [structured-output.md](structured-output.md).
+Implementation patterns, provider details, and failure modes for [[ai/output/structured-output]].
 
 ---
 

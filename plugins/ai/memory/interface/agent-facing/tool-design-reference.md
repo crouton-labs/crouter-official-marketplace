@@ -7,7 +7,7 @@ file-read-visibility: none
 ---
 # Tool Design Reference
 
-Implementation patterns and research citations for [tool-design.md](tool-design.md).
+Implementation patterns and research citations for [[ai/interface/agent-facing/tool-design]].
 
 ---
 

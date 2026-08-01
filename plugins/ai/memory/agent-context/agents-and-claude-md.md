@@ -55,4 +55,4 @@ Flag the *situation* (**when**), point to the action (**do Y** — usually a *po
 - **File-type-specific rules** → a rule scoped by path / `applies-to`.
 - **Must-not-be-ignored enforcement** → a hook (deterministic, not advisory).
 
-For the craft behind the directives (tone registers, framing, examples) see [[ai/agent-context/prompting-effectively]] and [[ai/agent-context/system-prompts]]. For Claude-Code-specific artifacts (skills, rules, hooks, commands) see [[claude-authoring/claude-md]].
+For the craft behind the directives (tone registers, framing, examples) see [[ai/agent-context/prompting-effectively]] and [[ai/agent-context/system-prompts]]. If the separately installed `claude-authoring` plugin is available, use it for Claude Code-specific artifacts (skills, rules, hooks, commands).

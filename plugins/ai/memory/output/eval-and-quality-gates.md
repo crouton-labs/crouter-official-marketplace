@@ -12,7 +12,7 @@ LLM outputs are probabilistic. The same prompt produces different outputs across
 
 This skill covers what actually works, ranked by when to use it, and what to skip.
 
-For implementation patterns and code, see [eval-and-quality-gates-reference.md](eval-and-quality-gates-reference.md).
+For implementation patterns and code, see [[ai/output/eval-and-quality-gates-reference]].
 
 ## The Three-Layer Hierarchy
 
@@ -103,4 +103,4 @@ Constitutional Classifiers (Anthropic, 2025) reduced jailbreak success from **86
 
 Defense in depth: input validation (PII detection, jailbreak detection, topic bounds) → model inference (Constitutional AI training) → output validation (toxicity, schema) → business logic checks. No single layer is sufficient.
 
-For implementation patterns, framework comparisons, and code examples, see [eval-and-quality-gates-reference.md](eval-and-quality-gates-reference.md).
+For implementation patterns, framework comparisons, and code examples, see [[ai/output/eval-and-quality-gates-reference]].

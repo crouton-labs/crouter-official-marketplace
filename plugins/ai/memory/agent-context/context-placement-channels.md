@@ -14,7 +14,7 @@ The governing rule: **always-loaded context is the scarcest resource in the syst
 ## The channels
 
 ### System prompt
-Durable behavior: identity, hard constraints, decision frameworks, the routing layer to everything else. It is a front door, not a manual — directives shaped "when X, do Y (a pointer), because Z," with the depth living in the channels below. Always loaded, position 0, trained authority, cacheable when stable. → [system-prompts.md](system-prompts.md) for what belongs in it and the placement mechanics; [prompting-effectively.md](prompting-effectively.md) for the craft.
+Durable behavior: identity, hard constraints, decision frameworks, the routing layer to everything else. It is a front door, not a manual — directives shaped "when X, do Y (a pointer), because Z," with the depth living in the channels below. Always loaded, position 0, trained authority, cacheable when stable. → [[ai/agent-context/system-prompts]] for what belongs in it and the placement mechanics; [[ai/agent-context/prompting-effectively]] for the craft.
 
 **Failure mode:** treating it as the manual. Bloat doesn't degrade gracefully — past a point the model starts *ignoring* instructions, including the ones that mattered.
 

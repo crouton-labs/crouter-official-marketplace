@@ -7,7 +7,7 @@ file-read-visibility: none
 ---
 # Eval and Quality Gates Reference
 
-Implementation patterns and code examples for the techniques described in [eval-and-quality-gates.md](eval-and-quality-gates.md).
+Implementation patterns and code examples for the techniques described in [[ai/output/eval-and-quality-gates]].
 
 ---
 

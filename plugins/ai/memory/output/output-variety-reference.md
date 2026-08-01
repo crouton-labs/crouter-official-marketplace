@@ -7,7 +7,7 @@ file-read-visibility: none
 ---
 # Output Variety Reference
 
-Implementation patterns and examples for the techniques described in [output-variety.md](output-variety.md).
+Implementation patterns and examples for the techniques described in [[ai/output/output-variety]].
 
 ---
 

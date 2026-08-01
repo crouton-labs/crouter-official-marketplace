@@ -35,7 +35,7 @@ Rewrite assertion helpers and lint rules so the failure names the fix.
 
 **Block escape hatches.** If `// eslint-disable-next-line`, `# type: ignore`, `@pytest.mark.skip` can silence the failure, the agent will use them. Reject in committed code, or require a justification comment a reviewer enforces.
 
-See [test-harness-reference.md](test-harness-reference.md) for the full failure-message table.
+See [[ai/testing/test-harness-reference]] for the full failure-message table.
 
 ## The agent's test command
 
@@ -47,7 +47,7 @@ Rules:
 - Include typecheck and lint commands alongside.
 - Keep the file short. Claude Code docs: "If Claude keeps doing something you don't want despite having a rule against it, the file is probably too long and the rule is getting lost."
 
-See [test-harness-reference.md](test-harness-reference.md) for the canonical CLAUDE.md test block.
+See [[ai/testing/test-harness-reference]] for the canonical CLAUDE.md test block.
 
 ## Wire verification into the lifecycle
 
@@ -57,7 +57,7 @@ The agent must not be able to claim done without verification. Hooks make this e
 - **Stop** hook → blocks turn end until the verification command passes. Most effective single guardrail against "I've completed the task" with red CI.
 - **Layer cheap to expensive**: syntax (every edit) → scoped test (every save) → full suite (before Stop).
 
-Tool-specific syntax — Aider `/test`, Amp AGENTS.md, Devin autofix, Continue checks — in [test-harness-reference.md](test-harness-reference.md). The pattern is the same across all of them: failure → context → iteration.
+Tool-specific syntax — Aider `/test`, Amp AGENTS.md, Devin autofix, Continue checks — in [[ai/testing/test-harness-reference]]. The pattern is the same across all of them: failure → context → iteration.
 
 ## CI as the outer loop
 

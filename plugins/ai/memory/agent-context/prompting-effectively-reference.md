@@ -7,7 +7,7 @@ file-read-visibility: none
 ---
 # Prompting Effectively — Reference
 
-Detailed patterns and examples for structuring LLM prompts. This is the worked-example companion to [prompting-effectively.md](prompting-effectively.md).
+Detailed patterns and examples for structuring LLM prompts. This is the worked-example companion to [[ai/agent-context/prompting-effectively]].
 
 ---
 

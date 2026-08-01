@@ -12,7 +12,7 @@ When you call an LLM repeatedly with structurally similar prompts, outputs conve
 
 This skill covers practical techniques to break that convergence, ranked by impact. All techniques operate at the prompt level — no fine-tuning or custom sampling required.
 
-For implementation patterns and examples, see [output-variety-reference.md](output-variety-reference.md).
+For implementation patterns and examples, see [[ai/output/output-variety-reference]].
 
 ## Techniques (Ranked by Impact)
 

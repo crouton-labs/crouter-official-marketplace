@@ -14,7 +14,7 @@ Structured output guarantees valid typed JSON from LLMs — the model can only e
 
 **Don't use when:** prose, creative writing, chat, or when the quality cost outweighs the reliability gain.
 
-For code examples and provider-specific patterns, see [structured-output-reference.md](structured-output-reference.md).
+For code examples and provider-specific patterns, see [[ai/output/structured-output-reference]].
 
 ## The Quality Problem
 
@@ -52,7 +52,7 @@ Put a `reasoning` or `thinking` field **first** in your schema. LLMs generate ke
 - Max 24 optional parameters (Anthropic hard limit).
 - Recursive schemas not supported on Anthropic.
 
-These patterns apply directly to [tool-design](../interface/agent-facing/tool-design.md) — tool schemas are structured output schemas.
+These patterns apply directly to [[ai/interface/agent-facing/tool-design]] — tool schemas are structured output schemas.
 
 ## The Production Loop
 
@@ -73,4 +73,4 @@ Libraries doing this loop:
 Zod v4 has native `z.toJSONSchema()` for converting schemas to JSON Schema format.
 
 
-For mechanism details, provider comparison, streaming patterns, and failure modes, see [structured-output-reference.md](structured-output-reference.md).
+For mechanism details, provider comparison, streaming patterns, and failure modes, see [[ai/output/structured-output-reference]].

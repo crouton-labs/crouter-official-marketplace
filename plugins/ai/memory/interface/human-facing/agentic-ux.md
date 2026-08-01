@@ -30,13 +30,13 @@ Agentic UX is **delegation**, not conversation. The job is not a good dialogue; 
 
 **7. The agent will be wrong — design for graceful failure and cheap recovery.** Bound the action space; prefer reversible actions; provide efficient correction (guided > freeform), checkpoints/undo, and an always-available kill switch that actually halts in-flight work. Set stopping conditions (max iterations, checkpoints, blockers). A well-handled failure *builds* trust.
 
-**8. Oversight does not scale linearly — design oversight, not control.** As autonomy and fleet size rise, approve *plans*, not step sequences; automate the watching (agents watching agents — orchestrating the agents themselves, not the human seam, is [multi-agent-orchestration](../../orchestration/multi-agent-orchestration.md)); keep the human practiced and in-context. Ironies of automation: more capable automation leaves the human the hardest cases after their skill and situational awareness have atrophied.
+**8. Oversight does not scale linearly — design oversight, not control.** As autonomy and fleet size rise, approve *plans*, not step sequences; automate the watching (agents watching agents — orchestrating the agents themselves, not the human seam, is [[ai/orchestration/multi-agent-orchestration]]); keep the human practiced and in-context. Ironies of automation: more capable automation leaves the human the hardest cases after their skill and situational awareness have atrophied.
 
 **9. Two user populations coexist: "show me the thinking" vs "let it rip."** Support both modes in one product; default by stakes (more legibility as consequence rises). Don't force the let-it-rip user through step approvals, or the inspector through a black box.
 
 ## The autonomy ladder
 
-Operator → Collaborator → Consultant → Approver → Observer (≈ human-in-loop → on-loop → out-of-loop). Pick the rung by **risk × reversibility × latency × regulation**, not by model capability. Make the rung explicit, task-scoped, and adjustable mid-session. Full table, the redefined agentic usability metrics, the 18 interaction guidelines and 12 mixed-initiative factors, and the principle-vs-principle tension table: [agentic-ux-reference.md](agentic-ux-reference.md).
+Operator → Collaborator → Consultant → Approver → Observer (≈ human-in-loop → on-loop → out-of-loop). Pick the rung by **risk × reversibility × latency × regulation**, not by model capability. Make the rung explicit, task-scoped, and adjustable mid-session. Full table, the redefined agentic usability metrics, the 18 interaction guidelines and 12 mixed-initiative factors, and the principle-vs-principle tension table: [[ai/interface/human-facing/agentic-ux-reference]].
 
 ## Decision heuristics
 

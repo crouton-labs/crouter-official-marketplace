@@ -89,7 +89,7 @@ Coverage thresholds are reward-hackable. Coverage as a *scope check* — "if thi
 
 ## Failure modes
 
-Each is documented in the wild. Full catalog with citations and detection patterns in [test-pitfalls-reference.md](test-pitfalls-reference.md).
+Each is documented in the wild. Full catalog with citations and detection patterns in [[ai/testing/test-pitfalls-reference]].
 
 - **Deleting failing tests** — most common; the agent removes assertions, files, or whole suites.
 - **Weakening assertions** — `assertEqual` → `assertIsInstance`, narrowed ranges, stringified round-trips.
