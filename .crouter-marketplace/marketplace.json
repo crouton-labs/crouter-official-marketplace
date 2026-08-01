@@ -14,13 +14,6 @@
       "keywords": ["llm", "agents", "prompting", "prompt-review", "agentic-ux", "agentic-ui", "cli-design", "tool-design", "multi-agent", "context-management", "structured-output", "evals", "testing", "feedback-loop"]
     },
     {
-      "name": "spec-driven-development",
-      "source": "./plugins/spec-driven-development",
-      "version": "0.2.5",
-      "description": "Skills for spec-driven development — write specs, then review specs/designs/plans/requirements against each other.",
-      "keywords": ["spec", "planning", "rpi", "behavior", "requirements", "review"]
-    },
-    {
       "name": "claude-authoring",
       "source": "./plugins/claude-authoring",
       "version": "0.2.5",
@@ -40,13 +33,6 @@
       "version": "0.1.5",
       "description": "Skills for web development workflows — frontend product design and UX consultancy.",
       "keywords": ["web", "frontend", "design", "ux", "ui"]
-    },
-    {
-      "name": "development",
-      "source": "./plugins/development",
-      "version": "0.2.3",
-      "description": "Software-development knowledge for systematic debugging and runtime verification.",
-      "keywords": ["debugging", "runtime-verification", "frontend-debugging", "software-development"]
     },
     {
       "name": "cloudflare",
