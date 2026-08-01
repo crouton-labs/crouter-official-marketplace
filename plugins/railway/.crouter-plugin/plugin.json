@@ -1,6 +1,6 @@
 {
   "name": "railway",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Work with Railway from a shell — Railway CLI for deploy/logs/environments, GraphQL API access with project or account tokens, and docs discovery through Railway's llms.txt and markdown references.",
   "source": "https://github.com/crouton-labs/crouter-official-marketplace",
   "owner": {
