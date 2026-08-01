@@ -5,6 +5,7 @@ when-and-why-to-read: When working in crouter-official-marketplace, this knowled
 short-form: crouter-official-marketplace
 system-prompt-visibility: content
 file-read-visibility: content
+applies-to: .
 ---
 
 # crouter-official-marketplace

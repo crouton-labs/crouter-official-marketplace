@@ -40,16 +40,11 @@ Log at decision points and async boundaries, not everywhere.
 3. Diagnose and fix
 4. **After user confirms fix works:** remove all added logging
 
-## Agent Investigation
+## Delegated Investigation
 
-For complex/unfamiliar code sections acting as a blackbox:
+For complex or unfamiliar code acting as a black box, create a focused `explore` child to trace the code path while you continue investigating. Use an `advisor` child when the task is diagnosis or a recommendation rather than current-state mapping.
 
-- Spawn an Explore agent to trace a specific code path and report back
-- Run agents in background while continuing other investigation
-
-**When stuck:** Spawn 2-3 senior-advisor agents in parallel with different perspectives (pragmatist, architect, skeptic).
-
-**Avoid biasing agents:** Pass them relevant file paths and the observed behavior, but *not* your hypotheses or assumptions. Let them form independent conclusions.
+Pass children the relevant file paths and observed behavior, but not your hypotheses or assumptions, so they form independent conclusions instead of inheriting your bias.
 
 ## Before Fixing
 
