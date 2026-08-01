@@ -4,9 +4,6 @@ when-and-why-to-read: When you need to call Fly.io's Machines API directly — l
 short-form: Fly.io Machines API by curl — base https://api.machines.dev/v1, Bearer token auth, apps/machines/volumes/secrets/tokens/certs resources, rate limits, GraphQL is internal/unstable.
 system-prompt-visibility: none
 file-read-visibility: none
-gate:
-  kind:
-    imatches: '^(general|developer)($|/)'
 ---
 
 # Fly.io Machines API from curl
@@ -39,7 +36,7 @@ Apps, Machines, Volumes, TLS Certificates, secrets (`/apps/{app}/secrets`), and 
 
 ## Rate limits
 
-Per Fly's Machines API docs: roughly 1 request/second per action with a burst of 3 (e.g. create/update/delete on one Machine), with the Get-Machine read endpoint allowed a higher 5 requests/second with a burst of 10. Limits are scoped per action and per resource identifier (e.g. per machine ID), not a single global budget — batch operations across many Machines/apps in parallel rather than hammering one Machine's endpoint in a tight loop. Confirm current numbers on the Machines API guide (`fly/doc-references`) since these aren't enforced via documented response headers the way Vercel's or Railway's are.
+Per Fly's Machines API docs: roughly 1 request/second per action with a burst of 3 (e.g. create/update/delete on one Machine), with the Get-Machine read endpoint allowed a higher 5 requests/second with a burst of 10. Limits are scoped per action and per resource identifier (e.g. per machine ID), not a single global budget — batch operations across many Machines/apps in parallel rather than hammering one Machine's endpoint in a tight loop. Confirm current numbers on the Machines API guide ([[fly/doc-references]]) since these aren't enforced via documented response headers the way Vercel's or Railway's are.
 
 ## GraphQL: internal, avoid it
 

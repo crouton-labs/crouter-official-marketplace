@@ -4,9 +4,6 @@ when-and-why-to-read: When you need to call Railway's GraphQL API directly — l
 short-form: Railway GraphQL API by curl — endpoint https://backboard.railway.com/graphql/v2, Bearer for account/workspace tokens vs Project-Access-Token for project tokens, rate limits, example queries/mutations.
 system-prompt-visibility: none
 file-read-visibility: none
-gate:
-  kind:
-    imatches: '^(general|developer)($|/)'
 ---
 
 # Railway GraphQL API from curl
@@ -62,7 +59,7 @@ curl -sS -X POST https://backboard.railway.com/graphql/v2 \
   -d '{"query":"mutation($s:String!,$e:String!){ serviceInstanceDeploy(serviceId:$s, environmentId:$e) }","variables":{"s":"<service_id>","e":"<environment_id>"}}' | jq
 ```
 
-More copy-paste recipes (variables, domains, volumes): `railway/doc-references`.
+More copy-paste recipes (variables, domains, volumes): [[railway/doc-references]].
 
 ## Rate limits
 

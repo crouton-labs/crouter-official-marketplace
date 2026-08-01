@@ -4,9 +4,6 @@ when-and-why-to-read: 'When you are about to do anything with Vercel — deploym
 short-form: Vercel from a shell — Vercel CLI for deploy/dev/logs, curl against the REST API, docs via llms.txt. No MCP needed.
 system-prompt-visibility: preview
 file-read-visibility: none
-gate:
-  kind:
-    imatches: '^(general|developer)($|/)'
 ---
 
 # Vercel
@@ -21,10 +18,10 @@ Vercel's surface is deployments, projects, domains, and environment variables. A
 
 | Path | Use it for | Sub-doc |
 |---|---|---|
-| **Vercel CLI** | Deploy, local dev server, logs, env vars, rollbacks — the everyday loop, especially inside a linked project | `vercel/cli-setup` |
-| **REST API via curl** | Listing/inspecting projects and deployments, scripting outside a linked directory, anything the CLI doesn't expose directly | `vercel/api-access` |
+| **Vercel CLI** | Deploy, local dev server, logs, env vars, rollbacks — the everyday loop, especially inside a linked project | [[vercel/cli-setup]] |
+| **REST API via curl** | Listing/inspecting projects and deployments, scripting outside a linked directory, anything the CLI doesn't expose directly | [[vercel/api-access]] |
 
-Find the right reference for either path with `vercel/doc-references`.
+Find the right reference for either path with [[vercel/doc-references]].
 
 ## Canonical pointers
 

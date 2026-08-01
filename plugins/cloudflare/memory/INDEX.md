@@ -4,9 +4,6 @@ when-and-why-to-read: 'When you are about to do anything with Cloudflare — Wor
 short-form: Cloudflare from a shell — Wrangler + curl against the REST API, endpoint discovery from openapi.json, docs via llms.txt. The Code Mode pattern without MCP.
 system-prompt-visibility: preview
 file-read-visibility: none
-gate:
-  kind:
-    imatches: '^(general|developer)($|/)'
 ---
 
 # Cloudflare
@@ -26,10 +23,10 @@ That is the same fixed-cost, progressive-discovery win the blog describes, with 
 
 | Path | Use it for | Sub-doc |
 |---|---|---|
-| **Wrangler CLI** | Build, run, and deploy Workers/Pages and manage their bindings (KV, R2, D1, secrets, tail logs) | `cloudflare/wrangler-setup` |
-| **REST API via curl** | Everything — 2,500+ endpoints across DNS, zones, Zero Trust, R2, accounts, analytics | `cloudflare/api-access` |
+| **Wrangler CLI** | Build, run, and deploy Workers/Pages and manage their bindings (KV, R2, D1, secrets, tail logs) | [[cloudflare/wrangler-setup]] |
+| **REST API via curl** | Everything — 2,500+ endpoints across DNS, zones, Zero Trust, R2, accounts, analytics | [[cloudflare/api-access]] |
 
-Find the right reference for either path with `cloudflare/doc-references`.
+Find the right reference for either path with [[cloudflare/doc-references]].
 
 ## The three canonical pointers (pointers to all the rest)
 

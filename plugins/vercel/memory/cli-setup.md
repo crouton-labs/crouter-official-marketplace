@@ -4,9 +4,6 @@ when-and-why-to-read: When you need to deploy, run a local dev server, stream lo
 short-form: Vercel CLI end-to-end — install, auth (vercel login vs VERCEL_TOKEN), vercel deploy/dev/logs/env/rollback, vercel.json, project linking and --scope.
 system-prompt-visibility: none
 file-read-visibility: none
-gate:
-  kind:
-    imatches: '^(general|developer)($|/)'
 ---
 
 # Vercel CLI setup
@@ -64,6 +61,8 @@ vercel pull --environment=preview      # same, for a specific target environment
 
 `vercel pull` is **not** the env-var-to-file command — it stores a local cache under `.vercel/` purely so `vercel build` and `vercel dev` can run offline against current project settings and env vars. If you aren't using `vercel build`/`vercel dev`, you don't need `vercel pull`; use `vercel env pull` above instead. Re-run `vercel pull` whenever env vars or project settings change on Vercel.
 
+Both `vercel env pull` output and `.vercel/.env.$target.local` cache files are secret material: verify they are ignored, and never commit or print them.
+
 ## Configuration: `vercel.json`
 
 Project root, optional — most settings have sane framework defaults. Common fields:
@@ -77,13 +76,13 @@ Project root, optional — most settings have sane framework defaults. Common fi
 }
 ```
 
-See `vercel/doc-references` for the full Project Configuration reference — most fields are optional overrides, not required boilerplate.
+See [[vercel/doc-references]] for the full Project Configuration reference — most fields are optional overrides, not required boilerplate.
 
 ## Project linking and team scope
 
 - `vercel link` connects the current directory to a Vercel project, writing `.vercel/project.json` (project ID + org/team ID). Most commands without an explicit target operate on this linked project — `vercel pull`/`vercel env`/`vercel logs` all read it.
 - In CI or a fresh checkout there is no `.vercel/` directory yet; either run `vercel link --yes` first or pass `--cwd`/explicit flags so the command isn't ambiguous about which project it targets.
-- Team-owned resources: pass `--scope <team-slug-or-id>` on CLI commands, or append `?teamId=<id>` on REST API calls (see `vercel/api-access`).
+- Team-owned resources: pass `--scope <team-slug-or-id>` on CLI commands, or append `?teamId=<id>` on REST API calls (see [[vercel/api-access]]).
 
 ## Discovering commands
 

@@ -4,9 +4,6 @@ when-and-why-to-read: 'When you are about to do anything with Fly.io — apps, M
 short-form: Fly.io from a shell — flyctl for launch/deploy/status/logs, curl against the Machines API, docs via fly.io/docs and llms.txt. No MCP needed.
 system-prompt-visibility: preview
 file-read-visibility: none
-gate:
-  kind:
-    imatches: '^(general|developer)($|/)'
 ---
 
 # Fly.io
@@ -23,10 +20,10 @@ Fly.io organizes work as apps made of Machines (Firecracker VMs), plus volumes, 
 
 | Path | Use it for | Sub-doc |
 |---|---|---|
-| **flyctl CLI** | Launch, deploy, check status, stream logs, manage secrets — the everyday loop, app-config-aware via `fly.toml` | `fly/cli-setup` |
-| **Machines API via curl** | Direct control of individual Machines, volumes, or apps; scripting outside flyctl's app-level abstractions | `fly/api-access` |
+| **flyctl CLI** | Launch, deploy, check status, stream logs, manage secrets — the everyday loop, app-config-aware via `fly.toml` | [[fly/cli-setup]] |
+| **Machines API via curl** | Direct control of individual Machines, volumes, or apps; scripting outside flyctl's app-level abstractions | [[fly/api-access]] |
 
-Find the right reference for either path with `fly/doc-references`.
+Find the right reference for either path with [[fly/doc-references]].
 
 ## Canonical pointers
 

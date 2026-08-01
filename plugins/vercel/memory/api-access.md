@@ -4,9 +4,6 @@ when-and-why-to-read: When you need to call the Vercel REST API directly — lis
 short-form: Vercel REST API by curl — base https://api.vercel.com, Bearer token auth, teamId scoping, rate-limit headers, curl examples for projects/deployments, no published OpenAPI spec.
 system-prompt-visibility: none
 file-read-visibility: none
-gate:
-  kind:
-    imatches: '^(general|developer)($|/)'
 ---
 
 # Vercel REST API from curl
@@ -41,7 +38,7 @@ curl -sS "https://api.vercel.com/v13/deployments/<deployment_id_or_url>" \
   -H "Authorization: Bearer $VERCEL_TOKEN" | jq
 ```
 
-Endpoint paths are versioned per-resource and the version number does change over time (`/v7/deployments`, `/v9/projects/{id}`, `/v10/projects`, `/v13/deployments/{id}` as of this writing) — confirm the current version on the resource's reference page (`vercel/doc-references`) before relying on it long-term, rather than assuming a version number stays fixed.
+Endpoint paths are versioned per-resource and the version number does change over time (`/v7/deployments`, `/v9/projects/{id}`, `/v10/projects`, `/v13/deployments/{id}` as of this writing) — confirm the current version on the resource's reference page ([[vercel/doc-references]]) before relying on it long-term, rather than assuming a version number stays fixed.
 
 ## Response shape and errors
 
@@ -59,4 +56,4 @@ Every response carries `X-RateLimit-Limit`, `X-RateLimit-Remaining`, and `X-Rate
 
 ## No published OpenAPI/machine spec
 
-Unlike Cloudflare, Vercel does not publish a downloadable `openapi.json` for agents to grep. The closest things to a machine-readable spec are the `@vercel/sdk` npm package's generated TypeScript models (one file per endpoint under `models/`, e.g. `getdeploymentsop.d.ts`, with exact paths and response shapes) and the human-authored REST API reference organized by resource — see `vercel/doc-references` for the reference URL and how to drill into one resource.
+Unlike Cloudflare, Vercel does not publish a downloadable `openapi.json` for agents to grep. The closest things to a machine-readable spec are the `@vercel/sdk` npm package's generated TypeScript models (one file per endpoint under `models/`, e.g. `getdeploymentsop.d.ts`, with exact paths and response shapes) and the human-authored REST API reference organized by resource — see [[vercel/doc-references]] for the reference URL and how to drill into one resource.

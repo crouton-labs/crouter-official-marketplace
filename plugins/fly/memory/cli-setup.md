@@ -4,9 +4,6 @@ when-and-why-to-read: When you need to launch, deploy, check status, stream logs
 short-form: flyctl end-to-end — install, auth (fly auth login vs FLY_API_TOKEN), fly launch/deploy/status/logs/secrets/machine, fly.toml, regions, destructive-op caveats.
 system-prompt-visibility: none
 file-read-visibility: none
-gate:
-  kind:
-    imatches: '^(general|developer)($|/)'
 ---
 
 # flyctl setup
@@ -43,11 +40,11 @@ fly logs -a <app> --follow          # stream logs
 ## Secrets
 
 ```bash
-fly secrets set KEY=VALUE -a <app>   # set one or more secrets; triggers a new deploy to apply them
-fly secrets list -a <app>            # list secret names (values are never shown back)
+fly secrets import -a <app>  # read NAME=VALUE pairs from stdin; triggers a new deploy to apply them
+fly secrets list -a <app>    # list secret names (values are never shown back)
 ```
 
-Secrets are **not** stored in `fly.toml` — they're encrypted and injected as runtime environment variables. Don't try to "configure" them in the toml file.
+Provide secret values through a secret-aware stdin source; do not put real values in command text, shell history, or logs. Secrets are **not** stored in `fly.toml` — they're encrypted and injected as runtime environment variables. Don't try to "configure" them in the toml file.
 
 ## Machines
 
@@ -63,7 +60,7 @@ Project root. flyctl looks for it in the current directory by default; override 
 
 ```toml
 app = "my-app"
-primary_region = "ord"        # three-letter region code — see fly/doc-references
+primary_region = "ord"        # three-letter region code — see [[fly/doc-references]]
 
 [env]
 PORT = "8080"
@@ -83,7 +80,7 @@ destination = "/data"
 
 ## Caveats
 
-- **Regions are three-letter codes** (`ord`, `sfo`, `lax`, `lhr`, ...) — see `fly/doc-references` for the full list; don't guess.
+- **Regions are three-letter codes** (`ord`, `sfo`, `lax`, `lhr`, ...) — see [[fly/doc-references]] for the full list; don't guess.
 - **Destructive operations are immediate** — `fly apps destroy`, `fly machine destroy`, `fly volumes destroy` have no built-in backup/undo. Confirm with the user before running them, or pass `--yes`/`-y` only once you mean it.
 - **Mixed Machines API + flyctl:** if you create or modify Machines directly via the API and then want `flyctl` to manage them, set the metadata `fly_platform_version=v2` and `fly_process_group=<name>` on the Machine — otherwise flyctl may not recognize it as part of the app's managed fleet.
 

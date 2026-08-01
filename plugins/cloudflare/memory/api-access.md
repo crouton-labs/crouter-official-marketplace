@@ -4,9 +4,6 @@ when-and-why-to-read: When you need to call the Cloudflare REST or GraphQL API d
 short-form: Cloudflare REST API by curl — base URL, Bearer token auth, the success/result envelope, pagination, GraphQL analytics, and grepping openapi.json to discover endpoints (Code Mode in a shell).
 system-prompt-visibility: none
 file-read-visibility: none
-gate:
-  kind:
-    imatches: '^(general|developer)($|/)'
 ---
 
 # Cloudflare REST API from curl

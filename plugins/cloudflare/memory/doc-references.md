@@ -4,9 +4,6 @@ when-and-why-to-read: When you need authoritative, current Cloudflare documentat
 short-form: Cloudflare's agent-facing docs map — llms.txt index, per-product llms-full.txt, openapi.json, and the api/wrangler references, with the drill-down recipe.
 system-prompt-visibility: none
 file-read-visibility: none
-gate:
-  kind:
-    imatches: '^(general|developer)($|/)'
 ---
 
 # Finding the right Cloudflare reference
@@ -22,7 +19,7 @@ Cloudflare publishes its docs in agent-friendly form. Pull from these directly w
 
 ## The API spec
 
-- **Machine-readable:** <https://developers.cloudflare.com/openapi.json> (~10 MB). Grep/jq it for endpoints — see `cloudflare/api-access`.
+- **Machine-readable:** <https://developers.cloudflare.com/openapi.json> (~10 MB). Grep/jq it for endpoints — see [[cloudflare/api-access]].
 - **Human-readable:** <https://developers.cloudflare.com/api/>.
 - **Source repo:** `github.com/cloudflare/api-schemas`.
 
@@ -37,7 +34,7 @@ Cloudflare publishes its docs in agent-friendly form. Pull from these directly w
 1. **Don't know the product?** `curl https://developers.cloudflare.com/llms.txt` and scan categories for the right product link.
 2. **Know the product, want orientation?** `curl …/<product>/llms.txt` for its page index; fetch the one page you need.
 3. **Working deep in one product?** `curl …/<product>/llms-full.txt` to load it all.
-4. **Need an exact API endpoint, params, or schema?** grep `openapi.json` (recipe in `cloudflare/api-access`).
+4. **Need an exact API endpoint, params, or schema?** grep `openapi.json` (recipe in [[cloudflare/api-access]]).
 
 ## On Cloudflare's MCP servers (we don't use them)
 

@@ -4,9 +4,6 @@ when-and-why-to-read: When you need authoritative, current Railway documentation
 short-form: Railway's docs map — llms.txt index, llms-full.txt, per-page .md fetches, CLI reference, API overview/cookbook/manage-resource docs, URL-based ID extraction, agent integrations as optional.
 system-prompt-visibility: none
 file-read-visibility: none
-gate:
-  kind:
-    imatches: '^(general|developer)($|/)'
 ---
 
 # Finding the right Railway reference
@@ -42,7 +39,7 @@ Railway dashboard URLs encode the IDs you need for API calls — pull them out i
 https://railway.com/project/<PROJECT_ID>/service/<SERVICE_ID>?environmentId=<ENVIRONMENT_ID>
 ```
 
-Fall back to `railway status --json` (optionally with `--project`/`--environment`/`--service` to override) only when no URL was given.
+Fall back to `railway status --json` only when no URL was given; it reports the current linked context and does not accept targeting overrides. See [[railway/cli-setup]] to establish that link.
 
 ## Drill-down recipe
 

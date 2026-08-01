@@ -4,9 +4,6 @@ when-and-why-to-read: When you need authoritative, current Vercel documentation 
 short-form: Vercel's docs map — llms.txt index, llms-full.txt, CLI reference, REST API reference by resource, plus the drill-down recipe.
 system-prompt-visibility: none
 file-read-visibility: none
-gate:
-  kind:
-    imatches: '^(general|developer)($|/)'
 ---
 
 # Finding the right Vercel reference

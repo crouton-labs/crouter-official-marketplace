@@ -4,9 +4,6 @@ when-and-why-to-read: 'When you are about to do anything with Railway — projec
 short-form: Railway from a shell — Railway CLI for deploy/logs/environments, curl against the GraphQL API, docs via llms.txt. No MCP needed.
 system-prompt-visibility: preview
 file-read-visibility: none
-gate:
-  kind:
-    imatches: '^(general|developer)($|/)'
 ---
 
 # Railway
@@ -15,16 +12,16 @@ The front door for working with Railway. Read this, then jump to the sub-doc you
 
 ## Orienting principle
 
-Railway organizes work as projects → environments → services → deployments, plus managed databases. Two ways to act cover almost everything: the `railway` CLI for the everyday deploy/logs/environment loop, or the GraphQL API via `curl` for anything programmatic — listing resources, scripting CI, or operating without a linked directory. Neither needs MCP, though Railway does publish one (see `railway/doc-references`).
+Railway organizes work as projects → environments → services → deployments, plus managed databases. Two ways to act cover almost everything: the `railway` CLI for the everyday deploy/logs/environment loop, or the GraphQL API via `curl` for anything programmatic — listing resources, scripting CI, or operating without a linked directory. Neither needs MCP, though Railway does publish one (see [[railway/doc-references]]).
 
 ## Two ways to act
 
 | Path | Use it for | Sub-doc |
 |---|---|---|
-| **Railway CLI** | Deploy, redeploy, stream logs, manage environments, SSH/connect into services — the everyday loop, especially inside a linked project | `railway/cli-setup` |
-| **GraphQL API via curl** | Listing/inspecting projects, environments, services, variables; scripting outside a linked directory; anything the CLI doesn't expose directly | `railway/api-access` |
+| **Railway CLI** | Deploy, redeploy, stream logs, manage environments, SSH/connect into services — the everyday loop, especially inside a linked project | [[railway/cli-setup]] |
+| **GraphQL API via curl** | Listing/inspecting projects, environments, services, variables; scripting outside a linked directory; anything the CLI doesn't expose directly | [[railway/api-access]] |
 
-Find the right reference for either path with `railway/doc-references`.
+Find the right reference for either path with [[railway/doc-references]].
 
 ## Canonical pointers
 

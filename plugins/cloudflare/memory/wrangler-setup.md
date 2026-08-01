@@ -1,12 +1,9 @@
 ---
 kind: knowledge
 when-and-why-to-read: When you need to build, run locally, or deploy a Cloudflare Worker or Pages project, or manage its bindings (KV, R2, D1, secrets) and logs, this doc should be read because it is the end-to-end Wrangler setup — install, auth (interactive vs headless), scaffold, dev, deploy, config — with the commands that actually work.
-short-form: Wrangler end-to-end — install, auth (login vs CLOUDFLARE_API_TOKEN), scaffold with C3, wrangler dev / deploy, wrangler.jsonc config and bindings.
+short-form: Wrangler end-to-end — install, auth (login vs CLOUDFLARE_API_TOKEN), scaffold with C3, local development and deployment, wrangler.jsonc config and bindings.
 system-prompt-visibility: none
 file-read-visibility: none
-gate:
-  kind:
-    imatches: '^(general|developer)($|/)'
 ---
 
 # Wrangler setup
@@ -43,7 +40,8 @@ cd my-app
 npx wrangler dev            # local dev server (Workerd); --remote runs on Cloudflare's edge
 npx wrangler deploy         # publish the Worker
 npx wrangler tail           # live-stream production logs
-npx wrangler versions upload / deploy   # gradual/versioned rollouts
+npx wrangler versions upload                         # upload a rollout version
+npx wrangler versions deploy <version-id>@<percentage>  # send that version a share of traffic
 ```
 
 ## Configuration: `wrangler.jsonc`

@@ -1,12 +1,9 @@
 ---
 kind: knowledge
 when-and-why-to-read: When you need to deploy, redeploy, stream logs, or manage environments/services for a Railway project, this doc should be read because it is the end-to-end Railway CLI setup — install, auth (interactive vs headless), verify, the common deploy/logs/environment/deployment commands, and config caveats.
-short-form: Railway CLI end-to-end — install, auth (railway login vs RAILWAY_TOKEN/RAILWAY_API_TOKEN), railway up/logs/environment/deployment/ssh/connect, railway.toml, explicit --project/--environment/--service.
+short-form: Railway CLI end-to-end — install, auth (railway login vs RAILWAY_TOKEN/RAILWAY_API_TOKEN), railway link/up/logs/environment/ssh/connect, railway.toml, and linked-project targeting.
 system-prompt-visibility: none
 file-read-visibility: none
-gate:
-  kind:
-    imatches: '^(general|developer)($|/)'
 ---
 
 # Railway CLI setup
@@ -53,11 +50,11 @@ railway logs --service backend          # logs for a specific service
 ```bash
 railway environment                     # interactively link/switch environment
 railway environment new staging         # create a new environment
-railway environment list --json         # list environments, machine-readable (alias: railway env)
-railway deployment list --json          # list deployments with IDs/status/timestamps
 railway ssh                             # SSH into a service's running container
 railway connect                         # open a shell/connection to a database service
 ```
+
+Public Railway docs list `railway environment list --json` and `railway deployment list --json`, but local Railway CLI 4.5.3 lacks those leaves. Before scripting either, check `railway <command> --help`; use [[railway/api-access]] for listings your installed CLI does not support.
 
 ## Config files
 
@@ -66,7 +63,7 @@ railway connect                         # open a shell/connection to a database 
 
 ## Explicit targeting
 
-`railway up`, `railway logs`, and `railway deployment list` all default to the **linked** project/environment/service (the directory's `.railway`-tracked link, set by `railway link`). In an agent or automation context, pass `-p/--project`, `-e/--environment`, and `-s/--service` explicitly rather than relying on implicit linked state — it avoids surprises when the working directory's link doesn't match the resource you mean to operate on.
+Use `railway link --project <project> --environment <environment> --service <service>` to set the directory's linked project context before automation. `railway up` and `railway logs` use that project and accept only `-e/--environment` and `-s/--service` overrides; `railway status` has no targeting flags. Do not assume `-p/--project` works outside `railway link`; check `railway <command> --help` for the installed version.
 
 ## Discovering commands
 
