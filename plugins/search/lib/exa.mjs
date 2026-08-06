@@ -52,19 +52,27 @@ export function resolveApiKey() {
 /** POST a JSON body to an Exa endpoint and return the parsed JSON. The key is
  *  resolved before the request is built, so a keyless invocation never reaches
  *  the network. Any non-2xx response or transport failure becomes a typed
- *  plugin error carrying Exa's status and a concrete next action. */
+ *  plugin error carrying Exa's status and a concrete next action. A generous
+ *  per-request time budget (300s) prevents hanging on stalled connections; deep
+ *  searches legitimately run long. */
 async function exaPost(endpoint, body) {
   const apiKey = resolveApiKey();
 
   let res;
   try {
+    // 300s budget per request; deep-reasoning searches run legitimately long.
+    const signal = AbortSignal.timeout(300_000);
     res = await fetch(`${EXA_BASE}${endpoint}`, {
       method: 'POST',
       headers: { 'x-api-key': apiKey, 'content-type': 'application/json' },
       body: JSON.stringify(body),
+      signal,
     });
   } catch (err) {
     const detail = err instanceof Error ? err.message : String(err);
+    // AbortError is a specific Error type raised by AbortSignal.timeout();
+    // map it onto the same exa_unreachable code as network failures so the
+    // caller gets a concrete next action.
     throw new PluginError('exa_unreachable', `Exa request failed: ${detail}`, {
       next: 'Check network connectivity and retry. If it persists, simplify the query or reduce --num.',
     });
