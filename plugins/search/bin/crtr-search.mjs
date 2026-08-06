@@ -4,6 +4,11 @@
 // crtr spawns this with `--crtr-command-protocol 1`, writes exactly one JSON
 // request to stdin, and reads exactly one JSON envelope from stdout. Diagnostics
 // go to stderr — anything else on stdout is a protocol violation.
+//
+// Every path returns an envelope rather than exiting: stdout is a pipe, so its
+// write is asynchronous, and a `process.exit()` behind it would truncate a large
+// result into a protocol error. The one writer below emits the envelope, sets
+// `process.exitCode`, and lets Node exit once stdout has drained.
 
 import { findLeaf } from '../lib/commands.mjs';
 import { PluginError } from '../lib/exa.mjs';
@@ -16,17 +21,12 @@ async function readStdin() {
   return Buffer.concat(chunks).toString('utf8');
 }
 
-function emit(envelope) {
-  process.stdout.write(`${JSON.stringify(envelope)}\n`);
-}
-
 function ok(result) {
-  emit({ protocolVersion: PROTOCOL_VERSION, ok: true, result });
-  process.exit(0);
+  return { protocolVersion: PROTOCOL_VERSION, ok: true, result };
 }
 
 function fail(code, message, { field, next } = {}) {
-  emit({
+  return {
     protocolVersion: PROTOCOL_VERSION,
     ok: false,
     error: {
@@ -35,57 +35,54 @@ function fail(code, message, { field, next } = {}) {
       ...(field !== undefined ? { field } : {}),
       ...(next !== undefined ? { next } : {}),
     },
-  });
-  process.exit(1);
+  };
 }
 
-async function main() {
+async function run() {
   const raw = await readStdin();
 
   let request;
   try {
     request = JSON.parse(raw);
   } catch {
-    fail('malformed_request', 'stdin did not carry a single JSON request object', {
+    return fail('malformed_request', 'stdin did not carry a single JSON request object', {
       next: 'Invoke this executable through crtr, which writes the protocol request.',
     });
-    return;
   }
 
   if (request?.protocolVersion !== PROTOCOL_VERSION) {
-    fail('unsupported_protocol', `unsupported request protocolVersion ${String(request?.protocolVersion)}`, {
+    return fail('unsupported_protocol', `unsupported request protocolVersion ${String(request?.protocolVersion)}`, {
       next: `This plugin speaks protocol version ${PROTOCOL_VERSION}. Update crtr or the plugin.`,
     });
-    return;
   }
 
   const leaf = findLeaf(request.command);
   if (leaf === null) {
-    fail('unknown_command', `no such command: ${(request.command ?? []).join(' ') || '(empty)'}`, {
+    return fail('unknown_command', `no such command: ${(request.command ?? []).join(' ') || '(empty)'}`, {
       next: 'Run `crtr search -h` to list this plugin\'s commands.',
     });
-    return;
   }
 
   const input = request.input && typeof request.input === 'object' ? request.input : {};
   try {
-    ok(await leaf.run(input));
+    return ok(await leaf.run(input));
   } catch (err) {
     if (err instanceof PluginError) {
-      fail(err.code, err.message, { field: err.field, next: err.next });
-      return;
+      return fail(err.code, err.message, { field: err.field, next: err.next });
     }
     const message = err instanceof Error ? err.message : String(err);
-    fail('command_failed', message, {
+    return fail('command_failed', message, {
       next: 'Retry the command. If it persists, report the failing invocation.',
     });
   }
 }
 
-main().catch((err) => {
-  const message = err instanceof Error ? err.stack ?? err.message : String(err);
-  process.stderr.write(`${message}\n`);
-  fail('command_failed', 'the search plugin crashed before producing a result', {
+const envelope = await run().catch((err) => {
+  process.stderr.write(`${err instanceof Error ? err.stack ?? err.message : String(err)}\n`);
+  return fail('command_failed', 'the search plugin crashed before producing a result', {
     next: 'Check stderr for the stack trace and report it.',
   });
 });
+
+process.stdout.write(`${JSON.stringify(envelope)}\n`);
+process.exitCode = envelope.ok ? 0 : 1;
