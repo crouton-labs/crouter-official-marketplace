@@ -75,6 +75,13 @@
       "version": "1.0.0",
       "description": "Mounts `crtr capture` as a transparent passthrough to the external Capture CLI (@crouton-kit/capture) \u2014 CDP screenshots, measurement, HAR, a11y, JS-exec, and site libs.",
       "keywords": ["capture", "browser", "cdp", "screenshot", "measure", "har", "a11y", "ui-validation", "chrome", "passthrough"]
+    },
+    {
+      "name": "search",
+      "source": "./plugins/search",
+      "version": "0.1.0",
+      "description": "Mounts `crtr search` — web search, grounded cited answers, and clean content extraction through the Exa API, using a locally resolved key (EXA_API_KEY or ~/.crouter/exa.key).",
+      "keywords": ["search", "web-search", "exa", "research", "answer", "citations", "contents", "extraction", "grounding"]
     }
   ]
 }

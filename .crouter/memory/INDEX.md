@@ -29,6 +29,11 @@ The official marketplace for optional crtr plugins. Every plugin here must be re
 - Knowledge and product discovery: `knowledge-capture`, `design-discovery`, `web`.
 - Provider kits: `cloudflare`, `vercel`, `railway`, `fly`.
 - Browser automation: `capture`.
+- Web search: `search`.
+
+## Command-contributing plugins
+
+`capture` and `search` contribute top-level `crtr` commands over exec transport. `search` generates its `.crouter-plugin/commands.json` from `plugins/search/lib/commands.mjs` — edit the command tree there and run `node plugins/search/scripts/generate-commands.mjs`; `.github/scripts/validate-marketplace.mjs` fails CI on drift, on a missing exec bit, and on a transport/commands mismatch.
 
 ## Versioning
 

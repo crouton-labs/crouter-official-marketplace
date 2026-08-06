@@ -1,0 +1,15 @@
+{
+  "name": "search",
+  "version": "0.1.0",
+  "description": "Mounts `crtr search` — web search, grounded cited answers, and clean content extraction through the Exa API, using a locally resolved key (EXA_API_KEY or ~/.crouter/exa.key).",
+  "commands": ".crouter-plugin/commands.json",
+  "transport": {
+    "kind": "exec",
+    "executable": "bin/crtr-search.mjs"
+  },
+  "source": "https://github.com/crouton-labs/crouter-official-marketplace",
+  "owner": {
+    "name": "Silas Rhyneer",
+    "email": "rhyneer.silas@gmail.com"
+  }
+}
