@@ -1,6 +1,6 @@
 ---
 kind: knowledge
-when-and-why-to-read: When setting up a repository for development work — the user invoked /dev:init, or a workspace has no .crouter/memory/INDEX.md front door — this knowledge should be read because one pass produces both halves agents need here forever: a lean memory front door, and a registered Grove-backed `dev` lifecycle whose live help replaces instructions that would otherwise go stale.
+when-and-why-to-read: "When setting up a repository for development work — the user invoked /dev:init, or a workspace has no .crouter/memory/INDEX.md front door — this knowledge should be read because one pass produces both halves agents need here forever: a lean memory front door, and a registered Grove-backed `dev` lifecycle whose live help replaces instructions that would otherwise go stale."
 short-form: "Initialize a repository: survey it, author the lean INDEX front door and dev runbook, and stand up the Grove-backed `dev` lifecycle — config, dev.sh from the shipped template, registration, and proof."
 system-prompt-visibility: name
 file-read-visibility: none
