@@ -1,7 +1,7 @@
 ---
 kind: knowledge
 when-and-why-to-read: When you need to establish or update a repository's Grove-backed development workflow, this knowledge should be read because it turns the repository's existing lifecycle arrangement into one registered, instance-aware `dev` path without leaving competing setup or service-control paths behind.
-short-form: Set up or update a repository's Grove-backed `dev` workflow: config, setup, lifecycle CLI, `/dev` runbook, registration, and proof.
+short-form: "Set up or update a repository's Grove-backed `dev` workflow: config, setup, lifecycle CLI, `/dev` runbook, registration, and proof."
 system-prompt-visibility: name
 file-read-visibility: none
 slash: true
@@ -9,7 +9,7 @@ slash: true
 
 # Set up a repository development workflow
 
-Set up one coherent development path: the workflow plugin exposes `dev`, Grove resolves the current registered source or instance, and the repository's configured CLI performs lifecycle work. Work from the repository root and update any existing Grove or development arrangement in place; do not leave a wrapper, duplicate script, or parallel config behind.
+Set up one coherent development path: the `dev` plugin exposes `dev`, Grove resolves the current registered source or instance, and the repository's configured CLI performs lifecycle work. For the generic division between a repository CLI and its runbook, read [[create-workflow]]; this procedure adds the Grove-specific routing. Work from the repository root and update any existing Grove or development arrangement in place; do not leave a wrapper, duplicate script, or parallel config behind.
 
 ## Inspect before changing
 

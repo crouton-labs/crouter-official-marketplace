@@ -73,6 +73,23 @@ function validateBins(name, manifest) {
   }
 }
 
+function validateRequires(name, manifest) {
+  if (!Object.hasOwn(manifest, 'requires')) return;
+  if (manifest.requires === null || Array.isArray(manifest.requires) || typeof manifest.requires !== 'object') {
+    fail(`${name}: requires must be an object`);
+    return;
+  }
+
+  for (const [executable, hint] of Object.entries(manifest.requires)) {
+    if (!/^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(executable)) {
+      fail(`${name}: requires name ${JSON.stringify(executable)} must be a bare executable name`);
+    }
+    if (typeof hint !== 'string' || hint.trim() === '' || /[\r\n]/.test(hint)) {
+      fail(`${name}: requires hint for ${JSON.stringify(executable)} must be a non-empty one-line string`);
+    }
+  }
+}
+
 function hasField(frontmatter, name) {
   return new RegExp(`^${name}:`, 'm').test(frontmatter);
 }
@@ -94,6 +111,7 @@ for (const name of pluginDirs) {
   if (manifest) {
     manifests.set(name, manifest);
     validateBins(name, manifest);
+    validateRequires(name, manifest);
   }
 }
 
