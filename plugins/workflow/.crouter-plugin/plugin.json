@@ -1,0 +1,13 @@
+{
+  "name": "workflow",
+  "version": "0.1.0",
+  "description": "Provides the stable `dev` front door plus runbooks for creating Grove-backed development workflows.",
+  "bin": {
+    "dev": "bin/dev"
+  },
+  "source": "https://github.com/crouton-labs/crouter-official-marketplace",
+  "owner": {
+    "name": "Silas Rhyneer",
+    "email": "rhyneer.silas@gmail.com"
+  }
+}

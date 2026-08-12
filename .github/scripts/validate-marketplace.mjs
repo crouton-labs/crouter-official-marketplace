@@ -30,6 +30,49 @@ function markdownFiles(dir) {
   });
 }
 
+function validateBins(name, manifest) {
+  if (!Object.hasOwn(manifest, 'bin')) return;
+  if (manifest.bin === null || Array.isArray(manifest.bin) || typeof manifest.bin !== 'object') {
+    fail(`${name}: bin must be an object`);
+    return;
+  }
+
+  const pluginRoot = fs.realpathSync(path.join(pluginsDir, name));
+  for (const [binName, target] of Object.entries(manifest.bin)) {
+    if (!/^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(binName)) {
+      fail(`${name}: bin name ${JSON.stringify(binName)} must be a bare binary name`);
+    }
+    if (typeof target !== 'string') {
+      fail(`${name}: bin target for ${JSON.stringify(binName)} must be a string`);
+      continue;
+    }
+    if (path.isAbsolute(target)) {
+      fail(`${name}: bin target for ${JSON.stringify(binName)} must be plugin-root-relative`);
+      continue;
+    }
+
+    let resolved;
+    try {
+      resolved = fs.realpathSync(path.resolve(pluginRoot, target));
+    } catch {
+      fail(`${name}: bin target for ${JSON.stringify(binName)} does not exist`);
+      continue;
+    }
+    const relative = path.relative(pluginRoot, resolved);
+    if (relative === '' || relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+      fail(`${name}: bin target for ${JSON.stringify(binName)} must stay inside the plugin root`);
+      continue;
+    }
+
+    const stat = fs.statSync(resolved);
+    if (!stat.isFile()) {
+      fail(`${name}: bin target for ${JSON.stringify(binName)} must be a regular file`);
+    } else if ((stat.mode & 0o111) === 0) {
+      fail(`${name}: bin target for ${JSON.stringify(binName)} must carry the exec bit`);
+    }
+  }
+}
+
 function hasField(frontmatter, name) {
   return new RegExp(`^${name}:`, 'm').test(frontmatter);
 }
@@ -48,7 +91,10 @@ for (const name of pluginDirs) {
     continue;
   }
   const manifest = readJson(manifestPath);
-  if (manifest) manifests.set(name, manifest);
+  if (manifest) {
+    manifests.set(name, manifest);
+    validateBins(name, manifest);
+  }
 }
 
 if (!marketplace || !Array.isArray(marketplace.plugins)) {

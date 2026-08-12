@@ -82,6 +82,13 @@
       "version": "0.1.0",
       "description": "Mounts `crtr search` — web search, grounded cited answers, and clean content extraction through the Exa API, using a locally resolved key (EXA_API_KEY or ~/.crouter/exa.key).",
       "keywords": ["search", "web-search", "exa", "research", "answer", "citations", "contents", "extraction", "grounding"]
+    },
+    {
+      "name": "workflow",
+      "source": "./plugins/workflow",
+      "version": "0.1.0",
+      "description": "Provides the stable `dev` front door plus runbooks for creating Grove-backed development workflows.",
+      "keywords": ["workflow", "development", "dev", "grove", "lifecycle", "runbook", "repo-setup"]
     }
   ]
 }
