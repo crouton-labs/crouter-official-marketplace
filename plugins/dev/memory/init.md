@@ -33,7 +33,17 @@ Exclude generic language/framework advice, copied docs, volatile version detail,
 
 Four artifacts, each created or updated in place:
 
-**`.grove/config.json`** — version 1, with `devCommand` naming the target-root-relative lifecycle executable (`scripts/dev.sh` for a single repository; a nested path only in a composite workspace). Declare `ports` so planted instances get non-colliding offsets. Keep only declarative Grove concerns here — no supervision, health policy, or lifecycle logic.
+**`.grove/config.json`** — version 1, with `devCommand` naming the target-root-relative lifecycle executable (`scripts/dev.sh` for a single repository; a nested path only in a composite workspace). Declare `ports` so planted instances get non-colliding offsets: an instance in slot N serves on `base + N × offset`, and the source checkout is slot 0. Keep only declarative Grove concerns here — no supervision, health policy, or lifecycle logic. The complete shape (also shown by `grove register -h`):
+
+```json
+{
+  "version": 1,
+  "devCommand": "scripts/dev.sh",
+  "ports": {
+    "app": { "base": 3000, "offset": 100 }
+  }
+}
+```
 
 **`scripts/dev.sh`** — the repository-owned CLI. Start from the template the plugin ships: run `crtr pkg plugin show dev` for the plugin path and copy its `templates/dev.sh`, then replace the SERVICES table and start commands with this repository's real ones, keeping the verb set (start/stop/restart/status/logs/logpath/doctor) and honoring `GROVE_SLOT` / `GROVE_PORT_<NAME>` so instances coexist. Its `-h` is the authoritative grammar — never duplicate that help in memory. Grow it toward the repository's needs; the template is a floor, not a schema.
 
