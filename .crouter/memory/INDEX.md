@@ -30,10 +30,13 @@ The official marketplace for optional crtr plugins. Every plugin here must be re
 - Provider kits: `cloudflare`, `vercel`, `railway`, `fly`.
 - Browser automation: `capture`.
 - Web search: `search`.
+- Development workflow: `dev` — ships the bare `dev` executable that delegates to `grove dev`, plus the `/dev/repo-setup`, `/dev/spec`, and `/dev/plan` front doors. It owns no lifecycle behavior: Grove resolves the caller's registered source or instance and the repository's own CLI performs the work.
 
 ## Command-contributing plugins
 
 `capture` and `search` contribute top-level `crtr` commands over exec transport. `search` generates its `.crouter-plugin/commands.json` from `plugins/search/lib/commands.mjs` — edit the command tree there and run `node plugins/search/scripts/generate-commands.mjs`; `.github/scripts/validate-marketplace.mjs` fails CI on drift, on a missing exec bit, and on a transport/commands mismatch.
+
+A plugin may also declare `bin` (bare executables placed on an agent's `PATH`, as `dev` does) and `requires` (a map of bare executable name to a one-line install hint, advisory only — crtr warns at install and in `crtr sys doctor` without blocking). The same validator checks both shapes.
 
 ## Versioning
 
