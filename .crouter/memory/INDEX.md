@@ -30,7 +30,7 @@ The official marketplace for optional crtr plugins. Every plugin here must be re
 - Provider kits: `cloudflare`, `vercel`, `railway`, `fly`.
 - Browser automation: `capture`.
 - Web search: `search`.
-- Development workflow: `dev` — ships the bare `dev` executable that delegates to `grove dev`, plus the `/dev/repo-setup`, `/dev/spec`, and `/dev/plan` front doors. It owns no lifecycle behavior: Grove resolves the caller's registered source or instance and the repository's own CLI performs the work.
+- Development workflow: `dev` — ships the bare `dev` executable that delegates to `grove dev`, the `/dev:init`, `/dev:spec`, `/dev:plan`, and `/dev:create-workflow` front doors, and `templates/dev.sh`, the stack-agnostic lifecycle CLI starting point `/dev:init` copies into a repository. It owns no lifecycle behavior: Grove resolves the caller's registered source or instance and the repository's own CLI performs the work.
 
 ## Command-contributing plugins
 

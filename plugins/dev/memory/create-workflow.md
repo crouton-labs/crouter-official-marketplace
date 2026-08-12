@@ -22,7 +22,7 @@ A workflow is a pair sharing one name: an executable the repository owns, and an
 
 ## Where each piece lives
 
-The executable sits in the repository beside the code it drives. The entry document is a project memory document named for the command, in the store `/dev:init` establishes — `/dev:init` owns the memory front door, so add the workflow to it instead of standing up a competing one. Where an environment already provides a stable cross-project command that dispatches to the active repository's executable, that command supplies invocation consistency only; the repository still owns the behavior and the help.
+The executable sits in the repository beside the code it drives. The entry document is a project memory document named for the command, linked from the project's existing memory front door — add the workflow to that store rather than standing up a competing one.
 
 ## Keep them honest
 
