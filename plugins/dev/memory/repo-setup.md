@@ -9,7 +9,7 @@ slash: true
 
 # Set up a repository development workflow
 
-Set up one coherent development path: the `dev` plugin exposes `dev`, Grove resolves the current registered source or instance, and the repository's configured CLI performs lifecycle work. For the generic division between a repository CLI and its runbook, read [[create-workflow]]; this procedure adds the Grove-specific routing. Work from the repository root and update any existing Grove or development arrangement in place; do not leave a wrapper, duplicate script, or parallel config behind.
+Set up one coherent development path: the `dev` plugin exposes `dev`, Grove resolves the current registered source or instance, and the repository's configured CLI performs lifecycle work. For the generic division between a repository CLI and its runbook, read [[dev/create-workflow]]; this procedure adds the Grove-specific routing. Work from the repository root and update any existing Grove or development arrangement in place; do not leave a wrapper, duplicate script, or parallel config behind.
 
 ## Inspect before changing
 

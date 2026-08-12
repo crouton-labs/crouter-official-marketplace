@@ -8,7 +8,7 @@ slash: true
 rationale: The prior /plan plugin prompt forced ordinary planning through a fixed question loop, reviewer node, and user approval, adding ceremony rather than letting the plan match the work. Reporting only the path also left the user opening a file to learn the approach, and agents hedged inside the artifact — risk and concern commentary belongs in the closing overview, never in the plan, which must read as a pure buildable path. Affected areas were also drawn from a guess at what the change touches, so plans missed call sites and consumers the implementer then hit mid-edit.
 ---
 
-# /plan — write an implementation plan
+# /dev:plan — write an implementation plan
 
 Pause the current work and write one right-sized implementation plan for: $ARGUMENTS
 
