@@ -10,7 +10,7 @@ rationale: Unguided agents bootstrap project memory badly in both directions —
 
 # /dev:init — initialize this repository for development
 
-Give this repository its two working halves: a memory front door every future agent boots with, and one registered `dev` lifecycle path — Grove resolves the current source or instance, and a repository-owned executable does the work. Inspect whatever already exists (`.crouter/memory/`, `.grove/`, lifecycle scripts, CLAUDE.md/AGENTS.md) and update it in place; never leave a wrapper, duplicate script, or competing config behind.
+Give this repository its two working halves: a memory front door every future agent boots with, and one registered `dev` lifecycle path — Grove resolves the current source or instance, and a repository-owned executable does the work. Before writing anything, confirm the repository you are standing in is the one to initialize: if it already has a `.grove/config.json` or a registered Grove entry, or it plainly isn't the repository the request describes, stop and ask rather than overwrite. Inspect whatever already exists (`.crouter/memory/`, `.grove/`, lifecycle scripts, CLAUDE.md/AGENTS.md) and update it in place; never leave a wrapper, duplicate script, or competing config behind.
 
 ## 1. Survey before writing
 
