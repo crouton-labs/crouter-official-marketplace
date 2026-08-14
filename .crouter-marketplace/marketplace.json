@@ -1,6 +1,6 @@
 {
   "name": "crouter-official-marketplace",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "owner": {
     "name": "Silas Rhyneer",
     "email": "rhyneer.silas@gmail.com"
@@ -86,7 +86,7 @@
     {
       "name": "dev",
       "source": "./plugins/dev",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "description": "Provides the stable bare `dev` lifecycle and project `/dev` front door for Grove-backed development work.",
       "keywords": ["workflow", "development", "dev", "grove", "lifecycle", "runbook", "repo-setup"]
     }
