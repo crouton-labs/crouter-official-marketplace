@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if ! command -v grove >/dev/null 2>&1; then
-  printf '%s\n' 'dev: grove is not available; install Grove and register this repository with `grove register`.' >&2
+  printf '%s\n' 'dev: grove is not available; install Grove, then run `grove setup` in the source repository.' >&2
   exit 127
 fi
 

@@ -1,9 +1,9 @@
 {
   "name": "dev",
   "version": "0.1.0",
-  "description": "Provides the stable `dev` front door plus runbooks for creating Grove-backed development workflows.",
+  "description": "Provides the stable bare `dev` lifecycle and project `/dev` front door for Grove-backed development work.",
   "requires": {
-    "grove": "Install Grove, then register this repository with `grove register`."
+    "grove": "Install Grove, then run `grove setup` in the source repository."
   },
   "bin": {
     "dev": "bin/dev"
