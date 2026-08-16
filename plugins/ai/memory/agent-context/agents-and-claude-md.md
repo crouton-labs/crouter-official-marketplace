@@ -55,7 +55,7 @@ Flag the *situation* (**when**), point to the action (**do Y** — usually a *po
 ## Escalate off the file when
 
 - **>5 lines of domain knowledge** → a memory doc / skill (loaded on demand, not every session).
-- **File-type-specific rules** → a rule scoped by path / `applies-to`.
+- **File-type-specific rules** → a rule with an `on: read` surface scoped by path match.
 - **Must-not-be-ignored enforcement** → a hook (deterministic, not advisory).
 
 For the craft behind the directives (tone registers, framing, examples) see [[ai/agent-context/prompting-effectively]] and [[ai/agent-context/system-prompts]]. If the separately installed `claude-authoring` plugin is available, use it for Claude Code-specific artifacts (skills, rules, hooks, commands).
