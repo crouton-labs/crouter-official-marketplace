@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: When you are building CLI tools or scripts that augment Claude Code — bin/ executables, automation scripts, or hook handlers — this authoring guide should be read because it keeps repeated workflows out of agent context while preserving actionable output.
 short-form: Create CLI tools and scripts that augment Claude Code — bin/ executables, automation, hook handlers.
-system-prompt-visibility: name
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # Creating Scripts and Tooling

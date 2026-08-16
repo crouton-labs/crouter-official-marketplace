@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: When you are creating, updating, or auditing a CLAUDE.md file for a project or directory, this authoring guide should be read because it keeps the project front door focused on constraints that change agent behavior.
 short-form: Best practices for writing effective CLAUDE.md files — constraints, codebase context, gotchas.
-system-prompt-visibility: name
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # Writing Effective CLAUDE.md Files

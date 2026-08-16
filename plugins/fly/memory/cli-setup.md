@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you need to launch, deploy, check status, stream logs, or manage secrets/Machines for a Fly.io app, this doc should be read because it is the end-to-end flyctl setup — install, auth (interactive vs headless), verify, the common launch/deploy/status/logs/secrets/machine commands, and fly.toml/destructive-operation caveats.
 short-form: flyctl end-to-end — install, auth (fly auth login vs FLY_API_TOKEN), fly launch/deploy/status/logs/secrets/machine, fly.toml, regions, destructive-op caveats.
-system-prompt-visibility: none
-file-read-visibility: none
 ---
 
 # flyctl setup

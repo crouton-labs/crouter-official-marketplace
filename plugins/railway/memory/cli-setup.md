@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you need to deploy, redeploy, stream logs, or manage environments/services for a Railway project, this doc should be read because it is the end-to-end Railway CLI setup — install, auth (interactive vs headless), verify, the common deploy/logs/environment/deployment commands, and config caveats.
 short-form: Railway CLI end-to-end — install, auth (railway login vs RAILWAY_TOKEN/RAILWAY_API_TOKEN), railway link/up/logs/environment/ssh/connect, railway.toml, and linked-project targeting.
-system-prompt-visibility: none
-file-read-visibility: none
 ---
 
 # Railway CLI setup

@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: 'When you are about to do anything with Vercel — deployments, projects, domains, or environment variables — open this dir first because it is the orientation map for how to authenticate, drive everything from a shell with the Vercel CLI or curl against the REST API, and find the exact Vercel doc for the task.'
 short-form: Vercel from a shell — Vercel CLI for deploy/dev/logs, curl against the REST API, docs via llms.txt. No MCP needed.
-system-prompt-visibility: preview
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: preview
 ---
 
 # Vercel

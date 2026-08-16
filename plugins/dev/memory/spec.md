@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When an agent invokes /spec to pause work and capture a request, this knowledge should be read because the work can resume from settled intent instead of rediscovering what it is meant to achieve.
 short-form: "Pause to write one right-sized specification in the node context, then stop."
-system-prompt-visibility: none
-file-read-visibility: none
 slash: true
 rationale: The prior /spec plugin prompt forced ordinary artifact requests through discovery loops, reviewer nodes, and user approval, turning a small pause to clarify work into prescribed ceremony. Reporting only the path also left the user opening a file to learn what was decided, and agents hedged inside the artifact — risk and concern commentary belongs in the closing overview, never in the spec, which must read as a pure statement of intended outcome. Scope boundaries were also drawn from a guess at what the change touches, so the spec named an outcome whose real reach nobody had mapped.
 ---

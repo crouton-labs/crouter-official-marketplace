@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: When you are creating a Claude Code `SKILL.md` — on-demand reference, methodology, or workflow guidance — this authoring guide should be read because it keeps bundled guidance discoverable without bloating project context.
 short-form: Write SKILL.md files for Claude Code — on-demand reference, methodology, bundling.
-system-prompt-visibility: name
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # Writing Claude Code Skills

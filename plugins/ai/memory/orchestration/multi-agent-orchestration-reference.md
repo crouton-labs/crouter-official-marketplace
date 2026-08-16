@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you are applying the multi-agent-orchestration skill and follow its pointers to worked examples, the full catalog, or the annotated reference, this reference should be read because it holds the deep-dive material the skill body links to.
 short-form: Deep-dive companion to the multi-agent-orchestration skill — worked examples and the full catalog the skill body points to.
-system-prompt-visibility: none
-file-read-visibility: none
 rationale: >-
   Agents copied this reference's review gates, two-layer reviewer tree, and repeat-until-clean critic loop into ordinary software work, creating recursive review subtrees instead of new evidence. Worked examples must show bounded critique and objective closure.
 ---

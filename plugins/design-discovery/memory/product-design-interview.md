@@ -2,11 +2,12 @@
 kind: knowledge
 when-and-why-to-read: When the user has product-design questions, wants to figure out how a product or feature should feel, or says "grill me" about the product, this skill should be read because it runs a Socratic, human-led interview to shape the ideal product experience.
 short-form: Socratic human-led interview to shape the ideal product experience (not technical design).
-system-prompt-visibility: name
-file-read-visibility: none
 gate:
   kind:
     imatches: '^(design|general)($|/)'
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # product-design-interview

@@ -2,10 +2,11 @@
 kind: knowledge
 when-and-why-to-read: "When reconciling a repository for development work — through /dev:init or after finding a partial setup — this knowledge should be read because every future change otherwise begins with rediscovery and risks running in the wrong checkout or against colliding services."
 short-form: "Reconcile the repository memory, Grove contract, project /dev intent front door, machine registration, and live lifecycle proof."
-system-prompt-visibility: name
-file-read-visibility: none
 slash: true
 rationale: "Unguided initialization produced either no project front door or a monolithic manual, while separate memory and lifecycle setup left repositories half-ready. The generated /dev command then covered only current-stack operation, forcing developers to translate new isolated feature work into Grove and node mechanics themselves."
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # /dev:init — reconcile this repository for development

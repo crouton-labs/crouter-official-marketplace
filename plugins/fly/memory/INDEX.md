@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: 'When you are about to do anything with Fly.io — apps, Machines, volumes, secrets, or regions — open this dir first because it is the orientation map for how to authenticate, drive everything from a shell with flyctl or curl against the Machines API, and find the exact Fly.io doc for the task.'
 short-form: Fly.io from a shell — flyctl for launch/deploy/status/logs, curl against the Machines API, docs via fly.io/docs and llms.txt. No MCP needed.
-system-prompt-visibility: preview
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: preview
 ---
 
 # Fly.io

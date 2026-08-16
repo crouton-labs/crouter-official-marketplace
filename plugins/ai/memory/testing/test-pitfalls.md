@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: When you are reviewing an agent's PR or auditing green CI you don't trust, this skill should be read because it gives ranked guardrails against the ways agent-written tests cheat — deletion, weakening, over-mocking, reward hacking, intent drift.
 short-form: Treat agent-written tests as adversarial — ranked guardrails against deletion, weakening, over-mocking, reward hacking, intent drift.
-system-prompt-visibility: name
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # Agent test pitfalls

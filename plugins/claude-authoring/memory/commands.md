@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: When you are creating a Claude Code slash command — one that sets mode, constraints, or a workflow invoked via `/command-name` — this authoring guide should be read because it keeps command prompts focused on the behavior that differs from Claude's defaults.
 short-form: Write Claude Code slash commands — mode-setting, constraints, workflows, frontmatter.
-system-prompt-visibility: name
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # Writing Slash Commands

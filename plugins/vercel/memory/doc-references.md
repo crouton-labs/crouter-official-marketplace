@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you need authoritative, current Vercel documentation for a product, CLI command, or API endpoint and want to pull it into context efficiently, this doc should be read because it is the map of Vercel's agent-friendly reference surfaces — the llms.txt index, the CLI and REST API references, and the drill-down path from "which area?" to the exact page.
 short-form: Vercel's docs map — llms.txt index, llms-full.txt, CLI reference, REST API reference by resource, plus the drill-down recipe.
-system-prompt-visibility: none
-file-read-visibility: none
 ---
 
 # Finding the right Vercel reference

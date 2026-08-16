@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: When you are creating, debugging, or planning Claude Code hooks for guardrails, context injection, quality gates, notifications, or automation, this authoring guide should be read because it matches the enforcement mechanism and output contract to the lifecycle event.
 short-form: Claude Code hooks — lifecycle automation, handler selection, event-specific output, and configuration patterns.
-system-prompt-visibility: name
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # Claude Code Hooks

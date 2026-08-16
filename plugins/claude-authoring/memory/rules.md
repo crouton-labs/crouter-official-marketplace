@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: When you are creating or updating `.claude/rules/*.md` files — auto-applied constraints scoped by file pattern — this authoring guide should be read because it keeps file-specific guidance precise without bloating project-wide context.
 short-form: Write .claude/rules/*.md — auto-applied, path-scoped constraints and conventions.
-system-prompt-visibility: name
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # Writing Rules

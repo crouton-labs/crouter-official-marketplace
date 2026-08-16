@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you are implementing a Claude Code hook and need its configuration shape or event-specific output behavior, this reference guide should be read because it prevents a valid handler from being registered or interpreted incorrectly.
 short-form: Claude Code hook configuration and event-specific output reference.
-system-prompt-visibility: none
-file-read-visibility: none
 ---
 
 # Claude Code Hooks — Configuration and Output Reference

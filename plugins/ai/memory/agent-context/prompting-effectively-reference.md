@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you are applying the prompting-effectively skill and follow its pointers to worked examples, the full catalog, or the annotated reference, this reference should be read because it holds the deep-dive material the skill body links to.
 short-form: Deep-dive companion to the prompting-effectively skill — zone separation, XML semantics, internal formatting, tone registers, example patterns, repetition, long-context placement, and the full prompt-architecture diagram, with worked examples.
-system-prompt-visibility: none
-file-read-visibility: none
 ---
 # Prompting Effectively — Reference
 

@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: When you are dealing with context windows — token budgeting, RAG, prompt caching, compression, long-context overflow, or multi-turn strategies — this skill should be read because it covers the context-engineering patterns for LLM applications.
 short-form: Token budgeting, placement effects, RAG, prompt caching, compression, and multi-turn context strategies.
-system-prompt-visibility: name
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # Context Management

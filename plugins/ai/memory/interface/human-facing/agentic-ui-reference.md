@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you are applying the agentic-ui skill and follow its pointers to worked examples, the full catalog, or the annotated reference, this reference should be read because it holds the deep-dive material the skill body links to.
 short-form: Deep-dive companion to the agentic-ui skill — worked examples and the full catalog the skill body points to.
-system-prompt-visibility: none
-file-read-visibility: none
 ---
 # Agentic UI — pattern catalog
 

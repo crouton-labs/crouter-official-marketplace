@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you need to deploy, run a local dev server, stream logs, or manage env vars for a Vercel project, this doc should be read because it is the end-to-end Vercel CLI setup — install, auth (interactive vs headless), verify, the common deploy/dev/logs/env commands, and project-linking caveats.
 short-form: Vercel CLI end-to-end — install, auth (vercel login vs VERCEL_TOKEN), vercel deploy/dev/logs/env/rollback, vercel.json, project linking and --scope.
-system-prompt-visibility: none
-file-read-visibility: none
 ---
 
 # Vercel CLI setup

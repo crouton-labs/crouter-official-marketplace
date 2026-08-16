@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you need authoritative, current Cloudflare documentation for a product or API and want to pull it into context efficiently, this doc should be read because it is the map of Cloudflare's agent-friendly reference surfaces — the llms.txt index, per-product full-text docs, and the OpenAPI spec — plus the drill-down path from "which product?" to the exact page.
 short-form: Cloudflare's agent-facing docs map — llms.txt index, per-product llms-full.txt, openapi.json, and the api/wrangler references, with the drill-down recipe.
-system-prompt-visibility: none
-file-read-visibility: none
 ---
 
 # Finding the right Cloudflare reference

@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: When the user asks to evaluate UX, review design direction, or wants a UX consultant's perspective on flows and information architecture, this knowledge should be read because it sets the consultant role — explore, form independent opinions, guide direction without writing code.
 short-form: UX-consultant role — explore the project, form independent opinions, guide design direction without implementing.
-system-prompt-visibility: name
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # UX Consultant

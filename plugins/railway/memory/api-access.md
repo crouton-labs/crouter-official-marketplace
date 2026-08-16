@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you need to call Railway's GraphQL API directly — listing or inspecting projects/environments/services/variables programmatically, scripting outside a linked directory, or driving a deploy from automation — this doc should be read because it gives the endpoint, the two auth header shapes (account/workspace vs project token), the response envelope, rate limits, and curl/GraphQL examples.
 short-form: Railway GraphQL API by curl — endpoint https://backboard.railway.com/graphql/v2, Bearer for account/workspace tokens vs Project-Access-Token for project tokens, rate limits, example queries/mutations.
-system-prompt-visibility: none
-file-read-visibility: none
 ---
 
 # Railway GraphQL API from curl

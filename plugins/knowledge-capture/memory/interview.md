@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: When the user asks to be interviewed, wants to gather requirements via Q&A, or to capture knowledge through structured conversation, this skill should be read because it runs a structured dialogue and saves it as a markdown document.
 short-form: Structured Q&A to capture information through dialogue, saved as markdown.
-system-prompt-visibility: name
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # Interview Mode

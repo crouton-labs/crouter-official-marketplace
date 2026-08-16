@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: When the user is stuck or asks for a breakthrough, fresh thinking, or out-of-the-box ideas on a problem, this skill should be read because independent advisor perspectives expose non-obvious approaches worth testing.
 short-form: Breakthrough thinking — use independent advisor lenses when they will broaden the insight, then synthesize actionable approaches.
-system-prompt-visibility: name
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # Epiphany — breakthrough thinking via parallel advisors

@@ -2,10 +2,11 @@
 kind: knowledge
 when-and-why-to-read: When you are building multi-agent LLM workflows — designing an orchestrator, coordinating parallel agents, splitting tasks across agents, or debugging multi-agent failures — this skill should be read because it covers the orchestration patterns and failure handling those systems need.
 short-form: Design multi-agent LLM systems — orchestrator patterns, parallel coordination, pipelines, hierarchical delegation, failure handling.
-system-prompt-visibility: name
-file-read-visibility: none
 rationale: >-
   Agents applied this guide's multi-lens and critic-loop examples as a default software workflow, producing review-of-review chains and repeated fresh validators even after a settled report. The guide must distinguish parallel evidence production from duplicated confidence-seeking.
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # Multi-Agent Orchestration

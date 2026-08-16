@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you need to call Fly.io's Machines API directly — listing or controlling individual Machines, apps, volumes, or secrets programmatically — this doc should be read because it gives the base URL, Bearer token auth, rate limits, resources, curl examples, and why to prefer this over Fly's internal GraphQL API.
 short-form: Fly.io Machines API by curl — base https://api.machines.dev/v1, Bearer token auth, apps/machines/volumes/secrets/tokens/certs resources, rate limits, GraphQL is internal/unstable.
-system-prompt-visibility: none
-file-read-visibility: none
 ---
 
 # Fly.io Machines API from curl

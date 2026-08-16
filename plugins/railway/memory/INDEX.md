@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: 'When you are about to do anything with Railway — projects, environments, services, deployments, or databases — open this dir first because it is the orientation map for how to authenticate, drive everything from a shell with the Railway CLI or curl against the GraphQL API, and find the exact Railway doc for the task.'
 short-form: Railway from a shell — Railway CLI for deploy/logs/environments, curl against the GraphQL API, docs via llms.txt. No MCP needed.
-system-prompt-visibility: preview
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: preview
 ---
 
 # Railway

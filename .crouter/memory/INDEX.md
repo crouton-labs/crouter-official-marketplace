@@ -4,13 +4,16 @@ when-and-why-to-read: When working in crouter-official-marketplace, this
   knowledge should be read because its boundary, current plugin inventory, and
   CI-owned versioning keep changes focused and release-safe.
 short-form: Official crtr plugin marketplace
-system-prompt-visibility: none
-file-read-visibility: content
-applies-to: .
 origin:
   created: 2026-08-01T19:00:18.879Z
   cwd: /Users/silasrhyneer/Code/cli/crouter-official-marketplace
   node: 3zl47w7d-msaqk1jk-70831037
+surfaces:
+  - on: workspace-open
+    at: content
+  - on: read
+    match: ./**
+    at: content
 ---
 
 # crouter-official-marketplace

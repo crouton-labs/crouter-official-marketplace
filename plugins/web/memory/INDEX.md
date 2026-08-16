@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: When the user asks to design a website or product UI, or wants a UX consultant's perspective on flows and information architecture, open this dir because it holds the frontend design workflow and the UX-consultant role.
 short-form: Web/frontend design knowledge — interactive design workflow and the UX-consultant role.
-system-prompt-visibility: preview
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: preview
 ---
 
 # Web / frontend

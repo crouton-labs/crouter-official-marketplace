@@ -2,11 +2,14 @@
 kind: knowledge
 when-and-why-to-read: When you are writing, editing, or auditing an AGENTS.md or CLAUDE.md (or any always-loaded agent instruction file), this knowledge should be read because it carries the genre's authoring discipline — what earns a line, what to cut, and the front-door shape that keeps the file from rotting into a manual.
 short-form: Writing AGENTS.md / CLAUDE.md — the always-loaded instruction-file genre. Front door not manual, the "would behavior change?" cut test, what belongs/excluded, when→do→why directives, root vs nested, and when to escalate off the file.
-system-prompt-visibility: name
-file-read-visibility: content
-applies-to:
-  - "**/AGENTS.md"
-  - "**/CLAUDE.md"
+surfaces:
+  - on: boot
+    at: name
+  - on: read
+    match:
+      - "**/AGENTS.md"
+      - "**/CLAUDE.md"
+    at: content
 ---
 
 # Writing AGENTS.md / CLAUDE.md

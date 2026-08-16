@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you need to call the Vercel REST API directly — listing or inspecting projects/deployments/domains programmatically, scripting outside a linked project directory, or anything the CLI doesn't expose — this doc should be read because it gives the base URL, token auth, team scoping, rate limits, and curl examples for the common endpoints.
 short-form: Vercel REST API by curl — base https://api.vercel.com, Bearer token auth, teamId scoping, rate-limit headers, curl examples for projects/deployments, no published OpenAPI spec.
-system-prompt-visibility: none
-file-read-visibility: none
 ---
 
 # Vercel REST API from curl

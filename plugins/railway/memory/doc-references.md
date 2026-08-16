@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you need authoritative, current Railway documentation for the CLI, the GraphQL API, or a specific resource (projects, services, variables, domains, volumes) and want to pull it into context efficiently, this doc should be read because it is the map of Railway's agent-friendly reference surfaces — the llms.txt index, per-page markdown, the API cookbook, and ID extraction from Railway URLs.
 short-form: Railway's docs map — llms.txt index, llms-full.txt, per-page .md fetches, CLI reference, API overview/cookbook/manage-resource docs, URL-based ID extraction, agent integrations as optional.
-system-prompt-visibility: none
-file-read-visibility: none
 ---
 
 # Finding the right Railway reference

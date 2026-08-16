@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you are writing or reviewing -h text for an agent-driven CLI and the draft already feels helpful and complete, this critique should be read because it shows a capable agent's best unassisted draft failing a line-by-line human review — the annotated diff marks the exact instincts (verb rows at root, schemas at branch, promoted warnings, restated contracts) that feel right while quietly breaking progressive disclosure.
 short-form: A capable agent's unassisted -h draft for a fictional CLI, the line-by-line human review that failed it, and the corrected version — the annotated diff between default instinct and the bar.
-system-prompt-visibility: none
-file-read-visibility: none
 ---
 # Critique: a naive `mesh` help draft, reviewed
 

@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: When you are building a system that calls an LLM in a loop and the outputs feel samey or cliché — personality lines, commentary, names, any repeated creative text — this skill should be read because it gives techniques for varied, non-repetitive generation.
 short-form: Get varied, non-repetitive outputs from repeated LLM calls — sampling, negative examples, anti-repetition techniques.
-system-prompt-visibility: name
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # Output Variety in Repeated LLM Calls

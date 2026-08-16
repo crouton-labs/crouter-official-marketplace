@@ -2,8 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you need authoritative, current Fly.io documentation for flyctl, app configuration, or the Machines API and want to pull it into context efficiently, this doc should be read because it is the map of Fly.io's reference surfaces — the docs hub and its llms.txt index, flyctl's per-command pages, fly.toml reference, and the Machines API's interactive/downloadable OpenAPI spec.
 short-form: Fly.io's docs map — fly.io/llms.txt, docs hub, flyctl reference, fly.toml config, Machines API docs and OpenAPI spec, tokens/regions/secrets pages.
-system-prompt-visibility: none
-file-read-visibility: none
 ---
 
 # Finding the right Fly.io reference

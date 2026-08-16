@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: When you are designing the surfaces around an LLM — a CLI or structured tool an agent drives, or the UI/UX an agent presents to a human — open this dir because it splits into agent-facing (cli, tool) and human-facing (agentic ui, ux) interface playbooks.
 short-form: Interface design for AI systems — agent-facing (cli, tool) and human-facing (agentic ui, ux).
-system-prompt-visibility: preview
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: preview
 ---
 
 # Interface design

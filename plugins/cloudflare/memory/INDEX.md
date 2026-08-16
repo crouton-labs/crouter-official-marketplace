@@ -2,8 +2,9 @@
 kind: knowledge
 when-and-why-to-read: 'When you are about to do anything with Cloudflare — Workers, Pages, R2, KV, D1, DNS, Zero Trust, or any Cloudflare API endpoint — open this dir first because it is the orientation map for how to authenticate, drive everything from a shell with curl and Wrangler (no MCP), and find the exact Cloudflare doc or API spec for the task.'
 short-form: Cloudflare from a shell — Wrangler + curl against the REST API, endpoint discovery from openapi.json, docs via llms.txt. The Code Mode pattern without MCP.
-system-prompt-visibility: preview
-file-read-visibility: none
+surfaces:
+  - on: boot
+    at: preview
 ---
 
 # Cloudflare
