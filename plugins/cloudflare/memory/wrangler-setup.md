@@ -2,6 +2,11 @@
 kind: knowledge
 when-and-why-to-read: When you need to build, run locally, or deploy a Cloudflare Worker or Pages project, or manage its bindings (KV, R2, D1, secrets) and logs, this doc should be read because it is the end-to-end Wrangler setup — install, auth (interactive vs headless), scaffold, dev, deploy, config — with the commands that actually work.
 short-form: Wrangler end-to-end — install, auth (login vs CLOUDFLARE_API_TOKEN), scaffold with C3, local development and deployment, wrangler.jsonc config and bindings.
+surfaces:
+  - on: command
+    match:
+      - "*wrangler *"
+    at: preview
 ---
 
 # Wrangler setup

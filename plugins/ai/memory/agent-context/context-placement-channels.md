@@ -2,9 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you are building or extending an agent system — deciding where a capability, instruction, or piece of context should live (system prompt, tools, CLI, memory, injection, hooks) — this skill should be read because choosing the wrong channel is the root cause of bloated prompts and agents that can't find what they need.
 short-form: The placement channels of an agent system — system prompt, tool definitions, CLI + progressive disclosure, output-as-pointer, memory pointers, on-read injection, first-message context, task messages, environment blocks, hooks — and what each is uniquely good for.
-surfaces:
-  - on: boot
-    at: name
 ---
 # Context Placement Channels
 

@@ -2,9 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you are planning a test suite, reviewing coverage, or pruning tests for code that AI agents write, this skill should be read because it gives the opinionated do/don't on what to test — skip mock-heavy units, invest in integration, property, contract, and conformance.
 short-form: Opinionated do/don't on what to test when agents write the code — skip mock-heavy units; invest in integration, property, contract.
-surfaces:
-  - on: boot
-    at: name
 ---
 
 # Test strategy in the age of agents

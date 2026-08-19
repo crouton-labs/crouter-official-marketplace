@@ -2,9 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When the user asks to capture lessons, save what was learned, or update durable knowledge from this conversation, this skill should be read because it preserves the session's non-obvious takeaways in the right memory scope.
 short-form: Extract key takeaways from the session and save them as durable memory.
-surfaces:
-  - on: boot
-    at: name
 ---
 
 # Capturing session takeaways

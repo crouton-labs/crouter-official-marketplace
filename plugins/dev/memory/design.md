@@ -4,6 +4,9 @@ when-and-why-to-read: When an agent invokes /dev:design to pause work and settle
 short-form: "Pause to write one right-sized design in the node context, then stop."
 slash: true
 rationale: The design kind carried the only design guidance in the tree, so a general node asked for an architecture had nothing but its own instincts — it produced descriptions of the current code rather than designs, drifted into function-level detail, and left the implementer a branch to pick. Concerns and risk commentary also belong in the closing overview rather than inside the artifact, which must read as one settled structure.
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # /dev:design — settle the structure of a change

@@ -2,9 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you are designing or reviewing how a human delegates to, steers, verifies, and stays in control of an AI agent, this skill should be read because it gives the first principles — articulation barrier, automation×control, trust calibration, graceful failure — behind good human–agent interaction.
 short-form: First principles of human–agent interaction — articulation barrier, automation×control, trust calibration, oversight at scale.
-surfaces:
-  - on: boot
-    at: name
 ---
 
 # Designing UX for agentic interaction

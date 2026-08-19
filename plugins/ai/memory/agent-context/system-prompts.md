@@ -2,9 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you are writing, fixing, or reviewing a system prompt — deciding what belongs in it vs another channel, why an instruction isn't holding, or how placement affects compliance and cost — this skill should be read because it covers both what a system prompt is for and the mechanics that make instructions in it stick.
 short-form: System prompts — what belongs in one (behavior, front-door routing) vs what doesn't, and the placement mechanics — primacy, instruction hierarchy, multi-turn degradation, caching, provider differences.
-surfaces:
-  - on: boot
-    at: name
 ---
 # System Prompts
 

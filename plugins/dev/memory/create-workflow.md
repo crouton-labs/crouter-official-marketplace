@@ -4,6 +4,9 @@ when-and-why-to-read: When a repeatable repository procedure deserves a stable c
 short-form: Build a repository workflow as one repository-owned executable plus one entry memory document sharing its name.
 rationale: The first version was written as a procedure for authoring dev.md and dev.sh specifically, so it read as "how to set up the development workflow" rather than how to build any workflow; Silas corrected it 2026-08-12 — a workflow is the generic pairing of scripts with an entry memory document, and development is only its commonest instance.
 slash: true
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # /dev:create-workflow — build a repository workflow

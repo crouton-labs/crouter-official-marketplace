@@ -2,9 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you are editing or reviewing text to remove the signs of AI-generated writing — inflated symbolism, em-dash overuse, rule of three, AI vocabulary, filler phrases — this skill should be read because it gives a detection-and-fix catalog for making prose sound human.
 short-form: Remove AI-writing tells from text — detect and fix inflated symbolism, em-dash overuse, rule of three, AI vocabulary, filler.
-surfaces:
-  - on: boot
-    at: name
 ---
 
 # Humanizer: Remove AI Writing Patterns

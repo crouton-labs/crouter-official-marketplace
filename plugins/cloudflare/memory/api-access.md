@@ -2,6 +2,11 @@
 kind: knowledge
 when-and-why-to-read: When you need to call the Cloudflare REST or GraphQL API directly — anything Wrangler does not cover, like DNS, zones, Zero Trust, accounts, or analytics — this doc should be read because it gives the base URL, token auth, the response envelope and pagination, and the shell-native way to discover the exact endpoint from openapi.json instead of loading the whole API.
 short-form: Cloudflare REST API by curl — base URL, Bearer token auth, the success/result envelope, pagination, GraphQL analytics, and grepping openapi.json to discover endpoints (Code Mode in a shell).
+surfaces:
+  - on: command
+    match:
+      - "*api.cloudflare.com*"
+    at: content
 ---
 
 # Cloudflare REST API from curl

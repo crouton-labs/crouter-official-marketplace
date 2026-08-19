@@ -2,9 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you are writing any prompt, whether a one-off task, a long-document or tool workflow, or a system prompt, agent, mode, skill, or command, this skill should be read because it gives both the architecture (the zones, tone registers, escalation ladder, subtract-before-you-add) and the craft (positive framing, motivation, examples, quality modifiers) that make prompts clear, reliable, and maintainable.
 short-form: Writing effective prompts — the zones, tone registers, escalation ladder, subtract-before-you-add, positive framing, the why, examples, and quality modifiers. Pairs with prompting-effectively-reference for worked examples and the full deep-dive.
-surfaces:
-  - on: boot
-    at: name
 ---
 # Writing Effective Prompts
 

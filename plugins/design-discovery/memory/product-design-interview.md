@@ -5,9 +5,6 @@ short-form: Socratic human-led interview to shape the ideal product experience (
 gate:
   kind:
     imatches: '^(design|general)($|/)'
-surfaces:
-  - on: boot
-    at: name
 ---
 
 # product-design-interview

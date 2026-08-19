@@ -4,6 +4,11 @@ when-and-why-to-read: 'When you are about to do anything with Cloudflare — Wor
 short-form: Cloudflare from a shell — Wrangler + curl against the REST API, endpoint discovery from openapi.json, docs via llms.txt. The Code Mode pattern without MCP.
 surfaces:
   - on: boot
+    at: name
+  - on: command
+    match:
+      - "*wrangler *"
+      - "*api.cloudflare.com*"
     at: preview
 ---
 

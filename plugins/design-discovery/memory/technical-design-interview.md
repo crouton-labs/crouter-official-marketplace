@@ -5,9 +5,6 @@ short-form: Socratic human-led interview to extract and pressure-test a system's
 gate:
   kind:
     imatches: '^(design|general)($|/)'
-surfaces:
-  - on: boot
-    at: name
 ---
 
 # technical-design-interview

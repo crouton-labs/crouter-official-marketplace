@@ -4,6 +4,9 @@ when-and-why-to-read: When an agent invokes /spec to pause work and settle what 
 short-form: "Pause to explore the outcome with the user and write one right-sized specification in the node context, then stop."
 slash: true
 rationale: The specification is the written output of a finished exploration, so the command opens divergent and closes disciplined; challenging the user's premise is not the point, and the openness belongs on the solution. The prior /spec plugin prompt forced ordinary artifact requests through discovery loops, reviewer nodes, and user approval, turning a small pause to clarify work into prescribed ceremony. Reporting only the path also left the user opening a file to learn what was decided, and agents hedged inside the artifact — risk and concern commentary belongs in the closing overview, never in the spec, which must read as a pure statement of intended outcome. Scope boundaries were also drawn from a guess at what the change touches, so the spec named an outcome whose real reach nobody had mapped. Agents also promoted plausible nice-to-haves into requirements without asking, silently expanding the requested work.
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # /dev:spec — write a specification

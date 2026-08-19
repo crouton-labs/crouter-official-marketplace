@@ -7,7 +7,7 @@ gate:
     imatches: '^(design|general)($|/)'
 surfaces:
   - on: boot
-    at: preview
+    at: content
 ---
 
 # Design discovery

@@ -4,6 +4,9 @@ when-and-why-to-read: When an agent invokes /plan to pause work and map an imple
 short-form: "Pause to write one right-sized implementation plan in the node context, then stop."
 slash: true
 rationale: The prior /plan plugin prompt forced ordinary planning through a fixed question loop, reviewer node, and user approval, adding ceremony rather than letting the plan match the work. Reporting only the path also left the user opening a file to learn the approach, and agents hedged inside the artifact — risk and concern commentary belongs in the closing overview, never in the plan, which must read as a pure buildable path. Affected areas were also drawn from a guess at what the change touches, so plans missed call sites and consumers the implementer then hit mid-edit. Agents also turned plausible improvements outside the specification into implementation tasks without asking, silently expanding scope.
+surfaces:
+  - on: boot
+    at: name
 ---
 
 # /dev:plan — write an implementation plan

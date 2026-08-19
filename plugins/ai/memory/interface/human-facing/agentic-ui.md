@@ -2,9 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you are building or reviewing the UI an agent presents to a human — surface choice, streaming, reasoning disclosure, tool-call legibility, review gates, steering — this skill should be read because it catalogs the interface patterns for surfacing agent work, web or terminal.
 short-form: Interface patterns for surfacing agent work to a human — surface choice, streaming, legibility, review gates, steering (web + TUI).
-surfaces:
-  - on: boot
-    at: name
 ---
 
 # Designing UI for agentic interaction

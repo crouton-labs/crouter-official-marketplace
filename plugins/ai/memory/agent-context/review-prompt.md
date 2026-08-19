@@ -2,9 +2,6 @@
 kind: knowledge
 when-and-why-to-read: When you are asked to review an existing agent prompt, this skill should be read because it walks you through reconstructing the full assembled prompt from its scattered sources, resolving variables to example values, and staging it on the user's screen for line-by-line comments.
 short-form: Reconstruct an agent's full assembled prompt from scattered sources, annotate provenance, and stage it for human line-by-line review.
-surfaces:
-  - on: boot
-    at: name
 ---
 
 # Review Prompt
