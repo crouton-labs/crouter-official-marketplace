@@ -1,6 +1,6 @@
 {
   "name": "crouter-official-marketplace",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "owner": {
     "name": "Silas Rhyneer",
     "email": "rhyneer.silas@gmail.com"
@@ -9,63 +9,63 @@
     {
       "name": "ai",
       "source": "./plugins/ai",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "description": "Skills for building with LLMs and designing for agents — prompt architecture, agent interface design (UI/UX/CLI/tools), multi-agent orchestration, LLM output quality, and agentic testing.",
       "keywords": ["llm", "agents", "prompting", "prompt-review", "agentic-ux", "agentic-ui", "cli-design", "tool-design", "multi-agent", "context-management", "structured-output", "evals", "testing", "feedback-loop"]
     },
     {
       "name": "claude-authoring",
       "source": "./plugins/claude-authoring",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Guides for authoring Claude Code artifacts — CLAUDE.md files, hooks, rules, skills, commands, and scripts.",
       "keywords": ["claude-code", "authoring", "claude-md", "hooks", "rules", "skills", "commands", "scripts"]
     },
     {
       "name": "knowledge-capture",
       "source": "./plugins/knowledge-capture",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Skills for capturing knowledge through interviews, peer collaboration, breakthrough thinking, and session takeaways.",
       "keywords": ["interview", "collaboration", "epiphany", "learn", "takeaways", "requirements"]
     },
     {
       "name": "web",
       "source": "./plugins/web",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Knowledge for web development workflows — frontend product design and UX consultancy.",
       "keywords": ["web", "frontend", "design", "ux", "ui"]
     },
     {
       "name": "cloudflare",
       "source": "./plugins/cloudflare",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Work with Cloudflare from a shell — Wrangler + curl against the REST API, endpoint discovery from the OpenAPI spec, and the llms.txt doc index. The Code Mode pattern without MCP.",
       "keywords": ["cloudflare", "wrangler", "workers", "pages", "r2", "kv", "d1", "dns", "api", "openapi", "llms-txt", "curl", "edge"]
     },
     {
       "name": "design-discovery",
       "source": "./plugins/design-discovery",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Socratic, crtr human-led design-discovery interviews — grill the user to shape the ideal product experience and to extract and pressure-test the technical design before building.",
       "keywords": ["design", "discovery", "interview", "socratic", "product-design", "ux", "experience", "architecture", "technical-design", "crtr-human", "elicitation", "requirements", "grillme"]
     },
     {
       "name": "vercel",
       "source": "./plugins/vercel",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Work with Vercel from a shell — Vercel CLI for deploy/dev/logs, REST API access with Bearer tokens, and docs discovery through Vercel's llms.txt and references.",
       "keywords": ["vercel", "deploy", "deployments", "cli", "rest-api", "llms-txt", "curl", "serverless", "edge", "nextjs"]
     },
     {
       "name": "railway",
       "source": "./plugins/railway",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Work with Railway from a shell — Railway CLI for deploy/logs/environments, GraphQL API access with project or account tokens, and docs discovery through Railway's llms.txt and markdown references.",
       "keywords": ["railway", "deploy", "deployments", "cli", "graphql", "api", "llms-txt", "curl", "environments", "paas"]
     },
     {
       "name": "fly",
       "source": "./plugins/fly",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Work with Fly.io from a shell — flyctl for launch/deploy/status/logs, Machines API access with Bearer tokens, and reference discovery through Fly.io docs, flyctl help, and Machines API docs.",
       "keywords": ["fly", "fly-io", "fly.io", "flyctl", "machines", "docker", "deploy", "edge", "curl", "openapi"]
     },
@@ -86,7 +86,7 @@
     {
       "name": "dev",
       "source": "./plugins/dev",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "description": "Provides the stable bare `dev` lifecycle and project `/dev` front door for Grove-backed development work.",
       "keywords": ["workflow", "development", "dev", "grove", "lifecycle", "runbook", "repo-setup"]
     }
