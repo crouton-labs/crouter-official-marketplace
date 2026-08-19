@@ -179,7 +179,7 @@ for (const name of pluginDirs) {
       fail(`${displayPath}: missing YAML frontmatter`);
       continue;
     }
-    for (const field of ['kind', 'when-and-why-to-read', 'short-form', 'system-prompt-visibility', 'file-read-visibility']) {
+    for (const field of ['kind', 'when-and-why-to-read', 'short-form']) {
       if (!hasField(match[1], field)) fail(`${displayPath}: missing frontmatter ${field}`);
     }
   }
