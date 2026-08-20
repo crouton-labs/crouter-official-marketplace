@@ -1,6 +1,6 @@
 {
   "name": "dev",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Provides the stable bare `dev` lifecycle and project `/dev` front door for Grove-backed development work.",
   "requires": {
     "grove": "Install Grove, then run `grove setup` in the source repository."
