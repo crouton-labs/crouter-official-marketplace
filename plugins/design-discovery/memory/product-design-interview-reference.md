@@ -68,7 +68,7 @@ Lead each wave after the first with a `kind:"context"` interaction that mirrors 
 }
 ```
 
-Or send a standalone mirror with `crtr human notify` between decks. Either way: never start wave N+1 without reflecting wave N back.
+Never start wave N+1 without reflecting wave N back.
 
 ## Full lens catalog
 

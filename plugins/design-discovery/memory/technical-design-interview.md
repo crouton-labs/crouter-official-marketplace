@@ -37,7 +37,7 @@ Pressure-test with: **pre-mortem** ("it's 6 months later and this fell over in p
 
 ## Reflect back between waves
 
-After each wave, mirror understanding before asking more — lead the next deck with a `kind:"context"` interaction (or send `crtr human notify`) carrying: what you now understand (3–5 bullets), the assumptions you're treating as load-bearing (mark *confirmed* vs *guess*), and each open risk turned into the next wave's question. This is where a silent assumption gets caught before it becomes a wrong build.
+After each wave, mirror understanding before asking more — lead the next deck with a `kind:"context"` interaction carrying: what you now understand (3–5 bullets), the assumptions you're treating as load-bearing (mark *confirmed* vs *guess*), and each open risk turned into the next wave's question. This is where a silent assumption gets caught before it becomes a wrong build.
 
 ## Close with the picture, then hand off
 
@@ -56,5 +56,5 @@ Before finalizing, ask one coverage question — *"Anything we circled but didn'
 
 ## Related
 
-- `crtr human -h` — the current ask, notify, and review handoff surface.
+- `crtr human -h` — the current ask and review handoff surface.
 - `crtr node new --kind design` or `crtr node new --kind spec` — managed follow-on nodes that receive the technical-picture artifact path.

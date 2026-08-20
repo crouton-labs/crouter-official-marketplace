@@ -74,7 +74,7 @@ Lead each later wave with a `kind:"context"` interaction that mirrors understand
 }
 ```
 
-Or send a standalone mirror with `crtr human notify`. Never start wave N+1 without reflecting wave N back — silent assumptions become wrong builds.
+Never start wave N+1 without reflecting wave N back — silent assumptions become wrong builds.
 
 ## Full lens catalog
 
