@@ -10,7 +10,7 @@ surfaces:
     match: git/pr-loop
     at: content
   - on: memory-read
-    match: northlight/linear/pr
+    match: northlight/git/branch-and-pr
     at: content
 ---
 
