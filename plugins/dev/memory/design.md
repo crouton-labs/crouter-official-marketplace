@@ -23,6 +23,8 @@ When the blast radius of the change is unclear — what it touches, who depends 
 
 Write the artifact in `$CRTR_CONTEXT_DIR`. For a design large enough to split across nodes, read [[design/roadmap]] instead.
 
+Lean toward ASD-STE100 in the artifact and closing response: state each necessary fact once, keep exact constraints, exceptions, numbers, and names, and cut inferable text.
+
 Keep the artifact pure: it states the structure, the contracts, and the decisions, and nothing else. Concerns, risks, caveats, and recommendations do not go in it, except as Open risks that genuinely affect the design's validity.
 
 End by reporting the artifact's absolute path and a short overview in plain, laconic language: one sentence per decision — what was chosen and what it closed off — then any real concerns and what you recommend, omitted entirely when none exist rather than manufactured. Then stop. Do not implement as part of this invocation.

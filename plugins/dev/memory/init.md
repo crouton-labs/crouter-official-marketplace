@@ -66,4 +66,6 @@ Run the native Grove setup command against the source after repository files are
 
 When lifecycle behavior was created or changed, prove the chain end to end: the bare command's help reaches the repository executable; doctor is read-only; the default start path serves on the resolved ports; status and a direct probe agree; stop releases the services and listeners; and the user's desired running state is restored afterward. An unchanged, already-proven lifecycle does not need a destructive replay merely because `/dev:init` ran again.
 
+Lean toward ASD-STE100 in the artifact and closing response: state each necessary fact once, keep exact constraints, exceptions, numbers, and names, and cut inferable text.
+
 Run `crtr memory lint` and fix findings in the files this invocation owns. End with the separate repository, machine, and health status plus the next useful development action.

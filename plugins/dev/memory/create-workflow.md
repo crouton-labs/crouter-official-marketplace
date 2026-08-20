@@ -28,3 +28,5 @@ The executable sits in the repository beside the code it drives. The entry docum
 ## Keep them honest
 
 Update the document when an operation's meaning or its right use changes, not merely when the executable gains a flag. Include only examples worth executing, each verified against the live command. When the workflow already exists, extend it in place — a second wrapper, or help text copied into memory, is the failure this command exists to prevent.
+
+Lean toward ASD-STE100 in the artifact and closing response: state each necessary fact once, keep exact constraints, exceptions, numbers, and names, and cut inferable text.
