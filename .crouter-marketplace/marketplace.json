@@ -1,6 +1,6 @@
 {
   "name": "crouter-official-marketplace",
-  "version": "3.6.0",
+  "version": "3.7.0",
   "owner": {
     "name": "Silas Rhyneer",
     "email": "rhyneer.silas@gmail.com"
@@ -30,7 +30,7 @@
     {
       "name": "web",
       "source": "./plugins/web",
-      "version": "1.1.1",
+      "version": "1.2.0",
       "description": "Knowledge for web development workflows — visual direction for customer-facing pages, interface craft for dashboards and tools, UX heuristics, the interactive design workflow, HTML design-review mockups, the UX-consultant role, and frontend debugging.",
       "keywords": ["web", "frontend", "design", "ux", "ui", "visual-design", "interface-design", "dashboards", "heuristics", "mockup", "prototype", "css", "debugging"]
     },
@@ -86,7 +86,7 @@
     {
       "name": "dev",
       "source": "./plugins/dev",
-      "version": "0.7.0",
+      "version": "0.8.0",
       "description": "Provides development workflows, code-craft preferences, runtime verification, and the stable bare `dev` lifecycle for Grove-backed projects.",
       "keywords": ["workflow", "development", "dev", "code-craft", "refactoring", "error-handling", "migration", "grove", "lifecycle", "runbook", "repo-setup", "verification", "comments"]
     }
