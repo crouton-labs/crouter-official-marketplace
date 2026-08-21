@@ -36,7 +36,7 @@ Derive local CI parity from the repository's checked-in workflows and their refe
 
 ## 3. Open or update the PR
 
-Use the repository's configured PR provider and current tooling to find an existing PR for the branch or create one against the selected target. Use its title convention and template. Write for reviewers: state the user-visible or operational result, the relevant implementation choices, verification performed, and any real limitation or follow-up. Keep the body specific to this diff; do not copy personal communication rules or project policy into this portable workflow.
+Use the repository's configured PR provider and current tooling to find an existing PR for the branch or create one against the selected target. Write the title and body through [[dev/pr-description]], then apply the repository's conventions and template. Keep the body specific to this diff; do not copy personal communication rules or project policy into this portable workflow.
 
 Capture the provider identity and read the PR's current checks, reviews, and comments before arming a watch. Handle a current settled failure or actionable review item immediately; a watcher baseline cannot discover facts that existed before it was armed.
 
