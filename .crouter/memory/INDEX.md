@@ -1,21 +1,23 @@
 ---
-namespace: crouter-official-marketplace
 kind: knowledge
 when-and-why-to-read: When working in crouter-official-marketplace, this
   knowledge should be read because its boundary, current plugin inventory, and
   CI-owned versioning keep changes focused and release-safe.
 short-form: Official crtr plugin marketplace
-origin:
-  created: 2026-08-01T19:00:18.879Z
-  cwd: /Users/silasrhyneer/Code/cli/crouter-official-marketplace
-  node: 3zl47w7d-msaqk1jk-70831037
 surfaces:
   - on: workspace-open
     at: content
   - on: read
     match: ./**
     at: content
+last-updated: 2026-08-21T19:15:48.137Z
+origin:
+  created: 2026-08-01T19:00:18.879Z
+  cwd: /Users/silasrhyneer/Code/cli/crouter-official-marketplace
+  node: 3zl47w7d-msaqk1jk-70831037
+namespace: crouter-official-marketplace
 ---
+
 
 # crouter-official-marketplace
 
@@ -35,7 +37,7 @@ The official marketplace for optional crtr plugins. Every plugin here must be re
 - Provider kits: `cloudflare`, `vercel`, `railway`, `fly`.
 - Browser automation: `capture`.
 - Web search: `search`.
-- Development workflow and practice: `dev` — ships the `code-craft` preference set, `dev/verify-runtime`, `dev/pr-description`, the bare `dev` executable that delegates to `grove dev`, the `/dev:init`, `/dev:spec`, `/dev:plan`, and `/dev:create-workflow` front doors, and `templates/dev.sh`, the stack-agnostic lifecycle CLI starting point `/dev:init` copies into a repository. It owns no lifecycle behavior: Grove resolves the caller's registered source or instance and the repository's own CLI performs the work.
+- Development workflow and practice: `dev` — owns the `/dev:spec`, `/dev:design`, and `/dev:plan` front doors and their shared spec, design, plan, and orchestrator-roadmap guidance; developer base/orchestrator overlays and development playbook; testing guidance; plan-reviewer and spec-requirements sub-personas; the `code-craft` preferences; `dev/verify-runtime`; `dev/pr-description`; `/dev:init`; `/dev:create-workflow`; the bare `dev` executable that delegates to `grove dev`; and `templates/dev.sh`, the stack-agnostic lifecycle CLI starting point `/dev:init` copies into a repository. It owns no lifecycle behavior: Grove resolves the caller's registered source or instance and the repository's own CLI performs the work.
 
 ## Command-contributing plugins
 
