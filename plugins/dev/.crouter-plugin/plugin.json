@@ -1,6 +1,6 @@
 {
   "name": "dev",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Provides development workflows, PR-writing guidance, code-craft preferences, runtime verification, and the stable bare `dev` lifecycle for Grove-backed projects.",
   "requires": {
     "grove": "Install Grove, then run `grove setup` in the source repository."
