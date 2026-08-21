@@ -31,8 +31,8 @@
       "name": "web",
       "source": "./plugins/web",
       "version": "1.1.1",
-      "description": "Knowledge for web development workflows — frontend product design and UX consultancy.",
-      "keywords": ["web", "frontend", "design", "ux", "ui"]
+      "description": "Knowledge for web development workflows — visual direction for customer-facing pages, interface craft for dashboards and tools, UX heuristics, the interactive design workflow, HTML design-review mockups, the UX-consultant role, and frontend debugging.",
+      "keywords": ["web", "frontend", "design", "ux", "ui", "visual-design", "interface-design", "dashboards", "heuristics", "mockup", "prototype", "css", "debugging"]
     },
     {
       "name": "cloudflare",
@@ -87,8 +87,8 @@
       "name": "dev",
       "source": "./plugins/dev",
       "version": "0.7.0",
-      "description": "Provides development workflows, code-craft preferences, and the stable bare `dev` lifecycle for Grove-backed projects.",
-      "keywords": ["workflow", "development", "dev", "code-craft", "refactoring", "error-handling", "migration", "grove", "lifecycle", "runbook", "repo-setup"]
+      "description": "Provides development workflows, code-craft preferences, runtime verification, and the stable bare `dev` lifecycle for Grove-backed projects.",
+      "keywords": ["workflow", "development", "dev", "code-craft", "refactoring", "error-handling", "migration", "grove", "lifecycle", "runbook", "repo-setup", "verification", "comments"]
     }
   ]
 }

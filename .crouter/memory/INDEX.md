@@ -1,4 +1,5 @@
 ---
+namespace: crouter-official-marketplace
 kind: knowledge
 when-and-why-to-read: When working in crouter-official-marketplace, this
   knowledge should be read because its boundary, current plugin inventory, and
@@ -29,11 +30,12 @@ The official marketplace for optional crtr plugins. Every plugin here must be re
 ## Plugins
 
 - AI and Claude authoring: `ai`, `claude-authoring`.
-- Knowledge and product discovery: `knowledge-capture`, `design-discovery`, `web`.
+- Knowledge and product discovery: `knowledge-capture`, `design-discovery`.
+- Web and frontend: `web` — visual direction, interface craft, UX heuristics, the design workflow, HTML mockups, the UX-consultant role, and frontend debugging, all routed from `plugins/web/memory/INDEX.md`.
 - Provider kits: `cloudflare`, `vercel`, `railway`, `fly`.
 - Browser automation: `capture`.
 - Web search: `search`.
-- Development workflow and practice: `dev` — ships the `code-craft` preference set, the bare `dev` executable that delegates to `grove dev`, the `/dev:init`, `/dev:spec`, `/dev:plan`, and `/dev:create-workflow` front doors, and `templates/dev.sh`, the stack-agnostic lifecycle CLI starting point `/dev:init` copies into a repository. It owns no lifecycle behavior: Grove resolves the caller's registered source or instance and the repository's own CLI performs the work.
+- Development workflow and practice: `dev` — ships the `code-craft` preference set, `dev/verify-runtime`, the bare `dev` executable that delegates to `grove dev`, the `/dev:init`, `/dev:spec`, `/dev:plan`, and `/dev:create-workflow` front doors, and `templates/dev.sh`, the stack-agnostic lifecycle CLI starting point `/dev:init` copies into a repository. It owns no lifecycle behavior: Grove resolves the caller's registered source or instance and the repository's own CLI performs the work.
 
 ## Command-contributing plugins
 
