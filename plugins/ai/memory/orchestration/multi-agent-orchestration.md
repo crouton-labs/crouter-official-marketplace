@@ -84,6 +84,8 @@ Before spawning a child, apply three tests:
 
 If any answer is no, serialize the dependency or keep the work in the current agent. Available capacity is not a reason to create work.
 
+The three tests do not hold on their own, because the default pull is toward spawning: given a plausible split, an agent delegates rather than continues, and every marginal case reads as passing. An orchestrator prompt that only describes when delegation *helps* therefore produces over-delegation. Write the ceiling as its own instruction beside the tests — delegate only genuinely independent, sizeable tracks; do not delegate work the orchestrator can finish in a handful of tool calls; use one child where one suffices; never spawn a child to check the orchestrator's own work.
+
 ## Review Is a Bounded Check
 
 For a substantive artifact, use one independent review assignment: one reviewer when the surface fits its window, or one bounded coordinator when coverage genuinely must split. Correctness, security, architecture, efficiency, and tests are lenses for that assignment, not an automatic reviewer roster. The coordinator partitions by units or lenses, not both, and owns synthesis.
