@@ -155,32 +155,21 @@ Effects
 
 ## Focused parameter help
 
-The worker override is still a parameter of `task claim`, but omission is normal and choosing one safely needs more than a compact schema row. Its focused view is independently complete:
+The worker override is still a parameter of `task claim`, but omission is normal and choosing one safely needs more than a compact schema row. Its focused view continues the ordinary help that routed the caller there:
 
 ```
 $ agentctl task claim --worker -h
 task claim: claim a draft task and spawn a worker. Returns immediately.
 
-Input
-  TASK_ID                positional, required. Task in `draft` state.
-  --worker NAME          optional. Worker template override. Omit to select from task.kind.
-  --context-file PATH    optional. Path to a JSON file with additional facts
-                         injected into the worker's prompt. Object shape;
-                         worker-template-specific keys.
-
 <parameter name="worker">
 When to use
-  Use only when this task needs a worker template other than the one selected from
-  task.kind. Omit for routine claims and when the task's kind already owns the right
-  prompt, tools, and model.
+  Use only when this task needs a worker template other than the one selected from task.kind. Omit for routine claims and when the task's kind already owns the right prompt, tools, and model.
 
 Value
-  Exact registered worker name from <workers> below. Names are case-sensitive; no
-  substring or fuzzy matching. Omission runs normal task-kind selection.
+  Exact registered worker name from <workers> below. Names are case-sensitive; no substring or fuzzy matching. Omission runs normal task-kind selection.
 
 Effects
-  Stores the selected template on this job and fixes its worker prompt, tool, and
-  model bundle for the claim. Does not change the task's kind or the worker registry.
+  Stores the selected template on this job and fixes its worker prompt, tool, and model bundle for the claim. Does not change the task's kind or the worker registry.
 
 <workers count="3">
   browser — browser automation and rendered-page evidence
@@ -188,27 +177,13 @@ Effects
   gpu — CUDA workloads on a GPU runner
 </workers>
 </parameter>
-
-Output (fields carried in the rendered result)
-  job_id      string. Use with agentctl job logs, agentctl job result, agentctl job status.
-  task_id     string. Echo of input.
-  worker      string. Template selected.
-  follow_up   string. Recommended next action. Typical:
-              `agentctl job result <job_id> --wait` to block until the worker
-              emits a result.
-
-Effects
-  Marks task `claimed`. Spawns a worker process.
-  Allocates a log file at $XDG_STATE_HOME/agentctl/jobs/<job_id>.log.
-  On termination, a result file appears atomically at <job_id>.result.json.
-  Worker runs until termination or cancellation.
 ```
 
 - The ordinary row says what the override changes, says omission is normal, and gives the exact focused-help road sign; it does not spend the full value grammar on every caller.
-- The focused view repeats the whole `task claim` contract before expanding `worker`, so it is safe even when it is the caller's first help read.
+- The focused view adds only the leaf identity and `worker` detail because the caller necessarily read the ordinary input, output, effects, and leaf state before following that road sign.
 - `worker` remains a flag. A `task claim worker` subtree or `--advanced-config` wrapper would falsely turn parameter selection into a new operation.
 - The registered worker set is bounded and belongs to this parameter, so its dynamic catalog appears only in the focused block.
-- The compact row and focused block are two renderings of one per-flag definition; rendered repetition is safe because the facts are authored once.
+- Explicit per-flag metadata controls which parameters get this second view; the flag type does not imply it.
 
 ---
 

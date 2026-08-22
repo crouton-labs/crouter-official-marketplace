@@ -76,7 +76,7 @@ Subcommand path is the navigation; flags and positional args are the parameters.
 
 An uncommon flag can remain a parameter even when its safe selection, value grammar, effects, interactions, or bounded choices do not fit one schema row. Keep it visible in ordinary leaf `-h` as compact discovery: type and optionality, a short discriminator naming what it changes and when omission is normal, and an exact road sign to `tool noun verb --flag -h`.
 
-The focused form renders the complete ordinary leaf contract, then expands only the selected flag with its when-to-use rule, accepted values and default or inheritance behavior, flag-specific effects and interactions, and any bounded dynamic choices. Repeating the leaf contract makes the focused form safe as the caller's first read; author the facts once as per-flag metadata and compose both views from that source so rendered duplication cannot drift.
+The focused form is a continuation of the ordinary leaf help that routed the caller there. Render the leaf identity, then only the selected flag's when-to-use rule, accepted values and default or inheritance behavior, flag-specific effects and interactions, and any bounded dynamic choices. Do not repeat the ordinary input schema, output schema, leaf effects, or leaf dynamic state; those tokens are already in the caller's context.
 
 This is a second view of the same leaf, not a new tree tier or invocation gate. Do not invent an `advanced-config` subcommand or `--advanced-config` container flag, require a read receipt, or auto-focus flags by type: subcommands represent operations, help must not mutate invocation state, and only the flag's own semantics establish that omission is normal and focused guidance is warranted.
 
