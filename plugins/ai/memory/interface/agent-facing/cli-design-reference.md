@@ -122,7 +122,8 @@ task claim: claim a draft task and spawn a worker. Returns immediately.
 
 Input
   TASK_ID                positional, required. Task in `draft` state.
-  --worker NAME          optional. Worker template. Default: matches task.kind.
+  --worker NAME          optional. Worker template override. Omit to select from task.kind.
+                         Before using this flag, run `agentctl task claim --worker -h`.
   --context-file PATH    optional. Path to a JSON file with additional facts
                          injected into the worker's prompt. Object shape;
                          worker-template-specific keys.
@@ -149,6 +150,65 @@ Effects
 - Effects names every persistent change. Paths are informational — the agent reads via `agentctl job`, not the filesystem directly.
 - No `--wait` flag on `claim`. If the agent wants to block, it composes: `claim` then `job result --wait`. The primitive stays simple; composition handles policy.
 - `claim` is a verb on `task` — the producer — and it *creates* a job; `agentctl job` stays the producer-agnostic monitoring surface (logs/result/status/cancel). If a second producer of jobs appeared (a scheduler, a queue), it would compose with the same `agentctl job` leaves rather than wedging its creation verbs into `job`. See *Creator verbs on the primitive* in cli-design.md.
+
+---
+
+## Focused parameter help
+
+The worker override is still a parameter of `task claim`, but omission is normal and choosing one safely needs more than a compact schema row. Its focused view is independently complete:
+
+```
+$ agentctl task claim --worker -h
+task claim: claim a draft task and spawn a worker. Returns immediately.
+
+Input
+  TASK_ID                positional, required. Task in `draft` state.
+  --worker NAME          optional. Worker template override. Omit to select from task.kind.
+  --context-file PATH    optional. Path to a JSON file with additional facts
+                         injected into the worker's prompt. Object shape;
+                         worker-template-specific keys.
+
+<parameter name="worker">
+When to use
+  Use only when this task needs a worker template other than the one selected from
+  task.kind. Omit for routine claims and when the task's kind already owns the right
+  prompt, tools, and model.
+
+Value
+  Exact registered worker name from <workers> below. Names are case-sensitive; no
+  substring or fuzzy matching. Omission runs normal task-kind selection.
+
+Effects
+  Stores the selected template on this job and fixes its worker prompt, tool, and
+  model bundle for the claim. Does not change the task's kind or the worker registry.
+
+<workers count="3">
+  browser — browser automation and rendered-page evidence
+  general — ordinary implementation and research
+  gpu — CUDA workloads on a GPU runner
+</workers>
+</parameter>
+
+Output (fields carried in the rendered result)
+  job_id      string. Use with agentctl job logs, agentctl job result, agentctl job status.
+  task_id     string. Echo of input.
+  worker      string. Template selected.
+  follow_up   string. Recommended next action. Typical:
+              `agentctl job result <job_id> --wait` to block until the worker
+              emits a result.
+
+Effects
+  Marks task `claimed`. Spawns a worker process.
+  Allocates a log file at $XDG_STATE_HOME/agentctl/jobs/<job_id>.log.
+  On termination, a result file appears atomically at <job_id>.result.json.
+  Worker runs until termination or cancellation.
+```
+
+- The ordinary row says what the override changes, says omission is normal, and gives the exact focused-help road sign; it does not spend the full value grammar on every caller.
+- The focused view repeats the whole `task claim` contract before expanding `worker`, so it is safe even when it is the caller's first help read.
+- `worker` remains a flag. A `task claim worker` subtree or `--advanced-config` wrapper would falsely turn parameter selection into a new operation.
+- The registered worker set is bounded and belongs to this parameter, so its dynamic catalog appears only in the focused block.
+- The compact row and focused block are two renderings of one per-flag definition; rendered repetition is safe because the facts are authored once.
 
 ---
 
@@ -279,6 +339,7 @@ Effects
 | Sidecar result file | `agentctl task claim` effects | Long-running operations |
 | Paginated list (simple, follow_up → show-leaf) | `agentctl task list` | Pagination, Principle 19 |
 | Paginated search (rich, --full opt-in, follow_up → -h) | `agentctl plan search` | Pagination, Principle 19 |
+| Focused parameter help | `agentctl task claim --worker -h` | Focused parameter help |
 | Streaming output | `agentctl job logs` | I/O contract |
 | Boolean flag | `agentctl job logs --follow` | I/O contract |
 | Read-only declaration | `agentctl job logs` effects | Principle 9 |

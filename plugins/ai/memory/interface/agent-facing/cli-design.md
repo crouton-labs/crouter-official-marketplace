@@ -66,11 +66,19 @@ Three node types: root, branch nodes, leaves.
 
 **Leaves** are the action surface. Each leaf declares:
 - One-line summary.
-- Input schema, with semantic constraints inline on each parameter. Flags, positional args, and stdin are all parameters and live in the same schema block.
+- Input schema, with semantic constraints inline on each parameter except the explicit focused-parameter form below. Flags, positional args, and stdin are all parameters and live in the same schema block.
 - Output schema, with *useful properties* of return values (sort order, semantic meaning), not just types.
 - Effects — every persistent change in the world.
 
 Subcommand path is the navigation; flags and positional args are the parameters.
+
+### Focused parameter help
+
+An uncommon flag can remain a parameter even when its safe selection, value grammar, effects, interactions, or bounded choices do not fit one schema row. Keep it visible in ordinary leaf `-h` as compact discovery: type and optionality, a short discriminator naming what it changes and when omission is normal, and an exact road sign to `tool noun verb --flag -h`.
+
+The focused form renders the complete ordinary leaf contract, then expands only the selected flag with its when-to-use rule, accepted values and default or inheritance behavior, flag-specific effects and interactions, and any bounded dynamic choices. Repeating the leaf contract makes the focused form safe as the caller's first read; author the facts once as per-flag metadata and compose both views from that source so rendered duplication cannot drift.
+
+This is a second view of the same leaf, not a new tree tier or invocation gate. Do not invent an `advanced-config` subcommand or `--advanced-config` container flag, require a read receipt, or auto-focus flags by type: subcommands represent operations, help must not mutate invocation state, and only the flag's own semantics establish that omission is normal and focused guidance is warranted.
 
 ### Branch format
 
@@ -116,7 +124,7 @@ When the root `-h` is auto-loaded into the agent's context (see [When the agent 
 
 ## I/O contract
 
-**Input.** Flags and positional arguments. Required, optional, and semantic constraints all live in the leaf's `-h`.
+**Input.** Flags and positional arguments. Required, optional, and semantic constraints all live in the leaf's ordinary or focused `-h`.
 
 - *Positional argument* — at most one per leaf, used only when the leaf has an obvious primary target (a plan id, a task id, a file path). When in doubt, use a flag.
 - *Flags* — long-form only (`--task-id`, `--limit`). No short aliases. Boolean flags take no value (`--follow`), set to true when present. Repeatable flags (`--tag foo --tag bar`) appear as arrays in the leaf's input schema.
