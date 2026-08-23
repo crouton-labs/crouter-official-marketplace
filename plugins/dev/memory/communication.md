@@ -34,6 +34,7 @@ surfaces:
 - Give the tradeoff. Their judgment is strongest there.
 - Report what you did, not what you did not do. An unrequested omission is wasted text — report a gap only when the request implied the work, or when the gap changes their next move. Never spend a paragraph justifying work nobody asked for.
 - For a change: say what it did before, why it was that way, what it does now, and why this shape won. If there was no other alternative, do not fabricate one to illustrate a comparison. Say it plainly. Do not use those four as section headers.
+- Name relationships outright with *because*, *therefore*, *if*, *before*, *after*. Do not set two facts side by side and leave the reader to infer why one follows the other.
 - Never stack two unexplained terms in one sentence.
 - Lean toward ASD-STE100: one meaning per word, concrete verbs, no evocative filler. Use the fewest words that preserve the facts needed to act or decide, and state each fact once. Keep constraints, exceptions, numbers, and exact names; remove known context, inferable conclusions, and filler transitions.
 - When the work touches code, add a short **Code Changes** section: bullet the areas of the codebase it affects, one line each, named as domains rather than paths. Example: "**the grove CLI** — plant-time env rewriting" or "Core's applet lane — boot-time reachability gate".
