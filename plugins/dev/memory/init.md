@@ -21,6 +21,8 @@ Survey the README, package manifests and lockfiles, build and CI configuration, 
 
 Require Grove, then read `grove setup -h`. Use the native setup surface to distinguish the repository contract from this machine's registration. A valid contract may be registered and verified immediately. A missing or invalid contract requires repository authoring below. Preserve a legacy machine registration that has no repository contract until the user approves an explicit migration; never infer or silently export it.
 
+Reconcile the machine-owned tmux glue too. Verify that `~/.local/bin/tmux-grove-slot` exists, is executable, and supplies its open and reset modes. Verify that the user's tmux configuration sources the installed keybind fragment. When either is absent, install it through the machine's delivery surface; do not copy the script or keybind content into the repository.
+
 Before creating a repository contract or materially changing existing lifecycle behavior, show the user the concrete proposed files and responsibilities. Filling a missing machine registration from an already-valid contract needs no second confirmation because invoking `/dev:init` already requested reconciliation.
 
 ## 2. Author the memory front door

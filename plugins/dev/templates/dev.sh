@@ -9,7 +9,7 @@
 #
 # This is a stack-agnostic starting point: replace the SERVICES table and
 # adjust start commands for this repository. Keep the verb set stable —
-# agents rely on start/stop/restart/status/logs/logpath/doctor everywhere.
+# agents rely on start/stop/restart/status/logs/logpath/doctor/reset everywhere.
 # Your -h output below is the live contract; keep it truthful as you edit.
 
 set -u
@@ -98,6 +98,108 @@ targets() {
   echo "${found:-$DEFAULT_SERVICES}"
 }
 
+doctor() {
+  issues=0
+  echo "doctor — read-only"
+  for s in $(names); do
+    port=$(port_of "$s")
+    pidstate="no pidfile"; alive "$s" && pidstate="pid $(cat "$(pidfile "$s")") alive"
+    if [ -f "$(pidfile "$s")" ] && ! alive "$s"; then pidstate="stale pidfile"; issues=1; fi
+    portstate="no port"
+    if [ -n "$port" ]; then
+      if [ -n "$(port_pid "$port")" ]; then
+        portstate=":$port listening"
+        [ ! -f "$(pidfile "$s")" ] && { portstate="$portstate (untracked)"; issues=1; }
+      else
+        portstate=":$port free"
+      fi
+    fi
+    printf '  %-10s %s · %s\n' "$s" "$pidstate" "$portstate"
+  done
+  [ "$issues" = 0 ] && echo "verdict: green" || echo "verdict: repair inconsistent state with 'dev stop'."
+  return "$issues"
+}
+
+# Add repository-specific generated-artifact work here. It runs after reset
+# has fast-forwarded a clean checkout to main.
+regenerate() {
+  :
+}
+
+reset_inventory() {
+  reset_parked_file=$1
+  printf '## inventory\n'
+  current_branch=$(git branch --show-current)
+  printf '%s\n' "current branch: ${current_branch:-detached}"
+
+  if dirty_paths=$(git status --porcelain) && [ -n "$dirty_paths" ]; then
+    printf '%s\n' "- dirty tree: $dirty_paths" >>"$reset_parked_file"
+  fi
+
+  git for-each-ref --format='%(refname:short)' refs/heads | while IFS= read -r local_branch; do
+    [ -z "$local_branch" ] && continue
+    [ "$local_branch" = main ] && continue
+    if ! git merge-base --is-ancestor "$local_branch" origin/main; then
+      printf '%s\n' "- unmerged branch: $local_branch" >>"$reset_parked_file"
+    fi
+    upstream=$(git for-each-ref --format='%(upstream:short)' "refs/heads/$local_branch")
+    if [ -n "$upstream" ]; then
+      unpushed=$(git rev-list --count "$upstream..$local_branch")
+    elif git show-ref --verify --quiet "refs/remotes/origin/$local_branch"; then
+      unpushed=$(git rev-list --count "origin/$local_branch..$local_branch")
+    else
+      unpushed=$(git rev-list --count "origin/main..$local_branch")
+    fi
+    [ "$unpushed" -gt 0 ] && printf '%s\n' "- unpushed commits: $local_branch ($unpushed)" >>"$reset_parked_file"
+  done
+
+  git worktree list --porcelain | while IFS= read -r record; do
+    case "$record" in
+      worktree\ *) reset_worktree=${record#worktree } ;;
+      '')
+        if [ -n "${reset_worktree:-}" ] && worktree_dirty=$(git -C "$reset_worktree" status --porcelain) && [ -n "$worktree_dirty" ]; then
+          printf '%s\n' "- dirty worktree: $reset_worktree: $worktree_dirty" >>"$reset_parked_file"
+        fi
+        reset_worktree="" ;;
+    esac
+  done
+
+  printf '## parked\n'
+  if [ -s "$reset_parked_file" ]; then cat "$reset_parked_file"; else printf '%s\n' '- none'; fi
+}
+
+reset() {
+  reset_parked_file="$RUN_DIR/reset-parked.$$"
+  trap 'rm -f "$reset_parked_file"' EXIT HUP INT TERM
+  : >"$reset_parked_file"
+
+  printf '## stop\n'
+  for s in $(names); do stop_one "$s" || return 1; done
+
+  printf '## fetch\n'
+  git fetch origin || return 1
+
+  reset_inventory "$reset_parked_file"
+
+  printf '## converge\n'
+  if [ -n "$(git status --porcelain)" ]; then
+    printf '%s\n' '- skipped: current checkout is dirty'
+    reset_converged=0
+  else
+    git checkout main && git pull --ff-only origin main || return 1
+    reset_converged=1
+  fi
+
+  printf '## regenerate\n'
+  if [ "$reset_converged" = 1 ]; then regenerate || return 1; else printf '%s\n' '- skipped: checkout did not converge'; fi
+
+  printf '## doctor\n'
+  doctor || return 1
+
+  [ -s "$reset_parked_file" ] && return 3
+  return 0
+}
+
 # --- verbs -------------------------------------------------------------------
 usage() {
   cat <<EOF
@@ -117,6 +219,7 @@ VERBS
   logs      follow a service log; --tail N prints last N lines instead
   logpath   print the log dir, or one service's log file
   doctor    read-only: report state and anything inconsistent
+  reset     stop, fetch, inventory/park, fast-forward main, regenerate, and doctor; exits 3 when items are parked
 
 Logs and pidfiles: $RUN_DIR
 EOF
@@ -125,7 +228,7 @@ EOF
 verb=start; args=""
 for a in "$@"; do
   case "$a" in
-    start|stop|restart|status|logs|logpath|doctor) verb=$a ;;
+    start|stop|restart|status|logs|logpath|doctor|reset) verb=$a ;;
     -h|--help|help) usage; exit 0 ;;
     *) args="$args $a" ;;
   esac
@@ -150,17 +253,6 @@ case "$verb" in
     [ -z "$svc" ] && { echo "logs: name a service ($(names | tr '\n' ' '))" >&2; exit 1; }
     if [ -n "$tail_n" ]; then tail -n "$tail_n" "$(logfile "$svc")"; else tail -f "$(logfile "$svc")"; fi ;;
   logpath) if [ -n "${1:-}" ] && [ -n "$(line_for "$1")" ]; then logfile "$1"; else echo "$RUN_DIR"; fi ;;
-  doctor)
-    echo "doctor — read-only"
-    for s in $(names); do
-      port=$(port_of "$s")
-      pidstate="no pidfile"; alive "$s" && pidstate="pid $(cat "$(pidfile "$s")") alive"
-      [ -f "$(pidfile "$s")" ] && ! alive "$s" && pidstate="stale pidfile"
-      portstate="no port"
-      if [ -n "$port" ]; then
-        if [ -n "$(port_pid "$port")" ]; then portstate=":$port listening"; else portstate=":$port free"; fi
-      fi
-      printf '  %-10s %s · %s\n' "$s" "$pidstate" "$portstate"
-    done
-    echo "verdict: run 'dev status' for liveness; stale pidfiles are cleared by 'dev stop'." ;;
+  doctor)  doctor ;;
+  reset)   reset ;;
 esac
