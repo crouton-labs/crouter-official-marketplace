@@ -169,7 +169,11 @@ for (const name of pluginDirs) {
   const files = markdownFiles(memoryDir);
   for (const file of files) {
     const relative = path.relative(memoryDir, file).replace(/\.md$/, '');
-    if (relative !== 'INDEX') canonicalNames.add(`${name}/${relative}`);
+    if (relative !== 'INDEX') {
+      canonicalNames.add(`${name}/${relative}`);
+      // A directory's INDEX.md answers at the directory name itself.
+      if (relative.endsWith('/INDEX')) canonicalNames.add(`${name}/${relative.slice(0, -'/INDEX'.length)}`);
+    }
     memoryDocuments.push(file);
 
     const text = fs.readFileSync(file, 'utf8');
