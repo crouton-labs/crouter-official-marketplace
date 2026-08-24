@@ -42,7 +42,7 @@ Capture the provider identity and read the PR's current checks, reviews, and com
 
 ## 4. Watch through the runtime
 
-Use the provider API or CLI to produce one stable, sorted PR-state summary: PR state; every non-success terminal check; running or pending checks as pending rather than failed; and non-pending review or comment activity with stable identifiers. Do not emit empty check conclusions as failures. Include enough review metadata to distinguish new activity, and sort collections so ordering alone does not produce an event.
+Use the provider API or CLI to produce one stable, sorted PR-state summary: PR state plus an explicit merge outcome derived from the provider's merge field or timestamp, so a merged PR prints `merged` rather than merely `closed`; every non-success terminal check; running or pending checks as pending rather than failed; and non-pending review or comment activity with stable identifiers. Do not emit empty check conclusions as failures. Include enough review metadata to distinguish new activity, and sort collections so ordering alone does not produce an event.
 
 Arm a recurring `crtr cron add` watcher with `--on-output on-change`, a `node:$CRTR_NODE_ID` sink, and `--anchor-self`. Give it a dynamic name containing the repository and PR identity. Its command must use the recorded provider identity and print only the stable summary. The runtime pushes changed output to this node; after arming, end the turn rather than polling or holding a terminal open. Do not use a fixed node ID, checkout path, cron name, or sink. Keep the watcher until the loop reaches its completion boundary, then cancel it explicitly.
 
