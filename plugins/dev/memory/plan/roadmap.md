@@ -1,25 +1,25 @@
 ---
 kind: knowledge
-when-and-why-to-read: When choosing between a flat plan and a decomposed one, or synthesizing part-plans into an index, this knowledge should be read so a planning effort splits only where a domain seam pays for the synthesis it costs.
-short-form: Use when deciding whether a planning effort splits into part-plans, and how to synthesize them into one index.
+when-and-why-to-read: When a plan orchestrator is choosing between a flat plan and part-plans, or synthesizing part-plans into an index, this knowledge should be read because the seams between domains are where integration bugs live, and only the synthesis pass can see across them.
+short-form: Split along domain seams, not size; delegate bounded part-plans; synthesize file ownership, naming, and integration gaps into one executable index plan.
 rationale: >-
-  Carries plan shape and decomposition only. The general planning contract — scope discipline, task quality, and plan review — lives in [[dev/plan/guide]] so every plan node loads it whether or not the effort ever needs a roadmap; do not pull general planning guidance back in here.
+  Orchestrators split plans by size rather than domain, and declared done after collecting parts — leaving two part-plans owning one file, misaligned names, and dependency edges visible only when all parts are read together. The generic parallelism threshold is deliberately absent — the builtin orchestration layer owns it; only the domain-seam trigger lives here.
 surfaces:
   - on: boot
     at: content
     gate: {kind: plan, mode: orchestrator}
 ---
 
-# Plan Shapes and the Decomposition Decision
+## Flat or decomposed
 
-Every planning effort produces either a flat plan or a decomposed plan (index + part-plans). Choose decomposition for worthwhile parallel planning, not raw size: a flat plan can span many yields, while part-plans add delegation and synthesis cost that independent slices must repay.
+The decomposition trigger is a domain seam, not size: three backend files and three frontend files are two domains even at a modest total, because the integration seam is where bugs live and two agents each going deep catch them more cleanly than one agent reading both halves. A single coherent domain stays a flat plan however long — a flat plan spans yields for free, while part-plans cost delegation and synthesis.
 
-## Choosing a shape
+## Delegating part-plans
 
-**Use a flat plan** when the work is a single coherent domain and can be written at consistent task granularity in one plan. A flat plan has an overview, ordered phases, and a verification section. No sub-plans. One file.
+Each slice goes to a `plan` child with the contract it plans from, its explicit scope, its place in the dependency graph, and the paths to the upstream artifacts. The child follows [[dev/plan/guide]], stays in its lane, writes `plan-<subject>-<part>.md`, and reports the absolute path.
 
-**Use a decomposed plan** when settled boundaries expose independent planning slices that can proceed concurrently and the effort is large enough that parallel work materially improves intelligence, productivity, or elapsed time after synthesis cost. Produce an index plan (the navigable master) and delegate each slice to a `plan`-kind child node, giving it the relevant spec, explicit scope, and place in the dependency graph. A slice goes to a `plan` sub-orchestrator (`crtr node new --kind plan --mode orchestrator`) only when its own work passes the same parallelism threshold; a long sequential slice goes to a base child that can yield. The index plan is the synthesis artifact — it lists all sub-plans by path, defines phases and dependencies, and contains a task table the implementation orchestrator can execute directly. Detail lives in sub-plans; the master is not allowed to carry it.
+## Synthesis
 
-**The decomposition trigger is domain boundary, not size alone.** Three backend files and three frontend files are two domains even if the total count is modest — plan them separately and synthesize, because the integration seam is where bugs live and one agent reading both halves won't catch them as cleanly as two agents each going deep.
+After the parts land, synthesize before declaring done — collecting is not synthesis: resolve file-ownership conflicts (two parts naming one file means you decide the sequence); align naming across all parts; fill the integration gaps at domain boundaries; and make the index task table reflect the dependencies that are visible only when all parts are read together.
 
-After collecting part-plans from children, synthesize before declaring done: resolve file ownership conflicts (two sub-plans naming the same file means you decide the sequence), align naming across all parts, fill integration gaps at domain boundaries, and ensure the task table in the index accurately reflects dependencies exposed only by reading all sub-plans together.
+The result is an index plan in the plan schema's index form ([[dev/artifacts/plan]]): the task table the implementation orchestrator executes, with detail living in the part-plans and Pointers naming each one.

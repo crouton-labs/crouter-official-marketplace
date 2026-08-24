@@ -1,21 +1,27 @@
 ---
 kind: knowledge
-when-and-why-to-read: When a design is large enough that independent surfaces could be designed in parallel, this knowledge should be read so sub-designs compose across written contracts instead of inventing incompatible assumptions.
-short-form: Use when deciding whether a design splits into sub-designs, and how to contract and integrate them.
+when-and-why-to-read: When a design orchestrator is deciding whether and how to split a design into sub-designs, this knowledge should be read because sub-designs compose only across contracts written before delegation, and integration failures surface after the parts are already drawn.
+short-form: Write the inter-part contracts first, delegate bounded sub-designs, then integrate — contracts honored both sides, no gaps or overlaps, flows composing.
 rationale: >-
-  Carries decomposition and integration only. The design contract and artifact shape live in [[dev/design/guide]] so every design node has them without reaching for a roadmap; do not pull general design guidance back in here.
+  Parallel sub-designers invented incompatible assumptions when the seams between them were not written down first, and orchestrators concatenated parts instead of integrating them. The generic parallelism threshold is deliberately absent — the builtin orchestration layer owns it; only the design-specific trigger lives here.
 surfaces:
   - on: boot
     at: content
     gate: {kind: design, mode: orchestrator}
 ---
 
-# Decomposing a design for parallel work
+## Decomposing a design
 
-Decompose only when settled contracts expose genuinely independent surfaces and the design is large enough that parallel work materially improves intelligence, productivity, or elapsed time after synthesis cost. Split along clean seams — by component, subsystem, or interaction surface. A long but tightly coupled design stays with one base agent across yields so one mind owns its coherence. Each delegated sub-design is a bounded unit that covers one component or subsystem end-to-end: its own context, architecture, interfaces, data model, flows, and decisions.
+Decompose only when the artifact itself splits into parts with contracts between them — separate components or subsystems whose seams can be written down before anyone designs behind them. A long but tightly coupled design is not a split candidate: it stays with one base designer across yields so one mind owns its coherence.
 
-Before delegating sub-designs, define the shared interface contracts between them explicitly. These contracts are the seams; they must be written down before sub-design begins so that parallel sub-designs don't invent incompatible assumptions. Capture these contracts in `$CRTR_CONTEXT_DIR/design-contracts.md` and give that absolute path to every sub-design agent.
+## Contracts before delegation
 
-Each sub-design agent gets: the overall architecture diagram, the contracts doc, the scope of its piece, and any constraints from the parent design. It follows [[dev/design/guide]], writes `design-<component>.md` in its own context directory, and reports the absolute path.
+Write the shared interface contracts between the parts to `$CRTR_CONTEXT_DIR/design-contracts.md` before delegating anything, and give that absolute path to every sub-designer — the contracts are the seams, and parallel sub-designs without them invent incompatible assumptions.
 
-After sub-designs land, integration is your job: read every sub-design, check that every contract is honored on both sides, that responsibilities don't overlap or gap, that the data models are consistent, and that the key flows compose correctly across component boundaries. Write the integrated design to `$CRTR_CONTEXT_DIR/design-<subject>.md`, synthesizing all sub-designs into one coherent artifact — don't just concatenate them. Reconcile any inconsistencies before declaring the design done.
+Each sub-design brief carries: the overall architecture diagram, the contracts doc path, the scope of its part, and the constraints from the parent design. The sub-designer follows [[dev/design/guide]], covers its part end-to-end, writes `design-<subject>-<part>.md`, and reports the absolute path.
+
+## Integration
+
+After the parts land, integration is your work, not a formality: read every part; check each contract is honored on both sides; check responsibilities neither gap nor overlap; check the data models are consistent; check the key flows compose across part boundaries. Reconcile every inconsistency before declaring the design done.
+
+Stitch the result into `design-<subject>.md` — the same schema at stitched altitude per [[dev/artifacts]], lean, its Pointers naming every part by absolute path — never a concatenation of the parts.

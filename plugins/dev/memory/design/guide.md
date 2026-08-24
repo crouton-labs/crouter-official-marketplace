@@ -1,49 +1,39 @@
 ---
 kind: knowledge
-when-and-why-to-read: When writing an architecture or interface design, this knowledge should be read so each section of the artifact carries what a planner and implementer need and the design opens from the end that is actually hard.
-short-form: Use when writing a design artifact — what the design must settle, what each section contains, and the top-down versus bottom-up call.
+when-and-why-to-read: When designing the structure of a change, this knowledge should be read because the decisions closed here are the expensive ones, and closing them on evidence rather than plausibility is what lets planning and implementation proceed without rework.
+short-form: Ground the design in exploration evidence, spike the risky bets, weigh decisions by reversibility, and give a consequential design one absence-hunting review.
 rationale: >-
-  Carries the shared design contract and artifact shape used by design-kind nodes and the optional /dev:design front door. Decomposition lives in [[dev/design/roadmap]], so both entry paths use one method instead of carrying contradictory templates.
+  Designers drew constraints from an assumed blast radius, deliberated equally over reversible and one-way decisions, recorded risky bets as settled choices without proving them, and self-reviewed — so absences (the existing system a design ignored) survived to implementation. The section template and design styles are deliberately absent here — [[dev/artifacts/design]] owns them at writing time; the scope rule and style line are absent because [[dev/artifacts]] owns them once.
 surfaces:
   - on: boot
     at: content
     gate: {kind: design}
 ---
 
-# Designing a change
+## Designing a change
 
-Ground the design in the relevant code and requirements. When the blast radius is unclear — what the change touches, who depends on it, or what constrains its shape — use `explore` scouts to map it before writing, and draw the constraints from evidence rather than an assumption.
+A design fixes the load-bearing structure before anyone writes code: component boundaries and responsibilities, interface contracts and data models, key flows, and the decisions that close real options. The altitude ceiling: a planner reading it has no design questions left, a coder reading it still has implementation choices, and nothing in it could be pasted into source. Design enough to close the expensive decisions and unblock parallel work, and no further — over-specification creates brittleness and rework when reality disagrees with the paper.
 
-A design fixes the load-bearing structure before anyone writes code: component boundaries and responsibilities, interface contracts and data models, key flows, and the decisions that close real options with their rationale and rejected alternatives.
+Write it as `design-<subject>.md` under the shared contract in [[dev/artifacts]], with the schema in [[dev/artifacts/design]]. A request that outgrows or undershoots design gets re-routed to the work it actually is, not forced through this method.
 
-It is not requirements — those state the behavior the system must satisfy, while the design states how it is structured to produce that behavior. It is not a plan — plans order implementation work against the design. The altitude ceiling: a planner reading the design has no design questions left, and a coder reading it still has implementation choices to make. No function bodies, algorithm walkthroughs, library calls, or ordering of implementation steps; anything that could be pasted into source belongs downstream.
+## Ground before you draft
 
-Design enough to unblock parallelism and close the decisions that are expensive to reverse, and no further. Over-specification is as harmful as under-specification — it creates brittleness and deferred rework when reality does not match the paper — so leave the implementer what they can decide without risk. Resolve every decision that closes a real option; never hand the implementer a branch to pick. When a decision turns on judgment the user should own — a performance tradeoff, a data-model shape, or which pattern to adopt — work it out with them through `crtr human` before finishing the document and reflect their decision in the design. Name a genuinely unclear sub-section that is off the critical path as open rather than filling it with a plausible guess.
+The design rests on exploration evidence, not on memory of the codebase. Handed no exploration covering the blast radius, commission `explore` scouts before drafting — an explore orchestrator when the surface is large. Handed maps with gaps, fill the gaps by extending the handed documents in place rather than writing parallel notes. Drafting begins only when the map's Gaps section holds no design-relevant gap.
 
-Write the design to `$CRTR_CONTEXT_DIR/design-<subject>.md`. Keep the artifact pure: it states the structure, contracts, and decisions. Concerns, risks, caveats, and recommendations do not belong in it except as Open risks that genuinely affect the design's validity.
+Brief scouts to map what the code is becoming, not just what it is — recent merges and review comments show the direction the file tree hides — and to find how the codebase already solves this class of problem, because consistency with an existing solution beats local cleverness.
 
-Structure it with these sections, in order:
+## Spike the load-bearing bet
 
-**Context & constraints** — the problem being solved, the non-goals, the constraints that are not negotiable (existing systems, performance envelopes, team conventions). This is the frame everything else hangs on.
+When the design rests on a risky, unproven bet — an unfamiliar API, an unclear performance profile, a novel algorithm — buy the evidence with a time-boxed spike through a `developer` child before committing the design to it. The spike brief demands a yes/no verdict on one named question; spike code carries no tests, no error handling, no abstractions, and is discarded. The verdict is recorded as evidence in the Decisions section — the temptation is to reason the bet out on paper, but an hour of spike beats a page of argument.
 
-**Architecture** — the high-level structure: what major components or layers exist, how they are arranged, what the topology looks like. Lead with a diagram (mermaid `graph TD`) before prose. Keep it at the level a new engineer would use to orient themselves.
+## Weigh decisions by reversibility
 
-**Components & responsibilities** — for each component: one-sentence description of what it owns, a responsibilities table, and explicit boundaries (what it does NOT own). Every responsibility must land in exactly one component; gaps and overlaps here become integration bugs.
+A reversible decision gets one line and no deliberation — deliberating it wastes the window and buries the decisions that matter. A one-way door — expensive to reverse once built on — gets the deliberation, and lands with the user through `crtr human` before the document closes, with the options and what each closes off.
 
-**Interfaces & contracts** — how components talk to each other. Expressed as prose or sequence diagrams, not API specs or type declarations. "Component A sends X to Component B when Y" is the right level. Include error cases and who owns recovery.
+## Review before you finish
 
-**Data model** — the key entities, their fields with semantic types ("session ID string", "ISO timestamp"), and their relationships. Tables are the right format. No TypeScript, no SQL — shape and semantics only.
+Give a consequential design one independent review pass. Prime the reviewer to hunt absence — what exists in the system that this design ignored — with the guardrail that it names the missing thing from evidence, never fabricates one to have a finding. Have it put each element to one question: what concrete, current thing makes this necessary, and how would we detect that it is wrong? Fold the findings in once; dismiss a finding only by citing evidence, not by out-arguing it.
 
-**Key flows** — the end-to-end flows that matter most. Walk from trigger to final state, naming which component handles each step and what state changes. This is where seam problems surface; a step whose output doesn't match the next step's expected input is a design gap.
+## Finish and report
 
-**Decisions** — every non-obvious architectural choice, structured as: decision → choice made → alternatives rejected → rationale. If the decision is obvious, omit it. If it closes a real option, it belongs here. This section is what distinguishes a design from a description.
-
-**Open risks** — unresolved questions and known unknowns that a reviewer or the implementer will need to address. Not a wish list — only things that could affect the design's validity.
-
-## Design styles — when to use each
-
-**Top-down, interface-first**: fix the contracts between components first, then fill in what sits behind each contract. Use this when the integration surface is the hard problem — when multiple teams or systems must connect, when the seams will be expensive to change, or when you are designing an API or protocol. The contract is the design; the implementation fills in around it.
-
-**Bottom-up, primitives-first**: identify and nail the core data structures or algorithms that the design depends on, then build the component model up from them. Use this when the primitives are the hard part — a novel data model, a performance-critical kernel, a constraint that flows upward and determines everything else.
-
-For a design large enough to split across nodes, read [[dev/design/roadmap]]. A bounded design node delivers the design path plus one sentence per decision, naming what was chosen and what it closed off. Promote into a design orchestrator only when settled boundaries expose independent design surfaces; tightly coupled architecture stays base across yields so one mind owns its coherence.
+End by reporting the artifact's absolute path, then one sentence per decision — what was chosen and what it closed off — then any real concern and your recommendation, omitted entirely when none exists. Promote into a design orchestrator only when the artifact itself splits into parts with written contracts between them ([[dev/design/roadmap]]); tightly coupled architecture stays base across yields so one mind owns its coherence.

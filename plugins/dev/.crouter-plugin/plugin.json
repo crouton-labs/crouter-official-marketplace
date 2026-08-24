@@ -6,26 +6,6 @@
     "grove": "Install Grove, then run `grove setup` in the source repository."
   },
   "kinds": {
-    "plan/reviewers/requirements-coverage": {
-      "whenToUse": "every requirement and design constraint maps to a concrete plan task, classified Covered/Partial/Missing; flags only blocking gaps",
-      "model": "medium"
-    },
-    "plan/reviewers/pattern-consistency": {
-      "whenToUse": "the plan honors the codebase's real conventions; reads actual source and cites the pattern each finding deviates from; owns contract-level conflicts between parts",
-      "model": "medium"
-    },
-    "plan/reviewers/code-smells": {
-      "whenToUse": "nullability mismatches, type conflicts across parts, hidden N+1s, over-fetching, missing error boundaries, leaky abstractions; owns file-level conflicts between parts",
-      "model": "medium"
-    },
-    "plan/reviewers/security": {
-      "whenToUse": "input validation, injection surfaces, auth/authz gaps, data exposure, races; reports only validated concrete exploit paths and asks the user about material unknown threat-model assumptions",
-      "model": "medium"
-    },
-    "plan/reviewers/architecture-fit": {
-      "whenToUse": "proposed files/modules/abstractions fit the system's existing decomposition; flags new units that duplicate existing ones or cross layer boundaries",
-      "model": "medium"
-    },
     "spec/requirements": {
       "whenToUse": "Derive testable EARS requirements from a finished, approved design — in isolation, from the rendered design text alone.",
       "model": "medium"
