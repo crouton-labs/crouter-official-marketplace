@@ -70,6 +70,8 @@ export type Leaf = {
     render: (value: JsonObject, input: Readonly<Record<string, InputValue>>) => RenderedResult;
   };
   stream?: boolean;
+  /** Keep this command in the repository CLI; omit it from the generated crtr fragment. */
+  crtrLocal?: boolean;
   run: (input: Readonly<Record<string, InputValue>>, context: RunContext) => JsonObject | CommandResult | Promise<JsonObject | CommandResult> | AsyncIterable<JsonObject>;
 };
 
@@ -79,6 +81,8 @@ export type Branch = {
   whenToUse: string;
   model?: string;
   state?: () => StateBlock | Promise<StateBlock>;
+  /** Keep this command and its descendants in the repository CLI only. */
+  crtrLocal?: boolean;
   children: Command[];
 };
 
@@ -131,14 +135,14 @@ export function generateCrtrFragment(definition: CliDefinition, executable: stri
     throw new Error("The crtr fragment executable must be a repository-relative path.");
   }
   if (definition.commands.length === 0) throw new Error(`${definition.name}: a crtr fragment needs at least one command.`);
-  return {
-    schemaVersion: 1,
-    transport: { kind: "exec", executable },
-    mounts: definition.commands.map((command) => {
-      if (!("children" in command)) throw new Error(`${definition.name} ${command.name}: a command contributed directly below crtr dev must be a branch.`);
-      return { parent: [], node: fragmentNode(command, [definition.name, command.name]) };
-    }),
-  };
+  const mounts = definition.commands.flatMap((command) => {
+    if (command.crtrLocal) return [];
+    if (!("children" in command)) throw new Error(`${definition.name} ${command.name}: a command contributed directly below crtr dev must be a branch.`);
+    const node = fragmentNode(command, [definition.name, command.name]);
+    return node ? [{ parent: [], node }] : [];
+  });
+  if (mounts.length === 0) throw new Error(`${definition.name}: a crtr fragment needs at least one contributed command.`);
+  return { schemaVersion: 1, transport: { kind: "exec", executable }, mounts };
 }
 
 async function executeCrtrProtocol(definition: CliDefinition): Promise<{ protocolVersion: 1; ok: true; result: JsonObject } | { protocolVersion: 1; ok: false; error: { code: string; message: string; field?: string; received?: string; next: string } }> {
@@ -150,7 +154,14 @@ async function executeCrtrProtocol(definition: CliDefinition): Promise<{ protoco
       throw new CommandError({ code: "invalid_request", message: "The crtr command request did not match the expected protocol.", received: "invalid request", expected: "a command path and object input", next: "Regenerate the fragment and retry through crtr." });
     }
     const leaf = resolveProtocolLeaf(definition, request.command);
-    const completed = await leaf.run(request.input, { argv: [], stdin: undefined, json: true });
+    const parsed = validateInput(leaf, { ...request.input });
+    if (parsed.error) {
+      const violation = parsed.error.violations[0];
+      throw new CommandError({ code: "invalid_input", message: "Command input did not satisfy its declared constraints.", field: violation.field, received: violation.received, expected: violation.expected, next: "Correct the reported input value and retry." });
+    }
+    const stdinParameter = leaf.params?.find((parameter) => parameter.kind === "stdin");
+    const stdin = stdinParameter && typeof parsed.input[stdinParameter.name] === "string" ? parsed.input[stdinParameter.name] : undefined;
+    const completed = await leaf.run(parsed.input, { argv: [], stdin, json: true });
     if (isAsyncIterable(completed)) throw new Error("A contributed crtr leaf cannot stream.");
     const result = isCommandResult(completed) ? completed.value : completed;
     if (isCommandResult(completed) && completed.exitCode !== 0) {
@@ -186,8 +197,14 @@ function protocolErrorCode(code: string): string {
   return /^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$/.test(code) && !["internal", "unknown_path", "command_collision", "plugin_protocol_error"].includes(code) ? code : "command_failed";
 }
 
-function fragmentNode(command: Command, path: string[]): JsonObject {
+function fragmentNode(command: Command, path: string[]): JsonObject | undefined {
+  if (command.crtrLocal) return undefined;
   if ("children" in command) {
+    const children = command.children.flatMap((child) => {
+      const node = fragmentNode(child, [...path, child.name]);
+      return node ? [node] : [];
+    });
+    if (children.length === 0) return undefined;
     return {
       kind: "branch",
       name: command.name,
@@ -195,10 +212,10 @@ function fragmentNode(command: Command, path: string[]): JsonObject {
       whenToUse: command.whenToUse,
       summary: fragmentSummary(command.description),
       ...(command.model ? { model: command.model } : {}),
-      children: command.children.map((child) => fragmentNode(child, [...path, child.name])),
+      children,
     };
   }
-  if (command.stream) throw new Error(`${path.join(" ")}: streaming leaves cannot contribute to crtr dev.`);
+  if (command.stream) throw new Error(`${path.join(" ")}: streaming leaves cannot contribute to crtr dev; mark this leaf crtrLocal: true because streaming cannot cross the one-shot exec protocol.`);
   if (command.effects.length === 0) throw new Error(`${path.join(" ")}: contributed leaves need a non-empty effects array.`);
   return {
     kind: "leaf",
@@ -217,17 +234,13 @@ function fragmentSummary(description: string): string {
   return description.replace(/[.!?]+$/, "");
 }
 
+function fragmentConstraint(parameter: Parameter): string {
+  return [parameter.description, parameter.min !== undefined ? `Must be >= ${parameter.min}.` : undefined, parameter.max !== undefined ? `Must be <= ${parameter.max}.` : undefined, parameter.pattern ? `Must match ${parameter.pattern}.` : undefined].filter(Boolean).join(" ");
+}
+
 function fragmentParameter(parameter: Parameter, path: string[]): JsonObject {
   const label = `${path.join(" ")} ${parameter.kind} ${parameter.name}`;
-  const unsupported = [
-    parameter.min !== undefined && "min",
-    parameter.max !== undefined && "max",
-    parameter.pattern !== undefined && "pattern",
-    parameter.validate !== undefined && "validate",
-    parameter.focused !== undefined && "focused help",
-  ].filter(Boolean);
-  if (unsupported.length > 0) throw new Error(`${label}: ${unsupported.join(", ")} cannot be represented in a native crtr fragment.`);
-  const base = { kind: parameter.kind, name: parameter.name, required: parameter.required ?? false, constraint: parameter.description };
+  const base = { kind: parameter.kind, name: parameter.name, required: parameter.required ?? false, constraint: fragmentConstraint(parameter) };
   if (parameter.kind === "stdin") return base;
   if (parameter.kind === "positional") {
     if (parameter.type !== "string" && parameter.type !== "path") throw new Error(`${label}: crtr positionals must be string or path.`);
@@ -370,28 +383,28 @@ async function parseInput(leaf: Leaf, path: string[], args: string[]): Promise<{
     if (!parameter.repeatable) positionalIndex += 1;
   }
 
-  for (const parameter of parameters) {
-    if (parameter.kind === "stdin") continue;
-    if (input[parameter.name] === undefined && parameter.default !== undefined) input[parameter.name] = parameter.default;
-    if (parameter.type === "boolean" && input[parameter.name] === undefined && !parameter.required) input[parameter.name] = false;
-    if (parameter.required && input[parameter.name] === undefined) violations.push({ field: parameterDisplay(parameter), received: "omitted", expected: "a required value", schema: true });
-  }
-
   const stdinParameter = parameters.find((parameter) => parameter.kind === "stdin");
   const stdin = stdinParameter ? await readStdin() : undefined;
-  if (stdinParameter) {
-    input[stdinParameter.name] = stdin;
-    if (stdinParameter.required && !stdin) violations.push({ field: "stdin", received: "empty stdin", expected: "required piped content", schema: true });
-  }
-
-  for (const parameter of parameters) {
-    const value = input[parameter.name];
-    if (value === undefined) continue;
-    validateValue(parameter, value, input, violations);
-  }
+  if (stdinParameter) input[stdinParameter.name] = stdin;
+  const validated = validateInput(leaf, input);
+  violations.push(...(validated.error?.violations ?? []));
 
   if (violations.length > 0) return { input, stdin, error: { violations } };
   return { input, stdin };
+}
+
+function validateInput(leaf: Leaf, input: Record<string, InputValue>): { input: Record<string, InputValue>; error?: { violations: Violation[] } } {
+  const violations: Violation[] = [];
+  for (const parameter of leaf.params ?? []) {
+    if (parameter.kind !== "stdin" && input[parameter.name] === undefined && parameter.default !== undefined) input[parameter.name] = parameter.default;
+    if (parameter.kind !== "stdin" && parameter.type === "boolean" && input[parameter.name] === undefined && !parameter.required) input[parameter.name] = false;
+    if (parameter.required && (parameter.kind === "stdin" ? !input[parameter.name] : input[parameter.name] === undefined)) violations.push({ field: parameterDisplay(parameter), received: parameter.kind === "stdin" ? "empty stdin" : "omitted", expected: parameter.kind === "stdin" ? "required piped content" : "a required value", schema: true });
+  }
+  for (const parameter of leaf.params ?? []) {
+    const value = input[parameter.name];
+    if (value !== undefined) validateValue(parameter, value, input, violations);
+  }
+  return violations.length > 0 ? { input, error: { violations } } : { input };
 }
 
 function addValue(input: Record<string, InputValue>, parameter: Parameter, rawValue: string, violations: Violation[]): void {
