@@ -157,10 +157,11 @@ async function executeCrtrProtocol(definition: CliDefinition): Promise<{ protoco
     const parsed = validateInput(leaf, { ...request.input });
     if (parsed.error) {
       const violation = parsed.error.violations[0];
-      throw new CommandError({ code: "invalid_input", message: "Command input did not satisfy its declared constraints.", field: violation.field, received: violation.received, expected: violation.expected, next: "Correct the reported input value and retry." });
+      throw new CommandError({ code: "invalid_input", message: `Command input did not satisfy its declared constraints: ${violation.field} expects ${violation.expected}.`, field: violation.field, received: violation.received, expected: violation.expected, next: "Correct the reported input value and retry." });
     }
     const stdinParameter = leaf.params?.find((parameter) => parameter.kind === "stdin");
-    const stdin = stdinParameter && typeof parsed.input[stdinParameter.name] === "string" ? parsed.input[stdinParameter.name] : undefined;
+    const stdinValue = stdinParameter ? parsed.input[stdinParameter.name] : undefined;
+    const stdin = typeof stdinValue === "string" ? stdinValue : undefined;
     const completed = await leaf.run(parsed.input, { argv: [], stdin, json: true });
     if (isAsyncIterable(completed)) throw new Error("A contributed crtr leaf cannot stream.");
     const result = isCommandResult(completed) ? completed.value : completed;
@@ -181,7 +182,7 @@ function resolveProtocolLeaf(definition: CliDefinition, command: unknown[]): Lea
   let node: Command = { name: definition.name, description: definition.description, whenToUse: "", children: definition.commands };
   for (const token of command.slice(1)) {
     if (!("children" in node)) throw new CommandError({ code: "invalid_request", message: "The crtr command request named tokens after a leaf.", received: command.join(" "), expected: "a declared leaf path", next: "Regenerate the fragment and retry through crtr." });
-    const child = node.children.find((candidate) => candidate.name === token);
+    const child: Command | undefined = node.children.find((candidate) => candidate.name === token);
     if (!child) throw new CommandError({ code: "invalid_request", message: "The crtr command request did not name a declared leaf.", received: command.join(" "), expected: "a declared leaf path", next: "Regenerate the fragment and retry through crtr." });
     node = child;
   }
@@ -437,9 +438,26 @@ function parseValue(parameter: Parameter, rawValue: string): { value?: JsonValue
   return { value: rawValue };
 }
 
+function valueShapeError(parameter: Parameter, item: InputValue): string | undefined {
+  if (parameter.type === "integer") return typeof item === "number" && Number.isSafeInteger(item) ? undefined : "a safe integer";
+  if (parameter.type === "boolean") return typeof item === "boolean" ? undefined : "a boolean";
+  if (parameter.type === "enum") return typeof item === "string" && parameter.values?.includes(item) ? undefined : `one of: ${parameter.values?.join(", ") ?? "the declared values"}`;
+  if (parameter.type === "json") return undefined;
+  return typeof item === "string" ? undefined : "a string";
+}
+
 function validateValue(parameter: Parameter, value: InputValue, input: Readonly<Record<string, InputValue>>, violations: Violation[]): void {
+  if (!parameter.repeatable && Array.isArray(value)) {
+    violations.push({ field: parameterDisplay(parameter), received: formatValue(value), expected: "a single value, not an array", schema: true });
+    return;
+  }
   const values = parameter.repeatable && Array.isArray(value) ? value : [value];
   for (const item of values) {
+    const shape = valueShapeError(parameter, item);
+    if (shape !== undefined) {
+      violations.push({ field: parameterDisplay(parameter), received: formatValue(item), expected: shape, schema: false });
+      continue;
+    }
     if (typeof item === "number") {
       if (parameter.min !== undefined && item < parameter.min) violations.push({ field: parameterDisplay(parameter), received: String(item), expected: `an integer at least ${parameter.min}`, schema: false });
       if (parameter.max !== undefined && item > parameter.max) violations.push({ field: parameterDisplay(parameter), received: String(item), expected: `an integer at most ${parameter.max}`, schema: false });
