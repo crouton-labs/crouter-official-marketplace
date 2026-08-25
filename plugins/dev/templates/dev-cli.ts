@@ -110,11 +110,141 @@ export class CommandError extends Error {
 export function defineCli(definition: CliDefinition) {
   return {
     async run(argv = process.argv.slice(2)): Promise<void> {
+      if (argv.length === 2 && argv[0] === "--crtr-command-protocol" && argv[1] === "1") {
+        const response = await executeCrtrProtocol(definition);
+        process.exitCode = response.ok ? 0 : 1;
+        process.stdout.write(`${JSON.stringify(response)}\n`);
+        return;
+      }
       const result = await execute(definition, argv, (record) => process.stdout.write(record));
       process.exitCode = result.exitCode;
       if (result.diagnostic) process.stderr.write(`${result.diagnostic}\n`);
       if (result.output) process.stdout.write(`${result.output}\n`);
     },
+  };
+}
+
+/** Build the repository-owned fragment that contributes this tree below `crtr dev`. */
+export function generateCrtrFragment(definition: CliDefinition, executable: string): JsonObject {
+  assertTree(definition.name, definition.commands);
+  if (!executable || executable.startsWith("/") || executable.split("/").includes("..")) {
+    throw new Error("The crtr fragment executable must be a repository-relative path.");
+  }
+  if (definition.commands.length === 0) throw new Error(`${definition.name}: a crtr fragment needs at least one command.`);
+  return {
+    schemaVersion: 1,
+    transport: { kind: "exec", executable },
+    mounts: definition.commands.map((command) => {
+      if (!("children" in command)) throw new Error(`${definition.name} ${command.name}: a command contributed directly below crtr dev must be a branch.`);
+      return { parent: [], node: fragmentNode(command, [definition.name, command.name]) };
+    }),
+  };
+}
+
+async function executeCrtrProtocol(definition: CliDefinition): Promise<{ protocolVersion: 1; ok: true; result: JsonObject } | { protocolVersion: 1; ok: false; error: { code: string; message: string; field?: string; received?: string; next: string } }> {
+  try {
+    assertTree(definition.name, definition.commands);
+    const raw = await readStdin();
+    const request = raw ? JSON.parse(raw) : undefined;
+    if (!isJsonObject(request) || !Array.isArray(request.command) || !request.command.every((part) => typeof part === "string") || !isJsonObject(request.input)) {
+      throw new CommandError({ code: "invalid_request", message: "The crtr command request did not match the expected protocol.", received: "invalid request", expected: "a command path and object input", next: "Regenerate the fragment and retry through crtr." });
+    }
+    const leaf = resolveProtocolLeaf(definition, request.command);
+    const completed = await leaf.run(request.input, { argv: [], stdin: undefined, json: true });
+    if (isAsyncIterable(completed)) throw new Error("A contributed crtr leaf cannot stream.");
+    const result = isCommandResult(completed) ? completed.value : completed;
+    if (isCommandResult(completed) && completed.exitCode !== 0) {
+      return { protocolVersion: 1, ok: false, error: { code: "command_failed", message: `${request.command.join(" ")} exited ${completed.exitCode}.`, next: "Inspect the repository command result and retry." } };
+    }
+    return { protocolVersion: 1, ok: true, result };
+  } catch (error) {
+    if (error instanceof CommandError) {
+      return { protocolVersion: 1, ok: false, error: { code: protocolErrorCode(error.code), message: error.message, field: error.field, received: error.received, next: error.next } };
+    }
+    return { protocolVersion: 1, ok: false, error: { code: "command_failed", message: error instanceof Error ? error.message : "The repository command could not complete.", next: "Inspect the repository command implementation and retry." } };
+  }
+}
+
+function resolveProtocolLeaf(definition: CliDefinition, command: unknown[]): Leaf {
+  if (command[0] !== definition.name) throw new CommandError({ code: "invalid_request", message: "The crtr command request named a different CLI.", received: String(command[0]), expected: definition.name, next: "Regenerate the fragment and retry through crtr." });
+  let node: Command = { name: definition.name, description: definition.description, whenToUse: "", children: definition.commands };
+  for (const token of command.slice(1)) {
+    if (!("children" in node)) throw new CommandError({ code: "invalid_request", message: "The crtr command request named tokens after a leaf.", received: command.join(" "), expected: "a declared leaf path", next: "Regenerate the fragment and retry through crtr." });
+    const child = node.children.find((candidate) => candidate.name === token);
+    if (!child) throw new CommandError({ code: "invalid_request", message: "The crtr command request did not name a declared leaf.", received: command.join(" "), expected: "a declared leaf path", next: "Regenerate the fragment and retry through crtr." });
+    node = child;
+  }
+  if ("children" in node) throw new CommandError({ code: "invalid_request", message: "The crtr command request did not name a leaf.", received: command.join(" "), expected: "a declared leaf path", next: "Regenerate the fragment and retry through crtr." });
+  return node;
+}
+
+function isJsonObject(value: unknown): value is JsonObject {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function protocolErrorCode(code: string): string {
+  return /^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$/.test(code) && !["internal", "unknown_path", "command_collision", "plugin_protocol_error"].includes(code) ? code : "command_failed";
+}
+
+function fragmentNode(command: Command, path: string[]): JsonObject {
+  if ("children" in command) {
+    return {
+      kind: "branch",
+      name: command.name,
+      description: command.description,
+      whenToUse: command.whenToUse,
+      summary: fragmentSummary(command.description),
+      ...(command.model ? { model: command.model } : {}),
+      children: command.children.map((child) => fragmentNode(child, [...path, child.name])),
+    };
+  }
+  if (command.stream) throw new Error(`${path.join(" ")}: streaming leaves cannot contribute to crtr dev.`);
+  if (command.effects.length === 0) throw new Error(`${path.join(" ")}: contributed leaves need a non-empty effects array.`);
+  return {
+    kind: "leaf",
+    name: command.name,
+    description: command.description,
+    whenToUse: command.whenToUse,
+    summary: fragmentSummary(command.description),
+    params: (command.params ?? []).map((parameter) => fragmentParameter(parameter, path)),
+    output: command.output.map((field) => ({ name: field.name, type: field.type, required: true, constraint: field.description })),
+    outputKind: "object",
+    effects: command.effects,
+  };
+}
+
+function fragmentSummary(description: string): string {
+  return description.replace(/[.!?]+$/, "");
+}
+
+function fragmentParameter(parameter: Parameter, path: string[]): JsonObject {
+  const label = `${path.join(" ")} ${parameter.kind} ${parameter.name}`;
+  const unsupported = [
+    parameter.min !== undefined && "min",
+    parameter.max !== undefined && "max",
+    parameter.pattern !== undefined && "pattern",
+    parameter.validate !== undefined && "validate",
+    parameter.focused !== undefined && "focused help",
+  ].filter(Boolean);
+  if (unsupported.length > 0) throw new Error(`${label}: ${unsupported.join(", ")} cannot be represented in a native crtr fragment.`);
+  const base = { kind: parameter.kind, name: parameter.name, required: parameter.required ?? false, constraint: parameter.description };
+  if (parameter.kind === "stdin") return base;
+  if (parameter.kind === "positional") {
+    if (parameter.type !== "string" && parameter.type !== "path") throw new Error(`${label}: crtr positionals must be string or path.`);
+    return { ...base, type: parameter.type, ...(parameter.repeatable ? { repeatable: true } : {}) };
+  }
+  const type = parameter.type === "integer" ? "int" : parameter.type === "boolean" ? "bool" : parameter.type;
+  if (!['string', 'int', 'bool', 'path', 'enum'].includes(type)) throw new Error(`${label}: crtr flags must be string, integer, boolean, path, or enum.`);
+  if (parameter.repeatable && (type === "bool" || type === "path")) throw new Error(`${label}: crtr repeatable flags must be string, integer, or enum.`);
+  if (parameter.repeatable && parameter.default !== undefined) throw new Error(`${label}: crtr repeatable flags cannot declare a default.`);
+  if (parameter.default === null) throw new Error(`${label}: crtr flag defaults cannot be null.`);
+  if (type === "enum" && (!parameter.values?.length || !parameter.values.every((value) => typeof value === "string"))) throw new Error(`${label}: crtr enum flags need non-empty string values.`);
+  return {
+    ...base,
+    type,
+    ...(type === "enum" ? { choices: [...parameter.values!] } : {}),
+    ...(parameter.default !== undefined ? { default: parameter.default } : {}),
+    ...(parameter.repeatable ? { repeatable: true } : {}),
   };
 }
 

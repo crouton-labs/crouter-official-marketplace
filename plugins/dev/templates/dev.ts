@@ -1,10 +1,12 @@
+#!/usr/bin/env node
 // Copy this file and dev-cli.ts into the repository that owns the development lifecycle.
 // Run with Node >=26: node .grove/dev.ts service -h
+// Generate its native crtr surface: mkdir -p .crouter/commands && node .grove/dev.ts --emit-crtr-fragment > .crouter/commands/dev.json
 // Replace the seed command tree below with the repository's real lifecycle contract.
 
-import { defineCli, withExitCode } from "./dev-cli.ts";
+import { defineCli, generateCrtrFragment, withExitCode } from "./dev-cli.ts";
 
-const cli = defineCli({
+const definition = {
   name: "dev",
   description: "repository development lifecycle.",
   commands: [
@@ -60,13 +62,7 @@ const cli = defineCli({
               name: "tail",
               type: "integer",
               description: "Maximum number of recent records to return. Omit to use the repository default.",
-              min: 1,
               default: 40,
-              focused: {
-                whenToUse: "Use when a bounded recent window is more useful than the default window of 40 records. Omit for ordinary diagnosis.",
-                value: "A positive integer. Default: 40. The repository adds a hard cap when it implements its log source.",
-                effects: ["None. This parameter only bounds the returned records."],
-              },
             },
           ],
           output: [
@@ -86,6 +82,12 @@ const cli = defineCli({
       ],
     },
   ],
-});
+};
 
-cli.run();
+const cli = defineCli(definition);
+
+if (process.argv.length === 3 && process.argv[2] === "--emit-crtr-fragment") {
+  process.stdout.write(`${JSON.stringify(generateCrtrFragment(definition, ".grove/dev.ts"), null, 2)}\n`);
+} else {
+  cli.run();
+}

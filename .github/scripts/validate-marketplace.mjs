@@ -250,6 +250,24 @@ if (searchManifest) {
   }
 }
 
+const devManifest = manifests.get('dev');
+if (devManifest) {
+  const devRoot = path.join(pluginsDir, 'dev');
+  if (devManifest.transport?.kind !== 'exec') fail('dev: transport.kind must be exec');
+  if (devManifest.commands !== '.crouter-plugin/commands.json') {
+    fail('dev: commands must reference .crouter-plugin/commands.json');
+  }
+  const { buildDevCommandManifest } = await import(pathToFileURL(path.join(devRoot, 'lib', 'commands.mjs')));
+  const expected = `${JSON.stringify(buildDevCommandManifest(), null, 2)}\n`;
+  const commandsPath = path.join(devRoot, '.crouter-plugin', 'commands.json');
+  const actual = fs.existsSync(commandsPath) ? fs.readFileSync(commandsPath, 'utf8') : null;
+  if (actual === null) {
+    fail('dev: .crouter-plugin/commands.json is missing');
+  } else if (actual !== expected) {
+    fail('dev: commands.json is stale — run node plugins/dev/scripts/generate-commands.mjs');
+  }
+}
+
 if (errors.length) {
   console.error(`Marketplace source validation failed:\n- ${errors.join('\n- ')}`);
   process.exit(1);
