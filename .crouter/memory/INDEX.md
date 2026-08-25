@@ -10,15 +10,13 @@ surfaces:
   - on: read
     match: ./**
     at: content
-last-updated: 2026-08-25T17:10:46.414Z
+last-updated: 2026-08-25T17:32:32.949Z
 origin:
   created: 2026-08-01T19:00:18.879Z
   cwd: /Users/silasrhyneer/Code/cli/crouter-official-marketplace
   node: 3zl47w7d-msaqk1jk-70831037
 namespace: crouter-official-marketplace
 ---
-
-
 
 # crouter-official-marketplace
 
@@ -38,7 +36,7 @@ The official marketplace for optional crtr plugins. Every plugin here must be re
 - Provider kits: `cloudflare`, `vercel`, `railway`, `fly`.
 - Browser automation: `capture`.
 - Web search: `search`.
-- Development workflow and practice: `dev` — owns the `/dev:spec`, `/dev:design`, and `/dev:plan` front doors and their shared spec, design, plan, and orchestrator-roadmap guidance; developer base/orchestrator overlays and development playbook; testing guidance; plan-reviewer and spec-requirements sub-personas; the `code-craft` preferences; `dev/verify-runtime`; `dev/pr-description`; `/dev:init`; `/dev:create-workflow`; the bare `dev` dispatcher (routes `dev grove …` to the grove binary, `dev <name>` to an executable `.dev/<name>` in the caller's nearest committed `.dev/` directory with cwd at that repo root, and everything else to `grove dev`), plus the `crtr dev` passthrough mount over exec transport; and `templates/dev.sh`, the stack-agnostic lifecycle CLI starting point `/dev:init` copies into a repository. It owns no lifecycle behavior: Grove resolves the caller's registered source or instance and the repository's own CLI performs the work.
+- Development workflow and practice: `dev` — owns the `/dev:spec`, `/dev:design`, and `/dev:plan` front doors and their shared spec, design, plan, and orchestrator-roadmap guidance; developer base/orchestrator overlays and development playbook; testing guidance; plan-reviewer and spec-requirements sub-personas; the `code-craft` preferences; `dev/verify-runtime`; `dev/pr-description`; `/dev:init`; `/dev:create-workflow`; the bare `dev` dispatcher (routes `dev grove …` to the grove binary, `dev <name>` to an executable `.dev/<name>` in the caller's nearest committed `.dev/` directory with cwd at that repo root, and everything else to `grove dev`), plus the `crtr dev` passthrough mount over exec transport; and `templates/dev.ts` plus `templates/dev-cli.ts`, the zero-dependency TypeScript declared-tree lifecycle CLI `/dev:init` copies into a repository. It owns no lifecycle behavior: Grove resolves the caller's registered source or instance and the repository's own CLI performs the work.
 
 ## Command-contributing plugins
 

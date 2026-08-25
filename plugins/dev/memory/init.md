@@ -43,7 +43,7 @@ Exclude generic framework advice, copied documentation, volatile version detail,
 Read the repository contract from `grove setup -h`; do not reproduce its schema here. Create or update only the artifacts this repository needs:
 
 - **`.grove/config.json`** declares Grove concerns such as repositories, ports, lifecycle executables, setup, secrets, and state. It contains no process supervision or health policy.
-- **The configured development executable** is the sole deterministic lifecycle CLI for one source or instance. Locate the dev plugin's shipped `templates/dev.sh` through the plugin inspection help, adapt it to the repository's real services, and keep its live `-h` truthful. Preserve the stable start, stop, restart, status, logs, logpath, and doctor meanings when they apply.
+- **The configured development executable** is the sole deterministic lifecycle CLI for one source or instance. Locate the dev plugin's shipped `templates/dev.ts` and `templates/dev-cli.ts` through the plugin inspection help, copy them together, declare the repository's real command tree and handlers, and keep its framework-rendered `-h` truthful. Preserve the stable start, stop, restart, status, logs, logpath, and doctor meanings when they apply.
 - **Setup, teardown, state, and secret scripts** exist only when the project needs those protocols. They are executable, repository-owned, and contain no competing lifecycle path.
 
 Honor Grove's resolved context and ports so simultaneous instances remain isolated. Update a valid existing contract surgically; never replace it with a generic template.
