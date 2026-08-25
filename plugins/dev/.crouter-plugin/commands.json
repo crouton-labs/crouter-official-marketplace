@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "mounts": [
+    {
+      "parent": [],
+      "node": {
+        "kind": "branch",
+        "name": "dev",
+        "description": "transparent alias for the bare `dev` development front door",
+        "whenToUse": "you need the current repository's own development surface — service lifecycle, a repo-defined branch such as prod or tunnel, or grove instance management via `crtr dev grove …`.",
+        "passthrough": {
+          "bin": "dev",
+          "installHint": "The `dev` binary ships with this plugin: crtr pkg plugin update --name dev"
+        },
+        "rootEntry": {
+          "concept": "the current repository's own development CLI — lifecycle, repo-defined surfaces, grove instances",
+          "description": "forwards verbatim to the bare `dev` dispatcher",
+          "whenToUse": "you are working inside a registered repository and need its dev services or its repo-defined operational surfaces. `crtr dev -h` renders that repository's own verbs."
+        },
+        "summary": "transparent alias for the bare `dev` dispatcher — every argument forwards verbatim",
+        "model": "This branch owns no schema of its own: it execs `dev` with whatever args follow, inherits stdio, and propagates its exit code. The dispatcher routes `grove …` to the grove binary, a branch name matching an executable in the nearest committed `.dev/` directory to that executable (cwd at the repo root), and everything else to `grove dev` — the repository's registered lifecycle command.",
+        "children": []
+      }
+    }
+  ]
+}

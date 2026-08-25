@@ -1,8 +1,62 @@
 #!/bin/sh
+# dev — front door for a repository's own development surface.
+#
+# Dispatch, in order:
+#   1. `dev grove …`      → the grove binary (instance management: plant,
+#                           list, snapshot, restore, …).
+#   2. `dev <branch> …`   → the executable `.dev/<branch>` in the nearest
+#                           committed .dev/ directory walking up from cwd,
+#                           run with cwd at the repository root that owns it.
+#                           .dev/ is the repo's manifest of extra dev
+#                           surfaces (prod, tunnel, …): one executable per
+#                           branch, ordinary argv, ordinary stdio.
+#   3. anything else      → `grove dev "$@"` — the repository's registered
+#                           lifecycle command, with grove's slot/port env.
+set -u
 
-if ! command -v grove >/dev/null 2>&1; then
+no_grove() {
   printf '%s\n' 'dev: grove is not available; install Grove, then run `grove setup` in the source repository.' >&2
   exit 127
+}
+
+if [ "${1:-}" = "grove" ]; then
+  shift
+  command -v grove >/dev/null 2>&1 || no_grove
+  exec grove "$@"
 fi
 
+# Nearest committed .dev/ manifest at or above cwd.
+root=$PWD
+devdir=
+while :; do
+  if [ -d "$root/.dev" ]; then devdir="$root/.dev"; break; fi
+  [ "$root" = "/" ] && break
+  root=$(dirname "$root")
+done
+
+case "${1:-}" in
+  -h|--help)
+    # Preamble the repo-defined branches, then fall through to the
+    # repository's own lifecycle help.
+    if [ -n "$devdir" ]; then
+      branches=$(cd "$devdir" && for f in *; do [ -x "$f" ] && printf '%s ' "$f"; done)
+      if [ -n "$branches" ]; then
+        printf 'Repo-defined branches (dev <branch> …, from %s): %s\n' "$devdir" "$branches"
+        printf 'Also: dev grove … forwards to the grove binary.\n\n'
+      fi
+    fi
+    ;;
+  ""|-*|*/*|.*) ;;
+  *)
+    # A branch is a plain name with a matching executable in .dev/.
+    if [ -n "$devdir" ] && [ -x "$devdir/$1" ]; then
+      branch=$1
+      shift
+      cd "$root" || exit 1
+      exec "$devdir/$branch" "$@"
+    fi
+    ;;
+esac
+
+command -v grove >/dev/null 2>&1 || no_grove
 exec grove dev "$@"
