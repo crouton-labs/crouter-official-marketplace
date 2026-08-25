@@ -33,6 +33,8 @@ export type OutputField = {
   name: string;
   type: string;
   description: string;
+  /** An optional field is omitted from the result when absent — never null. */
+  optional?: boolean;
 };
 
 export type RenderedResult = {
@@ -164,10 +166,10 @@ async function executeCrtrProtocol(definition: CliDefinition): Promise<{ protoco
     const stdin = typeof stdinValue === "string" ? stdinValue : undefined;
     const completed = await leaf.run(parsed.input, { argv: [], stdin, json: true });
     if (isAsyncIterable(completed)) throw new Error("A contributed crtr leaf cannot stream.");
+    // A produced, schema-declared result is the answer even at a nonzero exit code —
+    // leaves declare their preview/error objects in `output`, and the envelope's `ok`
+    // is authoritative over exit status on the crtr side.
     const result = isCommandResult(completed) ? completed.value : completed;
-    if (isCommandResult(completed) && completed.exitCode !== 0) {
-      return { protocolVersion: 1, ok: false, error: { code: "command_failed", message: `${request.command.join(" ")} exited ${completed.exitCode}.`, next: "Inspect the repository command result and retry." } };
-    }
     return { protocolVersion: 1, ok: true, result };
   } catch (error) {
     if (error instanceof CommandError) {
@@ -225,7 +227,7 @@ function fragmentNode(command: Command, path: string[]): JsonObject | undefined 
     whenToUse: command.whenToUse,
     summary: fragmentSummary(command.description),
     params: (command.params ?? []).map((parameter) => fragmentParameter(parameter, path)),
-    output: command.output.map((field) => ({ name: field.name, type: field.type, required: true, constraint: field.description })),
+    output: command.output.map((field) => ({ name: field.name, type: field.type, required: !field.optional, constraint: field.description })),
     outputKind: "object",
     effects: command.effects,
   };
