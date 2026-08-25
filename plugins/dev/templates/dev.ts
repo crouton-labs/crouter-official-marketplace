@@ -2,7 +2,7 @@
 // Run with Node >=26: node .grove/dev.ts service -h
 // Replace the seed command tree below with the repository's real lifecycle contract.
 
-import { CommandError, defineCli } from "./dev-cli.ts";
+import { defineCli, withExitCode } from "./dev-cli.ts";
 
 const cli = defineCli({
   name: "dev",
@@ -40,14 +40,15 @@ const cli = defineCli({
             { name: "state", type: "string", description: "Whether this seed started a configured service." },
             { name: "next", type: "string", description: "The implementation location required before a start can occur." },
           ],
-          effects: ["None in this seed. Replace this handler and declare every process, file, or state change the repository will persist."],
+          effects: ["None. Read-only: this seed refuses to start services until a repository lifecycle handler replaces it."],
           result: {
             block: "service-start",
-            render: () => ({ attributes: { state: "unconfigured" }, body: "No start handler is configured. Add this repository's service lifecycle implementation before invoking `dev service start` for real work." }),
+            render: (value) => {
+              const start = value as { state: string; next: string };
+              return { attributes: { state: start.state }, body: `next: ${start.next}` };
+            },
           },
-          run: async () => {
-            throw new CommandError({ code: "unconfigured", message: "No start handler is configured.", received: "an unconfigured seed", expected: "a repository service lifecycle handler", next: "Replace this seed handler with the repository's real start implementation, then retry." });
-          },
+          run: async () => withExitCode({ state: "unconfigured", next: "Replace this seed handler with the repository's real start implementation, then retry." }, 1),
         },
         {
           name: "logs",

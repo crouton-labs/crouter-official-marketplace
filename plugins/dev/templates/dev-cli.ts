@@ -2,8 +2,9 @@
 // dev surfaces, plugin bin executables, or any standalone house-style tool.
 // Run with Node >=26: node path/to/dev.ts …
 
-type Primitive = string | number | boolean | null;
-type JsonValue = Primitive | JsonValue[] | { [key: string]: JsonValue };
+export type Primitive = string | number | boolean | null;
+export type JsonValue = Primitive | JsonValue[] | { [key: string]: JsonValue };
+export type JsonObject = { [key: string]: JsonValue };
 type InputValue = JsonValue | undefined;
 
 export type Parameter = {
@@ -39,6 +40,12 @@ export type RenderedResult = {
   body?: string;
 };
 
+export type CommandResult<T extends JsonObject = JsonObject> = { value: T; exitCode: number };
+
+export function withExitCode<T extends JsonObject>(value: T, exitCode: number): CommandResult<T> {
+  return { value, exitCode };
+}
+
 export type RunContext = {
   argv: readonly string[];
   stdin: string | undefined;
@@ -60,10 +67,10 @@ export type Leaf = {
   effects: string[];
   result: {
     block: string;
-    render: (value: unknown, input: Readonly<Record<string, InputValue>>) => RenderedResult;
+    render: (value: JsonObject, input: Readonly<Record<string, InputValue>>) => RenderedResult;
   };
   stream?: boolean;
-  run: (input: Readonly<Record<string, InputValue>>, context: RunContext) => unknown | Promise<unknown> | AsyncIterable<unknown>;
+  run: (input: Readonly<Record<string, InputValue>>, context: RunContext) => JsonObject | CommandResult | Promise<JsonObject | CommandResult> | AsyncIterable<JsonObject>;
 };
 
 export type Branch = {
@@ -103,7 +110,7 @@ export class CommandError extends Error {
 export function defineCli(definition: CliDefinition) {
   return {
     async run(argv = process.argv.slice(2)): Promise<void> {
-      const result = await execute(definition, argv);
+      const result = await execute(definition, argv, (record) => process.stdout.write(record));
       process.exitCode = result.exitCode;
       if (result.diagnostic) process.stderr.write(`${result.diagnostic}\n`);
       if (result.output) process.stdout.write(`${result.output}\n`);
@@ -114,41 +121,57 @@ export function defineCli(definition: CliDefinition) {
 type Execution = { exitCode: number; output?: string; diagnostic?: string };
 type Resolved = { node: Command; path: string[]; rest: string[] };
 type Violation = { field: string; received: string; expected: string; schema: boolean };
+type Globals = { json: boolean; args: string[]; violations: Violation[] };
 
-async function execute(definition: CliDefinition, argv: string[]): Promise<Execution> {
-  const json = argv.includes("--json");
+async function execute(definition: CliDefinition, argv: string[], emit?: (record: string) => void): Promise<Execution> {
+  const globals = parseGlobals(argv);
   try {
     assertTree(definition.name, definition.commands);
-    const resolved = resolve(definition, argv);
+    const resolved = resolve(definition, globals.args);
+    if (globals.violations.length) return failure(renderError(resolved.path, errorCode(globals.violations), globals.violations, globals.json));
     if ("children" in resolved.node) {
       if (resolved.path.length === 1 && (resolved.rest.length === 0 || (resolved.rest.length === 1 && resolved.rest[0] === "-h"))) return success(await renderRootHelp(definition));
       if (resolved.rest.length === 1 && resolved.rest[0] === "-h") return success(await renderBranchHelp(resolved.node));
-      return failure(renderError(resolved.path, "missing_subcommand", [{ field: "command", received: displayArgs(resolved.rest), expected: `a subcommand of \`${resolved.path.join(" ")}\``, schema: true }], json));
+      return failure(renderError(resolved.path, "missing_subcommand", [{ field: "command", received: displayArgs(resolved.rest), expected: `a subcommand of \`${resolved.path.join(" ")}\``, schema: true }], globals.json));
     }
 
     const leaf = resolved.node;
-    const help = resolveHelp(leaf, resolved.path, resolved.rest, json);
+    const help = resolveHelp(leaf, resolved.path, resolved.rest, globals.json);
     if (help) return help.error ? failure(await help.output) : success(await help.output);
     const parsed = await parseInput(leaf, resolved.path, resolved.rest);
-    if (parsed.error) return failure(renderError(resolved.path, errorCode(parsed.error.violations), parsed.error.violations, parsed.json));
-    const context: RunContext = { argv, stdin: parsed.stdin, json: parsed.json };
-    const returned = await leaf.run(parsed.input, context);
+    if (parsed.error) return failure(renderError(resolved.path, errorCode(parsed.error.violations), parsed.error.violations, globals.json));
+    const context: RunContext = { argv, stdin: parsed.stdin, json: globals.json };
+    const completed = await leaf.run(parsed.input, context);
+    const exitCode = isCommandResult(completed) ? completed.exitCode : 0;
+    const returned = isCommandResult(completed) ? completed.value : completed;
     if (leaf.stream) {
       if (!isAsyncIterable(returned)) throw new Error("A streaming leaf must return an AsyncIterable.");
       const records: string[] = [];
-      const jsonRecords: unknown[] = [];
       for await (const value of returned) {
-        jsonRecords.push(value);
-        records.push(renderResult(leaf, value, parsed.input));
+        const record = globals.json ? JSON.stringify(value) : renderStreamRecord(leaf, value, parsed.input);
+        if (emit) emit(`${record}\n`);
+        else records.push(record);
       }
-      return success(parsed.json ? JSON.stringify(jsonRecords) : records.join("\n"));
+      return emit ? { exitCode } : { exitCode, output: records.join("\n") };
     }
     if (isAsyncIterable(returned)) throw new Error("A non-streaming leaf returned an AsyncIterable.");
-    return success(parsed.json ? JSON.stringify(returned) : renderResult(leaf, returned, parsed.input));
+    return { exitCode, output: globals.json ? JSON.stringify(returned) : renderResult(leaf, returned, parsed.input) };
   } catch (error) {
-    if (error instanceof CommandError) return failure(renderError([], error.code, [{ field: error.field, received: error.received, expected: error.expected, schema: false }], json, error.next, error.message));
-    return { exitCode: 1, output: renderError([], "internal", [{ field: "command", received: "command execution", expected: "a successful handler", schema: false }], json, "Inspect the repository CLI implementation and retry.", "The command could not complete.") };
+    if (error instanceof CommandError) return failure(renderError([], error.code, [{ field: error.field, received: error.received, expected: error.expected, schema: false }], globals.json, error.next, error.message));
+    return { exitCode: 1, output: renderError([], "internal", [{ field: "command", received: "command execution", expected: "a successful handler", schema: false }], globals.json, "Inspect the repository CLI implementation and retry.", "The command could not complete.") };
   }
+}
+
+function parseGlobals(argv: string[]): Globals {
+  const args: string[] = [];
+  const violations: Violation[] = [];
+  let json = false;
+  for (const token of argv) {
+    if (token !== "--json") { args.push(token); continue; }
+    if (json) violations.push({ field: "--json", received: "--json", expected: "the global flag at most once", schema: true });
+    json = true;
+  }
+  return { json, args, violations };
 }
 
 function resolve(definition: CliDefinition, argv: string[]): Resolved {
@@ -156,7 +179,7 @@ function resolve(definition: CliDefinition, argv: string[]): Resolved {
   const path = [definition.name];
   let index = 0;
   while ("children" in node && index < argv.length && !argv[index].startsWith("-")) {
-    const child = node.children.find((candidate) => candidate.name === argv[index]);
+    const child: Command | undefined = node.children.find((candidate) => candidate.name === argv[index]);
     if (!child) break;
     node = child;
     path.push(child.name);
@@ -176,22 +199,16 @@ function resolveHelp(leaf: Leaf, path: string[], args: string[], json: boolean):
   return undefined;
 }
 
-async function parseInput(leaf: Leaf, path: string[], args: string[]): Promise<{ input: Record<string, InputValue>; stdin: string | undefined; json: boolean; error?: { violations: Violation[] } }> {
+async function parseInput(leaf: Leaf, path: string[], args: string[]): Promise<{ input: Record<string, InputValue>; stdin: string | undefined; error?: { violations: Violation[] } }> {
   const parameters = leaf.params ?? [];
   const flags = parameters.filter((parameter) => parameter.kind === "flag");
   const positional = parameters.filter((parameter) => parameter.kind === "positional");
   const input: Record<string, InputValue> = {};
   const violations: Violation[] = [];
-  let json = false;
   let positionalIndex = 0;
 
   for (let index = 0; index < args.length; index += 1) {
     const token = args[index];
-    if (token === "--json") {
-      if (json) violations.push({ field: "--json", received: "--json", expected: "the global flag at most once", schema: true });
-      json = true;
-      continue;
-    }
     if (token.startsWith("--")) {
       const [rawName, inlineValue] = token.slice(2).split(/=(.*)/s, 2);
       const parameter = flags.find((candidate) => candidate.name === rawName);
@@ -220,7 +237,7 @@ async function parseInput(leaf: Leaf, path: string[], args: string[]): Promise<{
       continue;
     }
     addValue(input, parameter, token, violations);
-    positionalIndex += 1;
+    if (!parameter.repeatable) positionalIndex += 1;
   }
 
   for (const parameter of parameters) {
@@ -243,8 +260,8 @@ async function parseInput(leaf: Leaf, path: string[], args: string[]): Promise<{
     validateValue(parameter, value, input, violations);
   }
 
-  if (violations.length > 0) return { input, stdin, json, error: { violations } };
-  return { input, stdin, json };
+  if (violations.length > 0) return { input, stdin, error: { violations } };
+  return { input, stdin };
 }
 
 function addValue(input: Record<string, InputValue>, parameter: Parameter, rawValue: string, violations: Violation[]): void {
@@ -296,8 +313,8 @@ function errorCode(violations: Violation[]): string {
 
 function renderError(path: string[], code: string, violations: Violation[], json: boolean, next?: string, message = "Command input did not satisfy its declared constraints."): string {
   const recovery = next ?? (violations.some((violation) => violation.schema) ? `Run \`${path.join(" ")} -h\` and read the schema before re-issuing.` : "Correct every listed value and retry.");
-  if (json) return JSON.stringify({ error: code, message, received: violations.map((violation) => ({ field: violation.field, value: violation.received })), expected: violations.map((violation) => ({ field: violation.field, value: violation.expected })), field: violations.map((violation) => violation.field), next: recovery });
-  return `<error code="${escapeXml(code)}">\nreceived: ${violations.map((violation) => `${escapeXml(violation.field)}=${escapeXml(violation.received)}`).join("; ")}\nviolations:\n${violations.map((violation) => `- ${escapeXml(violation.field)}: received ${escapeXml(violation.received)}; expected ${escapeXml(violation.expected)}.`).join("\n")}\nNext: ${escapeXml(recovery)}\n</error>`;
+  if (json) return JSON.stringify({ error: code, message, violations: violations.map((violation) => ({ field: violation.field, received: violation.received, expected: violation.expected })), next: recovery });
+  return `<error code="${escapeXml(code)}">\nviolations:\n${violations.map((violation) => `- ${escapeXml(violation.field)}: received ${escapeXml(violation.received)}; expected ${escapeXml(violation.expected)}.`).join("\n")}\nNext: ${escapeXml(recovery)}\n</error>`;
 }
 
 async function renderRootHelp(definition: CliDefinition): Promise<string> {
@@ -348,11 +365,21 @@ function renderParameter(parameter: Parameter, path: string[]): string {
   return `  ${pad(name, 22)} ${requirement}. ${line(parameter.description)}${defaultValue}${repeatable}${focused}`;
 }
 
-function renderResult(leaf: Leaf, value: unknown, input: Readonly<Record<string, InputValue>>): string {
+function renderResult(leaf: Leaf, value: JsonObject, input: Readonly<Record<string, InputValue>>): string {
   const rendered = leaf.result.render(value, input);
-  const attributes = Object.entries(rendered.attributes ?? {}).filter(([, attribute]) => attribute !== null && attribute !== undefined).map(([name, attribute]) => ` ${name}="${escapeXml(String(attribute))}"`).join("");
+  const attributes = renderResultAttributes(rendered);
   const body = rendered.body ? `\n${escapeXml(rendered.body)}\n` : "";
   return `<${leaf.result.block}${attributes}>${body}</${leaf.result.block}>`;
+}
+
+function renderStreamRecord(leaf: Leaf, value: JsonObject, input: Readonly<Record<string, InputValue>>): string {
+  const rendered = leaf.result.render(value, input);
+  const body = rendered.body ? escapeXml(rendered.body).replaceAll("\n", "&#10;") : "";
+  return `<${leaf.result.block}${renderResultAttributes(rendered)}>${body}</${leaf.result.block}>`;
+}
+
+function renderResultAttributes(rendered: RenderedResult): string {
+  return Object.entries(rendered.attributes ?? {}).filter(([, attribute]) => attribute !== null && attribute !== undefined).map(([name, attribute]) => ` ${name}="${escapeXml(String(attribute))}"`).join("");
 }
 
 function assertTree(name: string, commands: Command[]): void {
@@ -393,6 +420,10 @@ function typeLabel(parameter: Parameter): string {
 
 function isAsyncIterable(value: unknown): value is AsyncIterable<unknown> {
   return Boolean(value) && typeof (value as AsyncIterable<unknown>)[Symbol.asyncIterator] === "function";
+}
+
+function isCommandResult(value: unknown): value is CommandResult {
+  return value !== null && typeof value === "object" && "value" in value && "exitCode" in value;
 }
 
 function readStdin(): Promise<string | undefined> {
