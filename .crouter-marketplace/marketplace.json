@@ -1,6 +1,6 @@
 {
   "name": "crouter-official-marketplace",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "owner": {
     "name": "Silas Rhyneer",
     "email": "rhyneer.silas@gmail.com"
@@ -86,7 +86,7 @@
     {
       "name": "dev",
       "source": "./plugins/dev",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Provides development workflows, PR-writing guidance, code-craft preferences, runtime verification, and the stable bare `dev` lifecycle for Grove-backed projects.",
       "keywords": ["workflow", "development", "dev", "code-craft", "refactoring", "error-handling", "migration", "grove", "lifecycle", "runbook", "repo-setup", "verification", "comments"]
     }
