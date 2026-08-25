@@ -1,4 +1,5 @@
-// Zero-dependency command-tree framework for repository development CLIs.
+// Zero-dependency command-tree framework for agent-facing CLIs — repository
+// dev surfaces, plugin bin executables, or any standalone house-style tool.
 // Run with Node >=26: node path/to/dev.ts …
 
 type Primitive = string | number | boolean | null;

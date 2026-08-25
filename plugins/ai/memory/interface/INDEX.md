@@ -8,7 +8,8 @@ short-form: Interface design for AI systems — agent-facing (cli, tool) and hum
 
 The surfaces around an LLM: what an agent drives (agent-facing) and what an agent shows a human (human-facing). Route by task:
 
-- **"Design a CLI an agent drives"** → [[ai/interface/agent-facing/cli-design]] (subcommand tree, `-h` disclosure, prompt-shaped stdout, structured errors) + worked example [[ai/interface/agent-facing/cli-design-reference]] + annotated failure diff [[ai/interface/agent-facing/cli-design-critique]].
+- **"Design a CLI an agent drives"** → [[ai/interface/agent-facing/cli-design]] (subcommand tree, `-h` disclosure, prompt-shaped stdout, structured errors) + worked example [[ai/interface/agent-facing/cli-design-reference]] + annotated failure diff [[ai/interface/agent-facing/cli-design-critique]]. To *build* one: the `dev` plugin ships a copyable zero-dependency TypeScript framework (`templates/dev-cli.ts`) that renders this house style from a declared command tree — general to any agent-facing CLI, not only dev surfaces.
+- **"Review an existing CLI against these rules"** → [[ai/interface/agent-facing/cli-review]] (walk its `-h` tree, judge it against the corpus, return severity-rated findings).
 - **"Design a function-calling / MCP tool"** → [[ai/interface/agent-facing/tool-design]] (descriptions, schemas, granularity, errors) + patterns/citations [[ai/interface/agent-facing/tool-design-reference]].
 - **"Build or review the UI an agent shows a human"** → [[ai/interface/human-facing/agentic-ui]] (surface choice, streaming, review gates, steering; web + TUI) — read [[ai/interface/human-facing/agentic-ux]] first for the judgment layer.
 - **"Decide autonomy, trust, friction, or oversight for human–agent interaction"** → [[ai/interface/human-facing/agentic-ux]] (the first principles: articulation barrier, automation×control, trust calibration).
@@ -17,6 +18,7 @@ Docs:
 
 - **agent-facing/cli-design** — CLIs an agent drives as a shell command: tree shape, `-h` progressive disclosure, stdout-as-prompt, exit codes, structured errors, job handles, pagination.
 - **agent-facing/cli-design-critique** — a naive agent-written `-h` draft, the line-by-line human review that failed it, and the corrected version: the annotated diff between default instinct and the spec.
+- **agent-facing/cli-review** — the invocable review workflow: walk a target CLI's `-h` tree breadth-first, judge it against the three corpus docs, and return severity-rated findings that each cite the principle, quote the output, and propose the fix.
 - **agent-facing/tool-design** — structured tool-calls (function calling / MCP): description craft, parameter schemas, error recovery, granularity, tool-count limits, composition.
 - **human-facing/agentic-ui** — the pattern layer for surfacing agent work to a human: what to render and when, web and terminal (alt-screen debate, differential redraw).
 - **human-facing/agentic-ux** — the judgment layer: first principles behind human–agent interaction — delegation over conversation, verify-not-execute, friction scaled to consequence.
