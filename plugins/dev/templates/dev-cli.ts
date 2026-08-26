@@ -139,7 +139,6 @@ export function generateCrtrFragment(definition: CliDefinition, executable: stri
   if (definition.commands.length === 0) throw new Error(`${definition.name}: a crtr fragment needs at least one command.`);
   const mounts = definition.commands.flatMap((command) => {
     if (command.crtrLocal) return [];
-    if (!("children" in command)) throw new Error(`${definition.name} ${command.name}: a command contributed directly below crtr dev must be a branch.`);
     const node = fragmentNode(command, [definition.name, command.name]);
     return node ? [{ parent: [], node }] : [];
   });
