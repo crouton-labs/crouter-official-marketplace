@@ -38,7 +38,13 @@ Run `crtr memory write -h` before creating or revising memory. Keep the root IND
 
 Exclude generic framework advice, copied documentation, volatile version detail, and multi-step procedures. Reference documents take `none` visibility on both axes; the INDEX links are how they are found.
 
-## 3. Author the repository-owned Grove contract
+## 3. Kick off the architecture-memory corpus
+
+Read [[dev/arch-memories]]. Inspect the existing store for `arch/`, `patterns/`, `product/`, and `glossary`; treat partial trees and existing gotcha memories as inputs, never as reasons to skip the process.
+
+Begin the chart phase during this invocation — do not leave it as a recommendation. Use an explore orchestrator to map candidate cross-cutting topics, their dir/file evidence, product-context gaps, and overlap with every existing memory. If every candidate is answerable from 2–3 files, report that the repository does not earn a corpus and stop this lane. Otherwise produce the proposed tree, retire/absorb plan, and batched founder questions; brief the owner and wait for explicit approval before writing corpus documents. The representative round and fan-out follow [[dev/arch-memories]] after approval.
+
+## 4. Author the repository-owned Grove contract
 
 Read the repository contract from `grove setup -h`; do not reproduce its schema here. Create or update only the artifacts this repository needs:
 
@@ -48,7 +54,7 @@ Read the repository contract from `grove setup -h`; do not reproduce its schema 
 
 Honor Grove's resolved context and ports so simultaneous instances remain isolated. Update a valid existing contract surgically; never replace it with a generic template.
 
-## 4. Author the project `/dev` intent front door
+## 5. Author the project `/dev` intent front door
 
 Create or update `.crouter/memory/dev.md` as a project memory document with `slash: true`. Its routing line names the consequence of reading it rather than summarizing its contents; for this surface, the relevant consequence is that work begun in the wrong checkout or data state becomes disposable even when the implementation itself is correct.
 
@@ -62,7 +68,7 @@ When no base is named, use Grove's configured-code and baseline-state defaults. 
 
 The `/dev` document owns intent recognition, pathway selection, project-specific evidence, and diagnostic ordering. It contains no exact Grove, dev, git, or crouter invocations: the selected branch or leaf's live `-h` owns mechanics and effects. Split lengthy project-specific operations into linked reference documents rather than turning `/dev` into a manual.
 
-## 5. Reconcile and prove
+## 6. Reconcile and prove
 
 Run the native Grove setup command against the source after repository files are settled. Resolve every reported contract, registration, or health failure before continuing.
 
