@@ -21,7 +21,8 @@ Report on repositories this conversation actually touched — files read or edit
 Every repo in the profile's purview plus the current one, fetched and surveyed at read time. Repos that are clean and in sync are omitted here and from your report; a repo missing from this block needs no words.
 
 ```!
-roots=$( { crtr profile show "$CRTR_PROFILE_ID" 2>/dev/null | sed -n 's/^- \(\/.*\)$/\1/p'; git rev-parse --show-toplevel 2>/dev/null; } | sort -u )
+purview() { [ -n "$CRTR_PROFILE_ID" ] || return 0; crtr profile show "$CRTR_PROFILE_ID" --json 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>{s+=d}).on("end",()=>{try{for(const p of JSON.parse(s).projects||[])console.log(p.path)}catch{}})'; }
+roots=$( { purview; git rev-parse --show-toplevel 2>/dev/null; } | sort -u )
 for d in $roots; do
   top=$(git -C "$d" rev-parse --show-toplevel 2>/dev/null) || continue
   git -C "$top" fetch --quiet --all --prune 2>/dev/null
@@ -39,6 +40,8 @@ for d in $roots; do
   echo
 done
 ```
+
+A purview path that is not itself a git repository — a workspace root holding several checkouts — resolves to nothing and never appears in the block. When the user's repos sit one level below such a root, survey those children the same way before reporting, or the briefing reads as an all-clear on repos nothing looked at.
 
 That is the whole gather — do not re-run status, log, or fetch to confirm it. Read a diff only when a dirty bullet needs to say what the change actually does and the file names do not tell you. The survey covers the purview; if this conversation touched a repo outside it, survey that one the same way.
 
