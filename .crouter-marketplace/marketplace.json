@@ -1,6 +1,6 @@
 {
   "name": "crouter-official-marketplace",
-  "version": "4.6.2",
+  "version": "4.6.3",
   "owner": {
     "name": "Silas Rhyneer",
     "email": "rhyneer.silas@gmail.com"
@@ -213,7 +213,7 @@
     {
       "name": "dev",
       "source": "./plugins/dev",
-      "version": "1.6.2",
+      "version": "1.6.3",
       "description": "Provides development workflows, PR-writing guidance, code-craft preferences, runtime verification, and the bare `dev` dispatcher for Grove-backed projects \u2014 routes `dev grove \u2026` to grove, repo-defined `.dev/<branch>` executables, and everything else to `grove dev`; `crtr dev` is a native extensible branch for repository-generated command fragments, with `crtr dev grove \u2026` forwarded to Grove.",
       "keywords": [
         "workflow",
