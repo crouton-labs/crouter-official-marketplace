@@ -1,6 +1,6 @@
 {
   "name": "dev",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "Provides development workflows, PR-writing guidance, code-craft preferences, runtime verification, and the bare `dev` dispatcher for Grove-backed projects — routes `dev grove …` to grove, repo-defined `.dev/<branch>` executables, and everything else to `grove dev`; `crtr dev` is a native extensible branch for repository-generated command fragments, with `crtr dev grove …` forwarded to Grove.",
   "commands": ".crouter-plugin/commands.json",
   "transport": {
