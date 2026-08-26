@@ -10,6 +10,7 @@ short-form: Update the covered slice in the same pass as the code change; rewrit
 - **Rewrite in place, never append.** Each doc is a living statement of what is true now; superseded text beside new text steers readers wrong.
 - **Dirs before files, never line numbers.** Pointers that survive refactors.
 - **`crtr memory lint`** after edits.
+- **State machines.** When a machine's state space, transition, guard, durable write, recovery path, or derived projection changes, rewrite its owner memory in the same pass and run `crtr memory lint`; change a cross-linking memory only when its stated boundary changes.
 - **The bar for a new slice** is a distinct read trigger plus a topic 2–3 files cannot answer; otherwise expand an existing doc. A slice that outgrows one doc nests into a directory instead of becoming a scroll.
 - **Glossary upkeep** — add or revise a term whenever a memory introduces one; entries stay one sentence.
 - **`product/` docs' Today section** is rewritten as the product moves; a stale Today silently reframes the Implications.

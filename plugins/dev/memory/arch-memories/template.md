@@ -42,6 +42,22 @@ Shapes for the three classes of architecture memory (`arch/` slices, `patterns/`
 3. **The map** — every site where the pattern shows up, as dirs/files.
 4. **Compliance** — what to do when adding code that touches this.
 
+## State-machine body shape
+
+This selectable body form applies inside the existing `arch`, `patterns`, and `product` classes when the answer depends on enumerated states, events, and recovery boundaries. It is not a fourth class, taxonomy, frontmatter kind, directory, or gating regime. Choose placement by the reader's existing routing question, then choose this form; it refines the selected class shape without removing any of its required artifacts. An `arch` memory keeps Orientation, the Mermaid The path diagram, Ownership map, Invariants and why, and Edges; a `patterns` memory keeps The principle, Why this shape won, The map, and Compliance; a `product` memory keeps The bet, What it must support, Ideal, Today, Implications, and Pointers.
+
+Add these artifacts in this order within and alongside the selected class sections:
+
+1. **Boundary and state space** — State the machine's purpose and authoritative store or process boundary. Include a state/axis legend whose rows name the value set, durability (`durable`, `ephemeral`, or `derived`), authoritative writer, and meaning. Keep independent facts as separate axes; never present a derived condition as stored state.
+2. **The path and transitions** — An `arch` memory retains its Mermaid The path diagram, then includes one complete transition table for meaningful normal, failure, cancellation, expiry, and recovery events. A `patterns` memory puts the same table in The map; a `product` memory uses it only when product state is the subject. Each row gives event, source state or predicate, target state or predicate, guard, authoritative transition writer, durable write, and post-commit effect. Include a self-transition only when it changes a durable value, retry budget, or recovery entitlement. The diagram and table carry different information; neither repeats the other.
+3. **Invariants, guards, and ownership** — Use `arch`'s Invariants and why, `patterns`' Why this shape won and The map, or the relevant product sections to identify admitting, refusing, deferring, or rerouting predicates; their owning directories and entry-point files; the authority that decides them; and why lower-level setters or helpers are not a second policy door. Keep the required ownership map and state why each non-obvious invariant exists.
+4. **Durable writes and effects** — Map the commit boundary for every state-changing event and effects that occur only after it. Name atomic multi-field exceptions, durable episode or latch records, external prompts or broker actions, and the authoritative result when an effect is interrupted.
+5. **Recovery and re-entry** — Include a table for crash, retry, credential reload, restart, expiry, and ordinary-input paths that apply. Each row names the re-entry predicate, preserved and consumed durable facts, and the idempotence or compare-and-swap boundary preventing replay. Label process-local state as ephemeral and state its replacement outcome rather than treating it as recoverable durable state.
+6. **Derived projections and compliance** — Map predicates, glyphs, scheduling decisions, and user-visible labels derived from the state or axes. Name the shared projection owner and forbid consumers from inventing a competing status; a `patterns` memory carries its required Compliance conclusion here.
+7. **Edges** — Link adjacent authoritative memories with a 2–4-word scope hint: use an `arch` entry's existing Edges section, put pattern edges after Compliance, and place product edges in Pointers.
+
+The inclusion bar applies to table rows as well as prose. Give a state, event, guard, durable write, effect, recovery path, or projection a row only when it changes an authority, durability boundary, recovery outcome, or meaning that a reader cannot safely infer from repository layout or a linked memory. Conversely, enumerate every non-obvious machine edge: it cannot hide in explanatory prose. Point each row to owner files, never line numbers; delete restatements of linked memories and link to their authoritative section instead.
+
 ## Terminology
 
 ASD-STE100-leaning: one meaning per word, the same term every time, a term defined at first use or in the repo's `glossary` doc, no coined shorthand. Add or revise a glossary term whenever a memory would otherwise use it undefined.
