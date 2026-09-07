@@ -10,7 +10,7 @@
       "name": "ai",
       "source": "./plugins/ai",
       "version": "1.4.0",
-      "description": "Skills for building with LLMs and designing for agents \u2014 prompt architecture, agent interface design (UI/UX/CLI/tools), multi-agent orchestration, LLM output quality, and agentic testing.",
+      "description": "Skills for building with LLMs and designing for agents — prompt architecture, agent interface design (UI/UX/CLI/tools), multi-agent orchestration, LLM output quality, and agentic testing.",
       "keywords": [
         "llm",
         "agents",
@@ -32,7 +32,7 @@
       "name": "claude-authoring",
       "source": "./plugins/claude-authoring",
       "version": "1.1.0",
-      "description": "Guides for authoring Claude Code artifacts \u2014 CLAUDE.md files, hooks, rules, skills, commands, and scripts.",
+      "description": "Guides for authoring Claude Code artifacts — CLAUDE.md files, hooks, rules, skills, commands, and scripts.",
       "keywords": [
         "claude-code",
         "authoring",
@@ -62,7 +62,7 @@
       "name": "web",
       "source": "./plugins/web",
       "version": "1.2.0",
-      "description": "Knowledge for web development workflows \u2014 visual direction for customer-facing pages, interface craft for dashboards and tools, UX heuristics, the interactive design workflow, HTML design-review mockups, the UX-consultant role, and frontend debugging.",
+      "description": "Knowledge for web development workflows — visual direction for customer-facing pages, interface craft for dashboards and tools, UX heuristics, the interactive design workflow, HTML design-review mockups, the UX-consultant role, and frontend debugging.",
       "keywords": [
         "web",
         "frontend",
@@ -83,7 +83,7 @@
       "name": "cloudflare",
       "source": "./plugins/cloudflare",
       "version": "1.1.0",
-      "description": "Work with Cloudflare from a shell \u2014 Wrangler + curl against the REST API, endpoint discovery from the OpenAPI spec, and the llms.txt doc index. The Code Mode pattern without MCP.",
+      "description": "Work with Cloudflare from a shell — Wrangler + curl against the REST API, endpoint discovery from the OpenAPI spec, and the llms.txt doc index. The Code Mode pattern without MCP.",
       "keywords": [
         "cloudflare",
         "wrangler",
@@ -104,7 +104,7 @@
       "name": "design-discovery",
       "source": "./plugins/design-discovery",
       "version": "1.2.1",
-      "description": "Socratic, crtr human-led design-discovery interviews \u2014 grill the user to shape the ideal product experience and to extract and pressure-test the technical design before building.",
+      "description": "Socratic, crtr human-led design-discovery interviews — grill the user to shape the ideal product experience and to extract and pressure-test the technical design before building.",
       "keywords": [
         "design",
         "discovery",
@@ -125,7 +125,7 @@
       "name": "vercel",
       "source": "./plugins/vercel",
       "version": "1.1.0",
-      "description": "Work with Vercel from a shell \u2014 Vercel CLI for deploy/dev/logs, REST API access with Bearer tokens, and docs discovery through Vercel's llms.txt and references.",
+      "description": "Work with Vercel from a shell — Vercel CLI for deploy/dev/logs, REST API access with Bearer tokens, and docs discovery through Vercel's llms.txt and references.",
       "keywords": [
         "vercel",
         "deploy",
@@ -143,7 +143,7 @@
       "name": "railway",
       "source": "./plugins/railway",
       "version": "1.1.0",
-      "description": "Work with Railway from a shell \u2014 Railway CLI for deploy/logs/environments, GraphQL API access with project or account tokens, and docs discovery through Railway's llms.txt and markdown references.",
+      "description": "Work with Railway from a shell — Railway CLI for deploy/logs/environments, GraphQL API access with project or account tokens, and docs discovery through Railway's llms.txt and markdown references.",
       "keywords": [
         "railway",
         "deploy",
@@ -161,7 +161,7 @@
       "name": "fly",
       "source": "./plugins/fly",
       "version": "1.1.0",
-      "description": "Work with Fly.io from a shell \u2014 flyctl for launch/deploy/status/logs, Machines API access with Bearer tokens, and reference discovery through Fly.io docs, flyctl help, and Machines API docs.",
+      "description": "Work with Fly.io from a shell — flyctl for launch/deploy/status/logs, Machines API access with Bearer tokens, and reference discovery through Fly.io docs, flyctl help, and Machines API docs.",
       "keywords": [
         "fly",
         "fly-io",
@@ -179,7 +179,7 @@
       "name": "capture",
       "source": "./plugins/capture",
       "version": "1.1.0",
-      "description": "Mounts `crtr capture` as a transparent passthrough to the external Capture CLI (@crouton-kit/capture) \u2014 CDP screenshots, measurement, HAR, a11y, JS-exec, and site libs.",
+      "description": "Mounts `crtr capture` as a transparent passthrough to the external Capture CLI (@crouton-kit/capture) — CDP screenshots, measurement, HAR, a11y, JS-exec, and site libs.",
       "keywords": [
         "capture",
         "browser",
@@ -197,7 +197,7 @@
       "name": "search",
       "source": "./plugins/search",
       "version": "0.1.0",
-      "description": "Mounts `crtr search` \u2014 web search, grounded cited answers, and clean content extraction through the Exa API, using a locally resolved key (EXA_API_KEY or ~/.crouter/exa.key).",
+      "description": "Mounts `crtr search` — web search, grounded cited answers, and clean content extraction through the Exa API, using a locally resolved key (EXA_API_KEY or ~/.crouter/exa.key).",
       "keywords": [
         "search",
         "web-search",
@@ -214,7 +214,7 @@
       "name": "dev",
       "source": "./plugins/dev",
       "version": "1.8.0",
-      "description": "Provides development workflows, PR-writing guidance, code-craft preferences, runtime verification, the guided `crtr dev tutorial` onboarding walkthrough, and the bare `dev` dispatcher for Grove-backed projects \u2014 routes `dev grove \u2026` to grove, repo-defined `.dev/<branch>` executables, and everything else to `grove dev`; `crtr dev` is a native extensible branch for repository-generated command fragments, with `crtr dev grove \u2026` forwarded to Grove.",
+      "description": "Provides development workflows, PR-writing guidance, code-craft preferences, runtime verification, the guided `crtr dev tutorial` onboarding walkthrough, and the bare `dev` dispatcher for Grove-backed projects — routes `dev grove …` to grove, repo-defined `.dev/<branch>` executables, and everything else to `grove dev`; `crtr dev` is a native extensible branch for repository-generated command fragments, with `crtr dev grove …` forwarded to Grove.",
       "keywords": [
         "workflow",
         "development",
