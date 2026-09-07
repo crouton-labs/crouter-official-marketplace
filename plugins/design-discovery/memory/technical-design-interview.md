@@ -9,18 +9,19 @@ gate:
 
 # technical-design-interview
 
-Audience: future LLM agent sessions. You help the user nail the technical design of a system by *interviewing* them, not by picking the architecture for them. They hold the constraints, the load shape, the systems they can't change; your value is dragging those into the open and forcing the tradeoffs to be explicit before code gets written. This is the **elicitation front-end** that feeds a design or spec — not the artifact itself. The experience-side counterpart is the sibling `product-design-interview`. Drive it through `crtr human`: each wave is a deck, kicked off non-blocking, answered into your inbox.
+Audience: future LLM agent sessions. You help the user nail the technical design of a system by *interviewing* them, not by picking the architecture for them. They hold the constraints, the load shape, the systems they can't change; your value is dragging those into the open and forcing the tradeoffs to be explicit before code gets written. This is the **elicitation front-end** that feeds a design or spec — not the artifact itself. The experience-side counterpart is the sibling `product-design-interview`. Drive it through `crtr human`: each wave is one page, sent non-blocking, answered into your inbox.
 
 ## The core move
 
-Don't design — elicit. Replace "why?" with "what makes that a hard requirement?". Run in **waves**: a wave is one `crtr human` deck of 2–5 tightly-related questions. Read the answers, find the **tension** — a contradiction, an unexamined "it'll be fine", a hidden dependency, a forced tradeoff being dodged — and aim the next wave straight at it. The first answers are the happy path; the real design surfaces in wave 2–3 when you push into scale, failure, and the choices that can't be had both ways. The structure is a tool, not the goal: if an answer exposes a load-bearing assumption, drop the plan and dig there. Stop when no question you could ask would change the design.
+Don't design — elicit. Replace "why?" with "what makes that a hard requirement?". Run in **waves**: a wave is one human page of 2–5 tightly-related questions. Read the answers, find the **tension** — a contradiction, an unexamined "it'll be fine", a hidden dependency, a forced tradeoff being dodged — and aim the next wave straight at it. The first answers are the happy path; the real design surfaces in wave 2–3 when you push into scale, failure, and the choices that can't be had both ways. The structure is a tool, not the goal: if an answer exposes a load-bearing assumption, drop the plan and dig there. Stop when no question you could ask would change the design.
 
 ## Run it through crtr human
 
-- Build a deck JSON file, then run `crtr human ask --context-file <path>`. The kickoff returns instantly and queues the ticket in the humanloop inbox; nothing opens automatically. The human answers on their own time and the answer is pushed to your inbox. Do not poll; end your turn or keep working until the inbox wakes you.
-- One wave = one deck (`interactions[]`). Each question needs a short `title`, a `subtitle` stating the decision, recommendation, and stakes, 2–4 *real* `options` as starting points, and `allowFreetext: true`. Always allow freetext — technical answers carry caveats.
+- Put each wave in front of the user as one human page. Read `crtr human -h` and `crtr human send -h` for the current authoring and delivery contract before writing it; the page module is TSX under `$CRTR_CONTEXT_DIR/pages/`, and the reader answers one question at a time.
+- One wave = one page. Give each question its own `<Step>`, a title naming what it settles, 2–4 real options as starting points, and a writing surface when the answer belongs in their own words. Put the context a question needs in that question's own body — page-level prose is not on screen while they answer.
+- Sending is non-blocking: the page queues in the inbox, the user answers on their own time, and the answer wakes you. Do not poll or hold the turn open.
 - Anchor questions in concrete numbers and scenarios, never abstractions. *"At 10x today's writes, all hitting in a morning burst — does the store still hold?"* beats *"How should we handle scale?"*.
-- Deck JSON shape, a worked technical wave, the reflect-back mechanism, and the full lens catalog live in [[design-discovery/technical-design-interview-reference]].
+- A worked technical wave, the reflect-back mechanism, and the full lens catalog live in [[design-discovery/technical-design-interview-reference]].
 
 ## Pick 3–4 lenses, not all of them
 
@@ -37,7 +38,7 @@ Pressure-test with: **pre-mortem** ("it's 6 months later and this fell over in p
 
 ## Reflect back between waves
 
-After each wave, mirror understanding before asking more — lead the next deck with a `kind:"context"` interaction carrying: what you now understand (3–5 bullets), the assumptions you're treating as load-bearing (mark *confirmed* vs *guess*), and each open risk turned into the next wave's question. This is where a silent assumption gets caught before it becomes a wrong build.
+After each wave, mirror understanding before asking more — open the next page with a step carrying: what you now understand (3–5 bullets), the assumptions you're treating as load-bearing (mark *confirmed* vs *guess*), and each open risk turned into the next wave's question. This is where a silent assumption gets caught before it becomes a wrong build.
 
 ## Close with the picture, then hand off
 

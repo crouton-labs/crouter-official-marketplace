@@ -9,18 +9,19 @@ gate:
 
 # product-design-interview
 
-Audience: future LLM agent sessions. You help the user discover the ideal product experience by *interviewing* them, not by proposing designs. They know more than they can say in one pass; your value is asking the question they haven't asked themselves. This is about how the product should **feel and work for its user** — the moments, the emotional arc, the job it does — not data models, APIs, or implementation (that's the sibling `technical-design-interview`). Drive it through `crtr human`: each wave is a deck, kicked off non-blocking, answered into your inbox.
+Audience: future LLM agent sessions. You help the user discover the ideal product experience by *interviewing* them, not by proposing designs. They know more than they can say in one pass; your value is asking the question they haven't asked themselves. This is about how the product should **feel and work for its user** — the moments, the emotional arc, the job it does — not data models, APIs, or implementation (that's the sibling `technical-design-interview`). Drive it through `crtr human`: each wave is one page, sent non-blocking, answered into your inbox.
 
 ## The core move
 
-Don't answer — ask. Replace "why?" with "what makes you say that?" (same depth, less confrontation). Run in **waves**: a wave is one `crtr human` deck of 2–5 tightly-related questions. Read the answers, find the **tension** — a contradiction, an unexamined assumption, something avoided, a blocker — and aim the next wave straight at it. Surface answers come first; the real insight surfaces in wave 2–3 once the obvious is exhausted. The structure is a tool, not the goal: if an answer cracks something open, drop your plan and chase that thread. Stop when no question you could ask would change the picture.
+Don't answer — ask. Replace "why?" with "what makes you say that?" (same depth, less confrontation). Run in **waves**: a wave is one human page of 2–5 tightly-related questions. Read the answers, find the **tension** — a contradiction, an unexamined assumption, something avoided, a blocker — and aim the next wave straight at it. Surface answers come first; the real insight surfaces in wave 2–3 once the obvious is exhausted. The structure is a tool, not the goal: if an answer cracks something open, drop your plan and chase that thread. Stop when no question you could ask would change the picture.
 
 ## Run it through crtr human
 
-- Build a deck JSON file, then run `crtr human ask --context-file <path>`. The kickoff returns instantly and queues the ticket in the humanloop inbox; nothing opens automatically. The human answers on their own time and the answer is pushed to your inbox. Do not busy-wait or poll; end your turn or keep working until the inbox wakes you.
-- One wave = one deck (`interactions[]`). Each question needs a short `title`, a `subtitle` stating the decision, recommendation, and stakes, 2–4 *real* `options` as starting points, and `allowFreetext: true` — experience calls are judgment calls, so let people answer in their own words.
+- Put each wave in front of the user as one human page. Read `crtr human -h` and `crtr human send -h` for the current authoring and delivery contract before writing it; the page module is TSX under `$CRTR_CONTEXT_DIR/pages/`, and the reader answers one question at a time.
+- One wave = one page. Give each question its own `<Step>`, a title naming what it settles, 2–4 real options as starting points, and a writing surface when the answer belongs in their own words. Put the context a question needs in that question's own body — page-level prose is not on screen while they answer.
+- Sending is non-blocking: the page queues in the inbox, the user answers on their own time, and the answer wakes you. Do not poll or hold the turn open.
 - Frame every question as a concrete **moment**, never an abstraction. *"A new user lands on the empty dashboard — what's the one thing they should feel pulled to do?"* beats *"What are your UX goals?"*.
-- Deck JSON shape, a worked wave, the reflect-back mechanism, and the full lens catalog live in [[design-discovery/product-design-interview-reference]].
+- A worked wave, the reflect-back mechanism, and the full lens catalog live in [[design-discovery/product-design-interview-reference]].
 
 ## Pick 3–4 lenses, not all of them
 
@@ -37,7 +38,7 @@ Pressure-test with: **pre-mortem** ("they tried it once and never came back — 
 
 ## Reflect back between waves
 
-After each wave, mirror understanding before asking more — lead the next deck with a `kind:"context"` interaction carrying: what you now understand (3–5 bullets), the assumptions you're treating as true (mark *proven* vs *guess*), and each open risk turned into the next wave's question. This is where a wrong assumption gets caught before it hardens into a wrong build.
+After each wave, mirror understanding before asking more — open the next page with a step carrying: what you now understand (3–5 bullets), the assumptions you're treating as true (mark *proven* vs *guess*), and each open risk turned into the next wave's question. This is where a wrong assumption gets caught before it hardens into a wrong build.
 
 ## Close with the picture, then a coverage check
 

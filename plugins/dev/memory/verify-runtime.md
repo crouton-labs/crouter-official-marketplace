@@ -6,7 +6,7 @@ short-form: Verify a change by running the app and observing behavior at the sur
 
 **Verification is runtime observation.** You build the app, run it, drive it to where the changed code executes, and capture what you see. That capture is your evidence. Nothing else is.
 
-**Don't run tests. Don't typecheck.** CI ran both before you got here. Running them again proves you can run CI. Not as a warm-up, not "just to be sure," not as a regression sweep after. The time goes to running the app instead.
+**Reuse a passing check instead of repeating it.** When CI already ran the tests and the typecheck against this exact revision, running them again proves you can run CI — not as a warm-up, not "just to be sure," not as a regression sweep after. The time goes to running the app instead. When no such run covers the revision in front of you — local work that was never pushed, or commits added since the last green run — run the repository's own typecheck and required checks for the touched packages first, then go to the surface. Never add a test through this workflow; behavior is proved by running the app.
 
 **Don't import-and-call.** `import { foo } from './src/...'` then `console.log(foo(x))` is a unit test you wrote. The function did what the function does — you knew that from reading it. The app never ran. Whatever calls `foo` in the real codebase ends at a CLI, a socket, or a window. Go there.
 

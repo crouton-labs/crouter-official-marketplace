@@ -8,73 +8,23 @@ gate:
 ---
 # technical-design-interview — reference
 
-Lookup layer for the [technical-design-interview.md](technical-design-interview.md) judgment: deck mechanics, a worked technical wave, the reflect-back pattern, and the full lens catalog. The crtr human deck mechanics are shared with [product-design-interview-reference.md](product-design-interview-reference.md); the lens catalog below is specific to technical discovery.
+Lookup layer for the [technical-design-interview.md](technical-design-interview.md) judgment: how to run a wave, a worked technical example, the reflect-back pattern, and the full lens catalog. The crtr human deck mechanics are shared with [product-design-interview-reference.md](product-design-interview-reference.md); the lens catalog below is specific to technical discovery.
 
-## crtr human deck mechanics (recap)
+## Running a wave
 
-A wave is one deck written to a JSON file, then kicked off:
+A wave is one human page. The page contract — components, props, and delivery flags — is owned by `crtr human -h` and `crtr human send -h`; read it there rather than from an example here, because the examples below describe **question content**, not an executable payload.
 
-```bash
-crtr human ask --context-file /tmp/wave1.json
-```
-
-Kickoff returns instantly with `{job_id, dir, follow_up}` and **never blocks**. It queues a ticket in the humanloop inbox; nothing opens automatically. The answer is pushed to your inbox when the human finishes. Do not poll.
-
-Worked wave 1 — a new write-heavy store:
-
-```json
-{
-  "title": "Capture store — the shape of the load",
-  "interactions": [
-    {
-      "id": "invariant",
-      "title": "Hard invariant",
-      "subtitle": "Choose the record invariant; I recommend never losing an acknowledged write, because a crash must not break the user's trust.",
-      "body": "Pinning the correctness boundary before we pick a mechanism.\n\n## Why\nThe invariant decides whether we can relax durability for speed later.",
-      "options": [
-        {"id": "no-loss",  "label": "Never lose an acknowledged write"},
-        {"id": "no-dup",   "label": "Never double-process a record"},
-        {"id": "order",    "label": "Never reorder within a session"},
-        {"id": "best",     "label": "Best-effort is fine — drops are tolerable"}
-      ],
-      "allowFreetext": true,
-      "freetextLabel": "State the invariant precisely"
-    },
-    {
-      "id": "load",
-      "title": "Load shape",
-      "subtitle": "Choose the 10x load shape; I recommend planning for bursty concurrent writers until evidence says otherwise, because capacity choices depend on the peak.",
-      "options": [
-        {"id": "steady-1",  "label": "Steady, single writer"},
-        {"id": "steady-n",  "label": "Steady, many concurrent writers"},
-        {"id": "burst-n",   "label": "Bursty, many concurrent writers"}
-      ],
-      "allowFreetext": true
-    }
-  ]
-}
-```
+What a good question carries: a title naming what it settles, a one-line statement of the decision and what is at stake, 2–4 genuine alternatives as starting points, and a writing surface for the answer in their own words. Judgment calls almost always need that writing surface — a picker alone forces a false choice.
 
 ## The reflect-back pattern
 
-Lead each later wave with a `kind:"context"` interaction that mirrors understanding, then put the new questions below it:
+Open every wave after the first with a step that mirrors understanding before it asks anything new: what you now understand (3–5 bullets), which assumptions you are treating as true and whether each is **proven** or a **guess**, and the open risk that this wave's question is aimed at.
 
-```json
-{
-  "interactions": [
-    {
-      "id": "synthesis",
-      "kind": "context",
-      "title": "Where we are",
-      "subtitle": "Confirm the load-bearing facts; I recommend treating the no-loss invariant and bursty writes as settled, because the next tradeoff depends on them.",
-      "body": "## Confirmed\n- Invariant: never lose an acknowledged write\n- Load: bursty, many concurrent writers (10x = ~2k/s peak)\n\n## Treating as true (guess)\n- Reads are rare and tolerate staleness\n\n## Risk → this wave\n- Concurrent writers + no-loss forces a durability/throughput tradeoff. Asking which way now."
-    },
-    { "id": "tradeoff", "title": "Durability vs throughput", "subtitle": "Choose when to acknowledge a bursty write; I recommend after durable storage, because acknowledged writes must survive a crash.", "options": [ {"id":"durable","label":"Ack after durable"}, {"id":"fast","label":"Ack then persist"} ], "allowFreetext": true }
-  ]
-}
-```
+Example, as content rather than schema:
 
-Never start wave N+1 without reflecting wave N back — silent assumptions become wrong builds.
+> **Where we are.** Day-1 pull is creating a real thing fast (proven — you chose it). Power users live here daily (guess — not confirmed). I am treating the empty state as the make-or-break moment. Risk: if creation needs setup first, the "fast" promise breaks — which is what I'm asking about now.
+
+Never start wave N+1 without reflecting wave N back.
 
 ## Full lens catalog
 

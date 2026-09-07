@@ -8,65 +8,21 @@ gate:
 ---
 # product-design-interview — reference
 
-Lookup layer for the [product-design-interview.md](product-design-interview.md) judgment: deck mechanics, a worked wave, the reflect-back pattern, and the full lens catalog.
+Lookup layer for the [product-design-interview.md](product-design-interview.md) judgment: how to run a wave, a worked example, the reflect-back pattern, and the full lens catalog.
 
-## crtr human deck mechanics
+## Running a wave
 
-A wave is one deck written to a JSON file, then kicked off:
+A wave is one human page. The page contract — components, props, and delivery flags — is owned by `crtr human -h` and `crtr human send -h`; read it there rather than from an example here, because the examples below describe **question content**, not an executable payload.
 
-```bash
-crtr human ask --context-file /tmp/wave1.json
-```
-
-Kickoff returns instantly with `{job_id, dir, follow_up}` and **never blocks**. It queues a ticket in the humanloop inbox; nothing opens automatically. The human opens the inbox on their own time, and their answer is pushed to your inbox when they finish. End your turn or keep working — you'll be woken. Do not poll `follow_up` in a loop.
-
-Deck schema (humanloop):
-
-```json
-{
-  "title": "Onboarding experience",
-  "interactions": [
-    {
-      "id": "first-feeling",
-      "title": "First moment",
-      "subtitle": "Choose the first action for a new user; I recommend creating a real thing immediately, because the first minute determines whether onboarding feels compelling.",
-      "body": "We're shaping the day-1 experience.\n\n## Why it matters\nThe first 60 seconds decide whether they ever come back. One clear pull beats five options.",
-      "options": [
-        {"id": "create",  "label": "Create their first real thing immediately"},
-        {"id": "template","label": "Pick a template / see it pre-filled"},
-        {"id": "tour",    "label": "Get oriented with a guided tour"},
-        {"id": "import",  "label": "Bring in existing data so it feels theirs"}
-      ],
-      "allowFreetext": true,
-      "freetextLabel": "Describe the moment in your own words"
-    }
-  ]
-}
-```
-
-Per-interaction fields that matter: `id` (short and meaningful), `title` (the topic, ≤4 words), `subtitle` (a one-line decision, recommendation, and stakes), `body` (optional plain-language framing and tradeoffs; directive-flavored markdown — see `termrender doc -h`), `options[]` (2–4 genuine alternatives as starting points), `allowFreetext`/`freetextLabel`, `multiSelect`, and `kind` (one of `notify`, `decision`, `context`, `error`).
-
-Collect: the answer is pushed to your inbox when the human responds. Interpret it against the wave's concrete questions; do not poll for it.
+What a good question carries: a title naming what it settles, a one-line statement of the decision and what is at stake, 2–4 genuine alternatives as starting points, and a writing surface for the answer in their own words. Judgment calls almost always need that writing surface — a picker alone forces a false choice.
 
 ## The reflect-back pattern
 
-Lead each wave after the first with a `kind:"context"` interaction that mirrors understanding, then put the new questions below it:
+Open every wave after the first with a step that mirrors understanding before it asks anything new: what you now understand (3–5 bullets), which assumptions you are treating as true and whether each is **proven** or a **guess**, and the open risk that this wave's question is aimed at.
 
-```json
-{
-  "title": "Wave 2 — the empty state",
-  "interactions": [
-    {
-      "id": "synthesis",
-      "kind": "context",
-      "title": "Where we are",
-      "subtitle": "Confirm the day-one assumptions; I recommend treating fast creation as proved and daily use as unconfirmed, because the next questions depend on that boundary.",
-      "body": "## What I understand\n- Day-1 pull = create a real thing fast (proven — you chose it)\n- Power users live here daily (guess — not yet confirmed)\n\n## Assumptions I'm treating as true\n- Empty state is the make-or-break moment\n\n## Risk → this wave\n- If creation needs setup first, the 'fast' promise breaks. Asking about that now."
-    },
-    { "id": "setup-cost", "title": "Setup cost", "subtitle": "Choose the minimum setup before first creation; I recommend none, because every extra step weakens the fast-creation promise.", "options": [ {"id":"none","label":"Nothing — instant"}, {"id":"one","label":"One choice"}, {"id":"few","label":"A few steps"} ], "allowFreetext": true }
-  ]
-}
-```
+Example, as content rather than schema:
+
+> **Where we are.** Day-1 pull is creating a real thing fast (proven — you chose it). Power users live here daily (guess — not confirmed). I am treating the empty state as the make-or-break moment. Risk: if creation needs setup first, the "fast" promise breaks — which is what I'm asking about now.
 
 Never start wave N+1 without reflecting wave N back.
 
