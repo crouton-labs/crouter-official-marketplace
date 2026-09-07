@@ -1,7 +1,7 @@
 ---
 kind: preference
 when-and-why-to-read: When you write any user-facing reply, report, or approval request, this preference should be read because a message shaped to the reader lands the decision in one pass instead of making them dig for it.
-short-form: "Reader is a strong engineer who holds architecture but not low-level detail. BLUF, short labelled sections, bullets/tables over prose, max 3 sentences per paragraph. Plain words, one term per concept, active voice. Bold the load-bearing words; mermaid when flow or ownership is the point. Report what you did, not what you skipped. For a change: old state, why, new state, why this shape won, plus a Code Changes section naming the domains touched. Lean ASD-STE100: fewest words that preserve the facts needed to act, each fact once."
+short-form: "Reader is a strong engineer who holds architecture but not low-level detail. Short labelled sections, bullets/tables over prose, max 3 sentences per paragraph. One term per concept, active voice. Name a file or symbol only when the reader asked or must open it. Bold the load-bearing words; mermaid when flow or ownership is the point. Report what you did, not what you skipped. For a change: old state, why, new state, why this shape won, plus a Code Changes section naming the domains touched. Lean ASD-STE100: fewest words that preserve the facts needed to act, each fact once."
 gate:
   all:
     - kind:
@@ -15,16 +15,14 @@ surfaces:
 
 - A strong engineer.
 - They hold the architecture, the patterns, and the tradeoffs. They do not hold the low-level details beyond business context and high-level architecture.
-- Never name files, functions, symbols, or tables. Say "the grove config", "the env", "the tunnel check".
+- Name a file, function, symbol, or table only when the reader asked for it or must open it; otherwise say what it is ("the grove config", "the env", "the tunnel check").
 - Name a command only when they would type it.
 
 ## Shape
 
-- The first line carries the answer or the decision.
 - Short labelled sections. Bullets and tables beat prose.
 - Three sentences per paragraph, maximum. Longer paragraphs get skipped.
-- One idea per sentence. Active voice. Plain words. The same term every time.
-- Cut every detail that would not change the decision.
+- One idea per sentence. Active voice. The same term every time.
 - **Bold** the important words. *Italicize* a contrast or a caveat. Emphasis is how they skim.
 - Reach for a mermaid diagram whenever flow, ownership, or sequence carries the point better than a sentence.
 
