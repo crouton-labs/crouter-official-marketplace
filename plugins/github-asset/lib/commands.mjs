@@ -1,0 +1,97 @@
+import { attachAsset } from './attach.mjs';
+
+const attachLeaf = {
+  kind: 'leaf',
+  name: 'attach',
+  description: 'upload a local file to a GitHub pull request or issue and print its permanent attachment URL',
+  whenToUse:
+    'a pull request or issue body needs a local video, image, or other file uploaded through GitHub so the body can reference the resulting `github.com/user-attachments/assets/...` URL. This requires the Capture CLI and an already-running browser signed in to GitHub; it never launches a browser.',
+  summary: 'attach a local file to a GitHub pull request or issue through the signed-in browser',
+  params: [
+    {
+      kind: 'positional',
+      name: 'file',
+      type: 'path',
+      required: true,
+      constraint: 'Existing non-empty local file up to 1 MiB, such as proof.mp4 or screenshot.png. The file is read and inlined into page JavaScript because GitHub cannot read host paths from the browser.',
+    },
+    {
+      kind: 'flag',
+      name: 'pr',
+      type: 'int',
+      required: true,
+      constraint: 'Pull request or issue number. For an issue, the command uses one open pull request in the same repository only to access GitHub’s attachment form; the returned target remains the issue URL.',
+    },
+    {
+      kind: 'flag',
+      name: 'repo',
+      type: 'string',
+      required: false,
+      constraint: 'GitHub repository as owner/name. Omit to use the repository resolved by `gh repo view` in the current directory.',
+    },
+  ],
+  output: [
+    {
+      name: 'url',
+      type: 'string',
+      required: true,
+      constraint: 'Permanent GitHub attachment URL: https://github.com/user-attachments/assets/<uuid>.',
+    },
+    {
+      name: 'target',
+      type: 'string',
+      required: true,
+      constraint: 'Pull request or issue URL that accepted the upload.',
+    },
+    {
+      name: 'browser',
+      type: 'string',
+      required: true,
+      constraint: 'CDP port of the already-running browser whose GitHub login performed the upload.',
+    },
+  ],
+  outputKind: 'object',
+  effects: [
+    'Reads the local file into memory and uploads it through GitHub from an already-running browser signed in to GitHub.',
+    'Uses `gh` to resolve the repository and whether the supplied number is a pull request or issue. It does not edit the pull request or issue body.',
+    'Opens or reuses the target pull request tab, or for an issue one open pull request in the same repository that supplies GitHub’s attachment form, in the browser with a signed-in GitHub tab. It never launches a browser.',
+  ],
+  run: attachAsset,
+};
+
+export const githubAssetBranch = {
+  kind: 'branch',
+  name: 'github-asset',
+  description: 'upload local files through GitHub attachments from an already-signed-in browser',
+  whenToUse:
+    'a GitHub pull request or issue needs a local file attached and the permanent GitHub attachment URL, especially when a video must render in a pull request body.',
+  rootEntry: {
+    concept: 'GitHub pull request and issue attachment uploads for agents',
+    description: 'upload a local file through GitHub’s browser attachment flow and print its permanent URL',
+    whenToUse:
+      'a local video, image, or other file must be attached to a GitHub pull request or issue. Requires the external Capture CLI (`crtr capture`) and a running CDP browser already signed in to GitHub; this command attaches to that browser and never launches one.',
+  },
+  summary: 'GitHub attachment uploads through an existing signed-in browser',
+  model:
+    '`attach` validates and reads one local file up to 1 MiB, lists CDP endpoints with an existing GitHub tab, opens a GitHub page in each candidate browser, and checks `meta[name=user-login]` there to find the signed-in session. It then opens or reuses the requested pull request or issue and runs GitHub’s attachment upload flow in that page. It prints the permanent attachment URL but does not change the body.',
+  children: [attachLeaf],
+};
+
+export function findLeaf(commandPath) {
+  if (!Array.isArray(commandPath) || commandPath[0] !== githubAssetBranch.name) return null;
+  const node = githubAssetBranch.children.find(child => child.name === commandPath[1]);
+  return node?.kind === 'leaf' && commandPath.length === 2 ? node : null;
+}
+
+export function buildCommandManifest() {
+  return {
+    schemaVersion: 1,
+    mounts: [{ parent: [], node: stripRuns(githubAssetBranch) }],
+  };
+}
+
+function stripRuns(node) {
+  if (node.kind === 'branch') return { ...node, children: node.children.map(stripRuns) };
+  const { run, ...declaration } = node;
+  return declaration;
+}

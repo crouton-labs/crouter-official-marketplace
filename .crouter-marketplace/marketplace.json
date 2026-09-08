@@ -211,6 +211,22 @@
       ]
     },
     {
+      "name": "github-asset",
+      "source": "./plugins/github-asset",
+      "version": "0.1.0",
+      "description": "Uploads a local file through GitHub's browser attachment flow and prints its permanent user-attachments URL.",
+      "keywords": [
+        "github",
+        "pull-request",
+        "issue",
+        "attachment",
+        "video",
+        "image",
+        "browser",
+        "capture"
+      ]
+    },
+    {
       "name": "dev",
       "source": "./plugins/dev",
       "version": "1.8.1",

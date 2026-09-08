@@ -1,0 +1,19 @@
+{
+  "name": "github-asset",
+  "version": "0.1.0",
+  "description": "Uploads a local file through GitHub's browser attachment flow and prints its permanent user-attachments URL.",
+  "commands": ".crouter-plugin/commands.json",
+  "transport": {
+    "kind": "exec",
+    "executable": "bin/crtr-github-asset.mjs"
+  },
+  "requires": {
+    "capture": "Install the Capture CLI so `crtr capture` is available: npm install -g @crouton-kit/capture",
+    "gh": "Install and authenticate the GitHub CLI: https://cli.github.com/"
+  },
+  "source": "https://github.com/crouton-labs/crouter-official-marketplace",
+  "owner": {
+    "name": "Silas Rhyneer",
+    "email": "rhyneer.silas@gmail.com"
+  }
+}

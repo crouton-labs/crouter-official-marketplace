@@ -250,6 +250,33 @@ if (searchManifest) {
   }
 }
 
+const githubAssetManifest = manifests.get('github-asset');
+if (githubAssetManifest) {
+  const pluginRoot = path.join(pluginsDir, 'github-asset');
+  if (githubAssetManifest.transport?.kind !== 'exec') fail('github-asset: transport.kind must be exec');
+  if (githubAssetManifest.transport?.executable !== 'bin/crtr-github-asset.mjs') {
+    fail('github-asset: transport.executable must be bin/crtr-github-asset.mjs');
+  }
+  if (githubAssetManifest.commands !== '.crouter-plugin/commands.json') {
+    fail('github-asset: commands must reference .crouter-plugin/commands.json');
+  }
+  const executable = path.join(pluginRoot, 'bin', 'crtr-github-asset.mjs');
+  if (!fs.existsSync(executable)) {
+    fail('github-asset: bin/crtr-github-asset.mjs is missing');
+  } else if ((fs.statSync(executable).mode & 0o111) === 0) {
+    fail('github-asset: bin/crtr-github-asset.mjs must carry the exec bit');
+  }
+  const { buildCommandManifest } = await import(pathToFileURL(path.join(pluginRoot, 'lib', 'commands.mjs')));
+  const expected = `${JSON.stringify(buildCommandManifest(), null, 2)}\n`;
+  const commandsPath = path.join(pluginRoot, '.crouter-plugin', 'commands.json');
+  const actual = fs.existsSync(commandsPath) ? fs.readFileSync(commandsPath, 'utf8') : null;
+  if (actual === null) {
+    fail('github-asset: .crouter-plugin/commands.json is missing');
+  } else if (actual !== expected) {
+    fail('github-asset: commands.json is stale — run node plugins/github-asset/scripts/generate-commands.mjs');
+  }
+}
+
 const devManifest = manifests.get('dev');
 if (devManifest) {
   const devRoot = path.join(pluginsDir, 'dev');
