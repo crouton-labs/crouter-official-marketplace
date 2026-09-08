@@ -4,7 +4,6 @@ import { basename, extname, join } from 'node:path';
 import { spawn } from 'node:child_process';
 
 const GITHUB_URL = /^https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/(?:pull|issues)\/\d+(?:[/?#]|$)/;
-const MAX_FILE_BYTES = 1024 * 1024;
 const SIGNED_IN_LOGIN = 'const deadline = Date.now() + 15000; let login = null; while (Date.now() < deadline) { login = document.querySelector("meta[name=user-login]")?.content ?? null; if (login) break; await new Promise(resolve => setTimeout(resolve, 250)); } return login;'
 
 export class PluginError extends Error {
@@ -116,12 +115,6 @@ async function readUploadSource(file) {
   }
   if (info.size === 0) {
     throw new PluginError('invalid_input', `file is empty: ${file}`, { field: 'file' });
-  }
-  if (info.size > MAX_FILE_BYTES) {
-    throw new PluginError('file_too_large', `file is larger than the 1 MiB upload limit: ${file}`, {
-      field: 'file',
-      next: 'Trim or compress the file to 1 MiB or less before uploading it.',
-    });
   }
   return {
     name: basename(file),
@@ -291,7 +284,7 @@ policyForm.append('content_type', file.type);
 policyForm.append('authenticity_token', csrf);
 policyForm.append('repository_id', repositoryId);
 const policyResponse = await fetch(policyUrl, { method: 'POST', body: policyForm, credentials: 'include', headers: { Accept: 'application/json' } });
-if (!policyResponse.ok) return { error: 'upload policy request failed: ' + policyResponse.status };
+if (!policyResponse.ok) return { error: 'GitHub refused the upload (' + policyResponse.status + '): ' + (await policyResponse.text()).slice(0, 300) };
 const policy = await policyResponse.json();
 const uploadForm = new FormData();
 for (const [key, value] of Object.entries(policy.form || {})) uploadForm.append(key, value);

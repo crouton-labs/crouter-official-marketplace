@@ -13,7 +13,7 @@ const attachLeaf = {
       name: 'file',
       type: 'path',
       required: true,
-      constraint: 'Existing non-empty local file up to 1 MiB, such as proof.mp4 or screenshot.png. The file is read and inlined into page JavaScript because GitHub cannot read host paths from the browser.',
+      constraint: 'Existing non-empty local file, such as proof.mp4 or screenshot.png. The file is read and inlined into page JavaScript because GitHub cannot read host paths from the browser.',
     },
     {
       kind: 'flag',
@@ -73,7 +73,7 @@ export const githubAssetBranch = {
   },
   summary: 'GitHub attachment uploads through an existing signed-in browser',
   model:
-    '`attach` validates and reads one local file up to 1 MiB, lists CDP endpoints with an existing GitHub tab, opens a GitHub page in each candidate browser, and checks `meta[name=user-login]` there to find the signed-in session. It then opens or reuses the requested pull request or issue and runs GitHub’s attachment upload flow in that page. It prints the permanent attachment URL but does not change the body.',
+    '`attach` validates and reads one local file, lists CDP endpoints with an existing GitHub tab, opens a GitHub page in each candidate browser, and checks `meta[name=user-login]` there to find the signed-in session. It then opens or reuses the requested pull request or issue and runs GitHub’s attachment upload flow in that page. It prints the permanent attachment URL but does not change the body.',
   children: [attachLeaf],
 };
 
