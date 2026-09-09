@@ -53,6 +53,24 @@ const definition = {
           run: async () => withExitCode({ state: "unconfigured", next: "Replace this seed handler with the repository's real start implementation, then retry." }, 1),
         },
         {
+          name: "stop",
+          description: "stop the repository's configured development services.",
+          whenToUse: "The repository has declared a real service handler and its local processes need to stop.",
+          output: [
+            { name: "state", type: "string", description: "Whether this seed stopped a configured service." },
+            { name: "next", type: "string", description: "The implementation location required before a stop can occur." },
+          ],
+          effects: ["None. Read-only: this seed refuses to stop services until a repository lifecycle handler replaces it."],
+          result: {
+            block: "service-stop",
+            render: (value) => {
+              const stop = value as { state: string; next: string };
+              return { attributes: { state: stop.state }, body: `next: ${stop.next}` };
+            },
+          },
+          run: async () => withExitCode({ state: "unconfigured", next: "Replace this seed handler with the repository's real stop implementation, then retry." }, 1),
+        },
+        {
           name: "logs",
           description: "read records from a configured development service log.",
           whenToUse: "A configured service has a log source and you need recent records or a continuing event stream.",
@@ -78,6 +96,31 @@ const definition = {
             },
           },
           run: async () => ({ state: "unconfigured", records: [] }),
+        },
+      ],
+    },
+    {
+      name: "system",
+      description: "repository development environment maintenance.",
+      whenToUse: "You need to reset the repository's configured development environment.",
+      children: [
+        {
+          name: "reset",
+          description: "reset the repository's configured development environment.",
+          whenToUse: "The repository has declared a real reset handler and its development environment needs to return to a known state.",
+          output: [
+            { name: "state", type: "string", description: "Whether this seed reset a configured development environment." },
+            { name: "next", type: "string", description: "The implementation location required before a reset can occur." },
+          ],
+          effects: ["None. Read-only: this seed refuses to reset the development environment until a repository lifecycle handler replaces it."],
+          result: {
+            block: "system-reset",
+            render: (value) => {
+              const reset = value as { state: string; next: string };
+              return { attributes: { state: reset.state }, body: `next: ${reset.next}` };
+            },
+          },
+          run: async () => withExitCode({ state: "unconfigured", next: "Replace this seed handler with the repository's real reset implementation, then retry." }, 1),
         },
       ],
     },
