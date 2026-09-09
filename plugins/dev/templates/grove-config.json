@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "devCommand": ".grove/dev.ts",
+  "ports": { "app": { "base": 3000, "offset": 100 } },
+  "lifecycle": {
+    "start": ["service", "start"],
+    "stop": ["service", "stop"],
+    "status": ["service", "status", "--json"],
+    "reset": ["system", "reset"]
+  }
+}
