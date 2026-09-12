@@ -19,6 +19,6 @@ Read the report, especially `## parked`, and account for every item:
 - **Real unPR'd work** gets an owned branch and a pull request to the repository's integration branch. Follow [[dev/pr-loop]].
 - A **dirty or ambiguous** item requires a focused question through `crtr human`; do not stash, discard, reset hard, or delete it.
 
-Reset keeps data by default. Pass `--state baseline|<snapshot>` only when the user explicitly requests state restoration. The repository's auto-loaded memory supplies its own lifecycle, regeneration, branch, and integration guidance; do not add an overlay mechanism.
+Reset keeps data by default. For state restoration the user explicitly requests, read `grove restore -h`; `dev reset` has no state option. The repository's auto-loaded memory supplies its own lifecycle, regeneration, branch, and integration guidance; do not add an overlay mechanism.
 
 Finish only when the checkout is on its integration branch and synced, `dev doctor` is green, and every branch or worktree is merged, represented by an open pull request, or explicitly parked after user judgment.

@@ -2,8 +2,9 @@
 # dev — front door for a repository's own development surface.
 #
 # Dispatch, in order:
-#   1. `dev grove …`      → the grove binary (instance management: plant,
-#                           list, snapshot, restore, …).
+#   1. `dev grove …`      → the grove binary's full surface: declarative apply
+#                           and drift, labels and selectors, pool/claim/release,
+#                           rollout/rollback, and pending-operation recovery.
 #   2. `dev <branch> …`   → the executable `.dev/<branch>` in the nearest
 #                           committed .dev/ directory walking up from cwd,
 #                           run with cwd at the repository root that owns it.
@@ -36,15 +37,15 @@ done
 
 case "${1:-}" in
   -h|--help)
-    # Preamble the repo-defined branches, then fall through to the
+    # Preamble the repo-defined branches and Grove, then fall through to the
     # repository's own lifecycle help.
     if [ -n "$devdir" ]; then
       branches=$(cd "$devdir" && for f in *; do [ -x "$f" ] && printf '%s ' "$f"; done)
       if [ -n "$branches" ]; then
         printf 'Repo-defined branches (dev <branch> …, from %s): %s\n' "$devdir" "$branches"
-        printf 'Also: dev grove … forwards to the grove binary.\n\n'
       fi
     fi
+    printf 'Grove: dev grove … forwards raw arguments to Grove’s full surface: declarative apply and drift, labels and selectors, pool/claim/release, rollout/rollback, and pending-operation recovery. Run grove <verb> -h for grammar.\n\n'
     ;;
   ""|-*|*/*|.*) ;;
   *)
