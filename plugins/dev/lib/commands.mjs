@@ -186,7 +186,7 @@ export function buildDevCommandManifest() {
               summary: "direct access to Grove's full current instance surface",
               model: "This is a raw passthrough: Grove owns its grammar, parsing, effects, and output. Read `grove <verb> -h` for the current grammar; this branch does not enumerate or validate Grove arguments.",
               passthrough: {
-                bin: "grove",
+                bin: "bin/grove",
                 installHint: "Install Grove, then run `grove setup` in the source repository.",
               },
               children: [],

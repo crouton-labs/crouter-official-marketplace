@@ -1,0 +1,28 @@
+#!/bin/sh
+set -u
+
+no_grove() {
+  printf '%s\n' 'grove: Grove is not available; Install Grove, then run `grove setup` in the source repository.' >&2
+  exit 127
+}
+
+command -v grove >/dev/null 2>&1 || no_grove
+
+if [ "${1:-}" = "plant" ] && [ -n "${CRTR_NODE_ID:-}" ]; then
+  previous=
+  owner_label=
+  for argument in "$@"; do
+    if [ "$previous" = "--label" ]; then
+      case "$argument" in
+        owner=*) owner_label=1 ;;
+      esac
+    fi
+    case "$argument" in
+      --label=owner=*) owner_label=1 ;;
+    esac
+    previous=$argument
+  done
+  [ -n "$owner_label" ] || set -- "$@" --label "owner=$CRTR_NODE_ID"
+fi
+
+exec grove "$@"
