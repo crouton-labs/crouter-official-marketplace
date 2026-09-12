@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 2,
+  "lifecycle": [
+    {
+      "event": "node:close",
+      "phase": "on",
+      "op": "grove.cleanup-owned-instances",
+      "description": "remove Grove instances owned by the closing node",
+      "effects": [
+        "Removes every Grove instance labeled owner=<closing node id>."
+      ]
+    }
+  ]
+}
