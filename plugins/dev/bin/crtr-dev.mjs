@@ -53,18 +53,6 @@ function fail(code, message, { field, next } = {}) {
   };
 }
 
-function hookFail(code, message, next) {
-  return {
-    protocolVersion: PROTOCOL_VERSION,
-    ok: false,
-    error: {
-      code,
-      message,
-      ...(next === undefined ? {} : { next }),
-    },
-  };
-}
-
 function isRecord(value) {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -119,22 +107,22 @@ function ownedGroveTargets(inventory, nodeId) {
 
 async function cleanupOwnedGroveInstances(request) {
   if (!isRecord(request) || request.protocolVersion !== PROTOCOL_VERSION || request.event !== 'node:close' || request.phase !== 'on' || request.op !== GROVE_CLOSE_OP || !isRecord(request.node) || typeof request.node.id !== 'string' || request.node.id === '') {
-    return hookFail('invalid_hook_request', 'expected a protocolVersion 1 node:close request with the Grove cleanup operation and node.id');
+    return fail('invalid_hook_request', 'expected a protocolVersion 1 node:close request with the Grove cleanup operation and node.id');
   }
 
   const inventoryResult = await runGrove(['list', '--json']);
   if (inventoryResult.error !== undefined && inventoryResult.error.code === 'ENOENT') {
-    return hookFail('grove_unavailable', 'Grove is not available on PATH.', 'Install Grove, then run `grove setup` in the source repository.');
+    return fail('grove_unavailable', 'Grove is not available on PATH.', { next: 'Install Grove, then run `grove setup` in the source repository.' });
   }
   if (inventoryResult.error !== undefined || inventoryResult.code !== 0 || inventoryResult.signal !== null) {
-    return hookFail('grove_list_failed', `grove list --json failed: ${executionDetail(inventoryResult)}`);
+    return fail('grove_list_failed', `grove list --json failed: ${executionDetail(inventoryResult)}`);
   }
 
   let targets;
   try {
     targets = ownedGroveTargets(JSON.parse(inventoryResult.stdout), request.node.id);
   } catch (error) {
-    return hookFail('grove_inventory_invalid', `grove list --json returned invalid inventory: ${error instanceof Error ? error.message : String(error)}`);
+    return fail('grove_inventory_invalid', `grove list --json returned invalid inventory: ${error instanceof Error ? error.message : String(error)}`);
   }
 
   const failures = [];
@@ -142,7 +130,7 @@ async function cleanupOwnedGroveInstances(request) {
     const result = await runGrove(['uproot', target, '--force']);
     if (result.error !== undefined || result.code !== 0 || result.signal !== null) failures.push(`${target}: ${executionDetail(result)}`);
   }
-  if (failures.length > 0) return hookFail('grove_uproot_failed', `could not uproot Grove instances owned by ${request.node.id}: ${failures.join('; ')}`);
+  if (failures.length > 0) return fail('grove_uproot_failed', `could not uproot Grove instances owned by ${request.node.id}: ${failures.join('; ')}`);
   return { protocolVersion: PROTOCOL_VERSION, ok: true };
 }
 
@@ -183,14 +171,14 @@ async function run() {
     request = JSON.parse(raw);
   } catch {
     return process.argv[2] === '--crtr-hook-protocol'
-      ? hookFail('malformed_request', 'stdin did not carry a single JSON request object')
+      ? fail('malformed_request', 'stdin did not carry a single JSON request object')
       : fail('malformed_request', 'stdin did not carry a single JSON request object', {
         next: 'Invoke this executable through crtr, which writes the protocol request.',
       });
   }
 
   if (process.argv[2] === '--crtr-hook-protocol') {
-    if (process.argv[3] !== String(PROTOCOL_VERSION)) return hookFail('unsupported_protocol', `unsupported hook protocol ${String(process.argv[3])}`);
+    if (process.argv[3] !== String(PROTOCOL_VERSION)) return fail('unsupported_protocol', `unsupported hook protocol ${String(process.argv[3])}`);
     return cleanupOwnedGroveInstances(request);
   }
   return runCommand(request);
@@ -199,7 +187,7 @@ async function run() {
 const envelope = await run().catch((err) => {
   process.stderr.write(`${err instanceof Error ? err.stack ?? err.message : String(err)}\n`);
   return process.argv[2] === '--crtr-hook-protocol'
-    ? hookFail('hook_failed', 'the dev plugin crashed before producing a hook result')
+    ? fail('hook_failed', 'the dev plugin crashed before producing a hook result')
     : fail('command_failed', 'the dev plugin crashed before producing a result', {
       next: 'Check stderr for the stack trace and report it.',
     });
