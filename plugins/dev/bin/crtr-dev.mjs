@@ -15,6 +15,7 @@
 // and is never invoked by a human.
 
 import { spawn } from 'node:child_process';
+import { realpath } from 'node:fs/promises';
 import { relative } from 'node:path';
 
 import { runTrack, scenarioList, scenarioStart, scenarioClean, TutorialError } from '../lib/tutorial/run.mjs';
@@ -65,11 +66,11 @@ function executionDetail(result) {
   return result.stderr.trim() || result.stdout.trim() || `Grove exited with ${result.signal ?? result.code ?? 'an unknown status'}`;
 }
 
-function runProcess(command, args, { cwd } = {}) {
+function runProcess(command, args, { cwd, env } = {}) {
   return new Promise((resolve) => {
     let child;
     try {
-      child = spawn(command, args, { cwd, stdio: ['ignore', 'pipe', 'pipe'] });
+      child = spawn(command, args, { cwd, env, stdio: ['ignore', 'pipe', 'pipe'] });
     } catch (error) {
       resolve({ code: null, signal: null, stdout: '', stderr: '', error: error instanceof Error ? error : new Error(String(error)) });
       return;
@@ -91,6 +92,11 @@ function runProcess(command, args, { cwd } = {}) {
 
 function runGrove(args, options) {
   return runProcess('grove', args, options);
+}
+
+function groveDirectoryResolutionOptions(cwd) {
+  const { GROVE_INSTANCE: _groveInstance, ...env } = process.env;
+  return { cwd, env };
 }
 
 function groveUnavailable(result) {
@@ -149,7 +155,7 @@ async function guardOneResidentOwner(request) {
     return fail('invalid_hook_request', 'expected a protocolVersion 1 node:create request with the Grove resident-owner operation');
   }
 
-  const openResult = await runGrove(['open', '--json'], { cwd: request.create.cwd });
+  const openResult = await runGrove(['open', '--json'], groveDirectoryResolutionOptions(request.create.cwd));
   if (groveUnavailable(openResult) || openResult.code === 4) return ok();
   if (openResult.error !== undefined || openResult.code !== 0 || openResult.signal !== null) {
     return fail('grove_open_failed', `grove open --json failed: ${executionDetail(openResult)}`);
@@ -162,6 +168,13 @@ async function guardOneResidentOwner(request) {
     return fail('grove_open_invalid', error instanceof Error ? error.message : String(error));
   }
   if (instance.slot === 0) return ok();
+
+  let instancePath;
+  try {
+    instancePath = await realpath(instance.path);
+  } catch (error) {
+    return fail('grove_instance_path_unresolved', `grove open --json returned an instance path that cannot be resolved: ${instance.path}: ${error instanceof Error ? error.message : String(error)}`);
+  }
 
   const rootsResult = await runProcess('crtr', ['--json', 'node', 'inspect', 'list', '--status', 'active,idle']);
   if (rootsResult.error !== undefined || rootsResult.code !== 0 || rootsResult.signal !== null) {
@@ -177,13 +190,26 @@ async function guardOneResidentOwner(request) {
     return fail('crtr_roots_invalid', error instanceof Error ? error.message : String(error));
   }
 
-  const owner = nodes.find((node) => isRecord(node)
-    && node.parent === null
-    && node.lifecycle === 'resident'
-    && typeof node.node_id === 'string'
-    && node.node_id !== request.create.replaces
-    && typeof node.cwd === 'string'
-    && cwdIsInstancePath(node.cwd, instance.path));
+  let owner;
+  for (const node of nodes) {
+    if (!isRecord(node)
+      || node.parent !== null
+      || node.lifecycle !== 'resident'
+      || typeof node.node_id !== 'string'
+      || node.node_id === request.create.replaces
+      || typeof node.cwd !== 'string') continue;
+    let rootPath;
+    try {
+      rootPath = await realpath(node.cwd);
+    } catch {
+      process.stderr.write(`grove.one-resident-owner: skipping live root ${node.node_id} because its cwd no longer resolves: ${node.cwd}\n`);
+      continue;
+    }
+    if (cwdIsInstancePath(rootPath, instancePath)) {
+      owner = node;
+      break;
+    }
+  }
   if (owner === undefined) return ok();
   return fail('resident_owner_exists', `${instance.project}/${instance.name} already has a resident owner: ${owner.node_id} (${typeof owner.name === 'string' ? owner.name : 'unnamed'}). Reopen it with \`crtr surface node focus ${owner.node_id}\`, or finish it with \`grove finish ${instance.project}/${instance.name}\`.`);
 }
@@ -194,7 +220,7 @@ async function stampGroveOwner(request) {
   }
   if (request.runtime.isBirth !== true || request.node.lifecycle !== 'resident') return ok();
 
-  const openResult = await runGrove(['open', '--json'], { cwd: request.node.cwd });
+  const openResult = await runGrove(['open', '--json'], groveDirectoryResolutionOptions(request.node.cwd));
   if (groveUnavailable(openResult) || openResult.code === 4) return ok();
   if (openResult.error !== undefined || openResult.code !== 0 || openResult.signal !== null) {
     return fail('grove_open_failed', `grove open --json failed: ${executionDetail(openResult)}`);
