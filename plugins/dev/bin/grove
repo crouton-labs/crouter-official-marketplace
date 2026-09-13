@@ -8,7 +8,7 @@ no_grove() {
 
 command -v grove >/dev/null 2>&1 || no_grove
 
-if [ "${1:-}" = "plant" ] && [ -n "${CRTR_NODE_ID:-}" ]; then
+if { [ "${1:-}" = "plant" ] || [ "${1:-}" = "claim" ]; } && [ -n "${CRTR_NODE_ID:-}" ]; then
   previous=
   owner_label=
   for argument in "$@"; do

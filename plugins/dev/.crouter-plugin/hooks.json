@@ -2,12 +2,30 @@
   "schemaVersion": 2,
   "lifecycle": [
     {
+      "event": "node:create",
+      "phase": "before",
+      "op": "grove.one-resident-owner",
+      "description": "refuse a second resident root inside a Grove instance",
+      "effects": [
+        "Reads the Grove instance containing the new root and the live canvas roots."
+      ]
+    },
+    {
+      "event": "node:start",
+      "phase": "on",
+      "op": "grove.stamp-owner",
+      "description": "label a newly born resident Grove root with its node id",
+      "effects": [
+        "Sets owner=<node id> on the Grove instance containing the new root."
+      ]
+    },
+    {
       "event": "node:close",
       "phase": "on",
       "op": "grove.cleanup-owned-instances",
-      "description": "remove Grove instances owned by the closing node",
+      "description": "finish Grove instances owned by the closing node",
       "effects": [
-        "Removes every Grove instance labeled owner=<closing node id>."
+        "Finishes every Grove instance labeled owner=<closing node id> when its work is landed."
       ]
     }
   ]

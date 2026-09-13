@@ -15,10 +15,13 @@
 // and is never invoked by a human.
 
 import { spawn } from 'node:child_process';
+import { relative } from 'node:path';
 
 import { runTrack, scenarioList, scenarioStart, scenarioClean, TutorialError } from '../lib/tutorial/run.mjs';
 
 const PROTOCOL_VERSION = 1;
+const GROVE_CREATE_OP = 'grove.one-resident-owner';
+const GROVE_START_OP = 'grove.stamp-owner';
 const GROVE_CLOSE_OP = 'grove.cleanup-owned-instances';
 
 /** Command path (after the `dev` root) → handler. */
@@ -62,11 +65,11 @@ function executionDetail(result) {
   return result.stderr.trim() || result.stdout.trim() || `Grove exited with ${result.signal ?? result.code ?? 'an unknown status'}`;
 }
 
-function runGrove(args) {
+function runProcess(command, args, { cwd } = {}) {
   return new Promise((resolve) => {
     let child;
     try {
-      child = spawn('grove', args, { stdio: ['ignore', 'pipe', 'pipe'] });
+      child = spawn(command, args, { cwd, stdio: ['ignore', 'pipe', 'pipe'] });
     } catch (error) {
       resolve({ code: null, signal: null, stdout: '', stderr: '', error: error instanceof Error ? error : new Error(String(error)) });
       return;
@@ -84,6 +87,148 @@ function runGrove(args) {
     child.once('error', (error) => settle({ code: null, signal: null, stdout, stderr, error }));
     child.once('close', (code, signal) => settle({ code, signal, stdout, stderr }));
   });
+}
+
+function runGrove(args, options) {
+  return runProcess('grove', args, options);
+}
+
+function groveUnavailable(result) {
+  return result.error !== undefined && result.error.code === 'ENOENT';
+}
+
+function parseJson(stdout, description) {
+  try {
+    return JSON.parse(stdout);
+  } catch {
+    throw new Error(`${description} did not return JSON`);
+  }
+}
+
+function instanceFromOpen(result) {
+  const value = parseJson(result.stdout, 'grove open --json');
+  if (!isRecord(value) || typeof value.project !== 'string' || value.project === '' || typeof value.name !== 'string' || value.name === '' || typeof value.slot !== 'number' || typeof value.path !== 'string' || value.path === '') {
+    throw new Error('grove open --json returned an invalid instance');
+  }
+  return value;
+}
+
+function cwdIsInstancePath(cwd, instancePath) {
+  const path = relative(instancePath, cwd);
+  return path === '' || (path !== '..' && !path.startsWith(`..${process.platform === 'win32' ? '\\' : '/'}`) && !path.includes(`..${process.platform === 'win32' ? '\\' : '/'}`));
+}
+
+function createRequestIsResidentRoot(request) {
+  return isRecord(request)
+    && request.protocolVersion === PROTOCOL_VERSION
+    && request.event === 'node:create'
+    && request.phase === 'before'
+    && request.op === GROVE_CREATE_OP
+    && isRecord(request.create)
+    && typeof request.create.cwd === 'string'
+    && request.create.root === true
+    && request.create.lifecycle === 'resident';
+}
+
+function lifecycleRequestIsValid(request, event, op) {
+  return isRecord(request)
+    && request.protocolVersion === PROTOCOL_VERSION
+    && request.event === event
+    && request.phase === 'on'
+    && request.op === op
+    && isRecord(request.node)
+    && typeof request.node.id === 'string'
+    && request.node.id !== ''
+    && typeof request.node.cwd === 'string'
+    && isRecord(request.runtime);
+}
+
+async function guardOneResidentOwner(request) {
+  if (!createRequestIsResidentRoot(request)) {
+    if (isRecord(request) && request.protocolVersion === PROTOCOL_VERSION && request.event === 'node:create' && request.phase === 'before' && request.op === GROVE_CREATE_OP) return ok();
+    return fail('invalid_hook_request', 'expected a protocolVersion 1 node:create request with the Grove resident-owner operation');
+  }
+
+  const openResult = await runGrove(['open', '--json'], { cwd: request.create.cwd });
+  if (groveUnavailable(openResult) || openResult.code === 4) return ok();
+  if (openResult.error !== undefined || openResult.code !== 0 || openResult.signal !== null) {
+    return fail('grove_open_failed', `grove open --json failed: ${executionDetail(openResult)}`);
+  }
+
+  let instance;
+  try {
+    instance = instanceFromOpen(openResult);
+  } catch (error) {
+    return fail('grove_open_invalid', error instanceof Error ? error.message : String(error));
+  }
+  if (instance.slot === 0) return ok();
+
+  const rootsResult = await runProcess('crtr', ['--json', 'node', 'inspect', 'list', '--status', 'active,idle']);
+  if (rootsResult.error !== undefined || rootsResult.code !== 0 || rootsResult.signal !== null) {
+    return fail('crtr_roots_failed', `crtr --json node inspect list --status active,idle failed: ${executionDetail(rootsResult)}`);
+  }
+
+  let nodes;
+  try {
+    const value = parseJson(rootsResult.stdout, 'crtr --json node inspect list --status active,idle');
+    if (!isRecord(value) || !Array.isArray(value.nodes)) throw new Error('crtr --json node inspect list --status active,idle returned an invalid node list');
+    nodes = value.nodes;
+  } catch (error) {
+    return fail('crtr_roots_invalid', error instanceof Error ? error.message : String(error));
+  }
+
+  const owner = nodes.find((node) => isRecord(node)
+    && node.parent === null
+    && node.lifecycle === 'resident'
+    && typeof node.node_id === 'string'
+    && node.node_id !== request.create.replaces
+    && typeof node.cwd === 'string'
+    && cwdIsInstancePath(node.cwd, instance.path));
+  if (owner === undefined) return ok();
+  return fail('resident_owner_exists', `${instance.project}/${instance.name} already has a resident owner: ${owner.node_id} (${typeof owner.name === 'string' ? owner.name : 'unnamed'}). Reopen it with \`crtr surface node focus ${owner.node_id}\`, or finish it with \`grove finish ${instance.project}/${instance.name}\`.`);
+}
+
+async function stampGroveOwner(request) {
+  if (!lifecycleRequestIsValid(request, 'node:start', GROVE_START_OP)) {
+    return fail('invalid_hook_request', 'expected a protocolVersion 1 node:start request with the Grove owner-stamp operation');
+  }
+  if (request.runtime.isBirth !== true || request.node.lifecycle !== 'resident') return ok();
+
+  const openResult = await runGrove(['open', '--json'], { cwd: request.node.cwd });
+  if (groveUnavailable(openResult) || openResult.code === 4) return ok();
+  if (openResult.error !== undefined || openResult.code !== 0 || openResult.signal !== null) {
+    return fail('grove_open_failed', `grove open --json failed: ${executionDetail(openResult)}`);
+  }
+
+  let instance;
+  try {
+    instance = instanceFromOpen(openResult);
+  } catch (error) {
+    return fail('grove_open_invalid', error instanceof Error ? error.message : String(error));
+  }
+  if (instance.slot === 0) return ok();
+
+  const nodeResult = await runProcess('crtr', ['--json', 'node', 'inspect', 'show', request.node.id]);
+  if (nodeResult.error !== undefined || nodeResult.code !== 0 || nodeResult.signal !== null) {
+    return fail('crtr_node_failed', `crtr --json node inspect show ${request.node.id} failed: ${executionDetail(nodeResult)}`);
+  }
+
+  let node;
+  try {
+    const value = parseJson(nodeResult.stdout, `crtr --json node inspect show ${request.node.id}`);
+    if (!isRecord(value) || !isRecord(value.node)) throw new Error(`crtr --json node inspect show ${request.node.id} returned an invalid node`);
+    node = value.node;
+  } catch (error) {
+    return fail('crtr_node_invalid', error instanceof Error ? error.message : String(error));
+  }
+  if (node.parent !== null) return ok();
+
+  const labelResult = await runGrove(['label', `${instance.project}/${instance.name}`, `owner=${request.node.id}`]);
+  if (groveUnavailable(labelResult)) return ok();
+  if (labelResult.error !== undefined || labelResult.code !== 0 || labelResult.signal !== null) {
+    return fail('grove_label_failed', `grove label ${instance.project}/${instance.name} owner=${request.node.id} failed: ${executionDetail(labelResult)}`);
+  }
+  return ok();
 }
 
 function ownedGroveTargets(inventory, nodeId) {
@@ -105,33 +250,52 @@ function ownedGroveTargets(inventory, nodeId) {
   return targets.sort();
 }
 
+async function finishOwnedTarget(target, nodeId) {
+  const result = await runGrove(['finish', target, '--owner', nodeId, '--json']);
+  if (result.error !== undefined || result.signal !== null || (result.code !== 0 && result.code !== 3)) {
+    return { target, failure: executionDetail(result) };
+  }
+  try {
+    const output = parseJson(result.stdout, `grove finish ${target} --owner ${nodeId} --json`);
+    if (!isRecord(output) || output.instance !== target || typeof output.finished !== 'boolean' || (output.reason !== null && typeof output.reason !== 'string')) {
+      throw new Error('returned an invalid finish result');
+    }
+    if (result.code === 0 && output.finished !== true) throw new Error('exited 0 without a finished result');
+    if (result.code === 3 && (output.finished !== false || output.reason === null)) throw new Error('exited 3 without a kept reason');
+    return output.finished ? { target, removed: target } : { target, kept: { instance: target, reason: output.reason } };
+  } catch (error) {
+    return { target, failure: error instanceof Error ? error.message : String(error) };
+  }
+}
+
 async function cleanupOwnedGroveInstances(request) {
-  if (!isRecord(request) || request.protocolVersion !== PROTOCOL_VERSION || request.event !== 'node:close' || request.phase !== 'on' || request.op !== GROVE_CLOSE_OP || !isRecord(request.node) || typeof request.node.id !== 'string' || request.node.id === '') {
+  if (!lifecycleRequestIsValid(request, 'node:close', GROVE_CLOSE_OP)) {
     return fail('invalid_hook_request', 'expected a protocolVersion 1 node:close request with the Grove cleanup operation and node.id');
   }
 
   const inventoryResult = await runGrove(['list', '--json']);
-  if (inventoryResult.error !== undefined && inventoryResult.error.code === 'ENOENT') {
-    return fail('grove_unavailable', 'Grove is not available on PATH.', { next: 'Install Grove, then run `grove setup` in the source repository.' });
-  }
+  if (groveUnavailable(inventoryResult)) return ok();
   if (inventoryResult.error !== undefined || inventoryResult.code !== 0 || inventoryResult.signal !== null) {
     return fail('grove_list_failed', `grove list --json failed: ${executionDetail(inventoryResult)}`);
   }
 
   let targets;
   try {
-    targets = ownedGroveTargets(JSON.parse(inventoryResult.stdout), request.node.id);
+    targets = ownedGroveTargets(parseJson(inventoryResult.stdout, 'grove list --json'), request.node.id);
   } catch (error) {
     return fail('grove_inventory_invalid', `grove list --json returned invalid inventory: ${error instanceof Error ? error.message : String(error)}`);
   }
 
-  const failures = [];
-  for (const target of targets) {
-    const result = await runGrove(['uproot', target, '--force']);
-    if (result.error !== undefined || result.code !== 0 || result.signal !== null) failures.push(`${target}: ${executionDetail(result)}`);
-  }
-  if (failures.length > 0) return fail('grove_uproot_failed', `could not uproot Grove instances owned by ${request.node.id}: ${failures.join('; ')}`);
-  return { protocolVersion: PROTOCOL_VERSION, ok: true };
+  const results = await Promise.all(targets.map((target) => finishOwnedTarget(target, request.node.id)));
+  const failures = results.filter((result) => result.failure !== undefined);
+  if (failures.length > 0) return fail('grove_finish_failed', `could not finish Grove instances owned by ${request.node.id}: ${failures.map((result) => `${result.target}: ${result.failure}`).join('; ')}`);
+  // The lifecycle envelope allows only { protocolVersion, ok } on success (crtr's
+  // exec-lifecycle transport rejects any other key), so which instances were
+  // removed or kept is reported to stderr rather than in the envelope.
+  const removed = results.flatMap((result) => result.removed === undefined ? [] : [result.removed]);
+  const kept = results.flatMap((result) => result.kept === undefined ? [] : [result.kept]);
+  process.stderr.write(`grove.cleanup-owned-instances: removed [${removed.join(', ')}]; kept [${kept.map((entry) => `${entry.instance} (${entry.reason})`).join(', ')}]\n`);
+  return ok();
 }
 
 async function runCommand(request) {
@@ -163,6 +327,16 @@ async function runCommand(request) {
   }
 }
 
+async function runHook(request) {
+  if (process.argv[3] !== String(PROTOCOL_VERSION)) return fail('unsupported_protocol', `unsupported hook protocol ${String(process.argv[3])}`);
+  switch (request?.event) {
+    case 'node:create': return guardOneResidentOwner(request);
+    case 'node:start': return stampGroveOwner(request);
+    case 'node:close': return cleanupOwnedGroveInstances(request);
+    default: return fail('unsupported_hook_event', `no lifecycle handler is registered for ${String(request?.event)}`);
+  }
+}
+
 async function run() {
   const raw = await readStdin();
 
@@ -177,10 +351,7 @@ async function run() {
       });
   }
 
-  if (process.argv[2] === '--crtr-hook-protocol') {
-    if (process.argv[3] !== String(PROTOCOL_VERSION)) return fail('unsupported_protocol', `unsupported hook protocol ${String(process.argv[3])}`);
-    return cleanupOwnedGroveInstances(request);
-  }
+  if (process.argv[2] === '--crtr-hook-protocol') return runHook(request);
   return runCommand(request);
 }
 
