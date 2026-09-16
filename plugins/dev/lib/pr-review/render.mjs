@@ -7,7 +7,7 @@
 // changes, and the body absorbs the difference.
 
 import {
-  BG_ADD, BG_COMMENT, BG_DEL, BG_SELECT, BOLD, CYAN, DIM, GRAY, GREEN, MAGENTA, RED, RESET, REVERSE, YELLOW,
+  BG_ADD, BG_CARD, BG_COMMENT, BG_DEL, BG_SELECT, BOLD, CYAN, DIM, GRAY, GREEN, MAGENTA, RED, RESET, REVERSE, YELLOW,
   clipAnsi, expandTabs, padAnsi, textWidth, truncate, truncateLeft, visibleWidth, wrapText,
 } from './term.mjs';
 import { commentById, commentedRows, selectionBounds } from './state.mjs';
@@ -227,12 +227,12 @@ function diffRow(state, rowIndex, width, gw, commented, sel) {
     const head = `${marker} ${DIM}${fold}${RESET} ${statusChip(file.status)} ${rename}${BOLD}${file.path}${RESET}  ${counts(file)} ${note}`;
     const fill = Math.max(0, width - visibleWidth(head));
     const line = `${head}${DIM}${hline(fill)}${RESET}`;
-    return isCursor ? tint(line, width, BG_SELECT) : line;
+    return tint(line, width, isCursor ? BG_SELECT : BG_CARD);
   }
   if (row.kind === 'hunk') {
     const h = file.hunks[row.hunk];
     const line = `${marker} ${CYAN}@@ -${h.oldStart},${h.oldCount} +${h.newStart},${h.newCount} @@${RESET} ${DIM}${truncate(h.header, Math.max(0, width - 30))}${RESET}`;
-    return isCursor ? tint(line, width, BG_SELECT) : line;
+    return tint(line, width, isCursor ? BG_SELECT : BG_CARD);
   }
   if (row.kind === 'comment') {
     const c = commentById(state, row.id);
@@ -254,9 +254,9 @@ function diffRow(state, rowIndex, width, gw, commented, sel) {
   else if (l.kind === '\\') { sign = ' '; body = `${DIM}${text}${RESET}`; }
   else { sign = ' '; body = text; }
   const line = `${marker} ${DIM}${oldNo} ${newNo}${RESET} ${sign} ${body}`;
-  if (inSel) return tint(line, width, BG_SELECT);
-  if (bg !== null) return tint(line, width, bg);
-  return line;
+  // Every row of a file sits on the card background; the blank row between
+  // files stays on the terminal's own, so each file reads as one block.
+  return tint(line, width, inSel ? BG_SELECT : bg ?? BG_CARD);
 }
 
 // ── Frame ───────────────────────────────────────────────────────────────────
@@ -291,9 +291,12 @@ export function renderFrame(state, cols, rows) {
     for (let i = 0; i < bodyHeight; i++) {
       const rowIndex = state.scroll + i;
       let diff = rowIndex >= state.rows.length ? '' : diffRow(state, rowIndex, diffWidth, gw, commented, sel);
-      if (i === 0 && state.scroll > 0) diff = `${DIM}   ↑ ${state.scroll} more${RESET}`;
+      // Scroll indicators replace the edge rows; they keep the card
+      // background of the row they cover so a file's block stays whole.
+      const onCard = state.rows[rowIndex] !== undefined && state.rows[rowIndex].kind !== 'gap';
+      if (i === 0 && state.scroll > 0) diff = tint(`${DIM}   ↑ ${state.scroll} more${RESET}`, diffWidth, onCard ? BG_CARD : '');
       const remaining = state.rows.length - (state.scroll + bodyHeight);
-      if (i === bodyHeight - 1 && remaining > 0) diff = `${DIM}   ↓ ${remaining} more${RESET}`;
+      if (i === bodyHeight - 1 && remaining > 0) diff = tint(`${DIM}   ↓ ${remaining} more${RESET}`, diffWidth, onCard ? BG_CARD : '');
       diff = padAnsi(diff, diffWidth);
       body.push(side ? `${side[i]}${DIM} │ ${RESET}${diff}` : diff);
     }

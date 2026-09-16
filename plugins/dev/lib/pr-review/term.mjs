@@ -23,10 +23,11 @@ export const MAGENTA = `${ESC}35m`;
 export const CYAN = `${ESC}36m`;
 export const GRAY = `${ESC}90m`;
 export const WHITE = `${ESC}97m`;
-export const BG_SELECT = `${ESC}48;5;236m`;
+export const BG_CARD = `${ESC}48;5;234m`;
+export const BG_SELECT = `${ESC}48;5;238m`;
 export const BG_ADD = `${ESC}48;5;22m`;
 export const BG_DEL = `${ESC}48;5;52m`;
-export const BG_COMMENT = `${ESC}48;5;235m`;
+export const BG_COMMENT = `${ESC}48;5;237m`;
 
 const ANSI_RE = /\x1b\[[0-9;?]*[ -/]*[@-~]/g;
 
