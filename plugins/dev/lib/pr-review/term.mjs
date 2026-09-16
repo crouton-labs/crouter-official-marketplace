@@ -25,8 +25,12 @@ export const GRAY = `${ESC}90m`;
 export const WHITE = `${ESC}97m`;
 export const BG_CARD = `${ESC}48;5;234m`;
 export const BG_SELECT = `${ESC}48;5;238m`;
-export const BG_ADD = `${ESC}48;5;22m`;
-export const BG_DEL = `${ESC}48;5;52m`;
+// Muted truecolor tints a step off the card (#1c1c1c): readable as green
+// and red without lighting the line up.
+export const BG_ADD = `${ESC}48;2;28;44;28m`;
+export const BG_DEL = `${ESC}48;2;50;28;28m`;
+export const FG_ADD = `${ESC}38;2;150;200;150m`;
+export const FG_DEL = `${ESC}38;2;220;150;150m`;
 export const BG_COMMENT = `${ESC}48;5;237m`;
 
 const ANSI_RE = /\x1b\[[0-9;?]*[ -/]*[@-~]/g;
