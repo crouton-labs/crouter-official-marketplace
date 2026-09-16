@@ -7,7 +7,7 @@
 // changes, and the body absorbs the difference.
 
 import {
-  BG_ADD, BG_CARD, BG_COMMENT, BG_DEL, BG_SELECT, BOLD, CYAN, DIM, GRAY, GREEN, MAGENTA, RED, RESET, REVERSE, YELLOW,
+  BG_ADD, BG_CARD, BG_COMMENT, BG_DEL, BG_SELECT, BOLD, CYAN, DIM, FG_ADD, FG_DEL, GRAY, GREEN, MAGENTA, RED, RESET, REVERSE, YELLOW,
   clipAnsi, expandTabs, padAnsi, textWidth, truncate, truncateLeft, visibleWidth, wrapText,
 } from './term.mjs';
 import { commentById, commentedRows, selectionBounds } from './state.mjs';
@@ -249,8 +249,8 @@ function diffRow(state, rowIndex, width, gw, commented, sel) {
   let sign;
   let body;
   let bg = null;
-  if (l.kind === '+') { sign = `${GREEN}+${RESET}`; body = `${GREEN}${text}${RESET}`; bg = BG_ADD; }
-  else if (l.kind === '-') { sign = `${RED}-${RESET}`; body = `${RED}${text}${RESET}`; bg = BG_DEL; }
+  if (l.kind === '+') { sign = `${FG_ADD}+${RESET}`; body = `${FG_ADD}${text}${RESET}`; bg = BG_ADD; }
+  else if (l.kind === '-') { sign = `${FG_DEL}-${RESET}`; body = `${FG_DEL}${text}${RESET}`; bg = BG_DEL; }
   else if (l.kind === '\\') { sign = ' '; body = `${DIM}${text}${RESET}`; }
   else { sign = ' '; body = text; }
   const line = `${marker} ${DIM}${oldNo} ${newNo}${RESET} ${sign} ${body}`;
