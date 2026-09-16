@@ -156,9 +156,13 @@ export function parseUnifiedDiff(text) {
 /** Collect the PR diff: `base...branch`, honoring the repository's diff
  *  configuration (attributes, algorithm, rename detection). */
 export function collectDiff(range, cwd) {
-  const out = git([
+  return parseUnifiedDiff(rawDiff(range, cwd));
+}
+
+/** The same diff as text, exactly as `git diff` prints it. */
+export function rawDiff(range, cwd) {
+  return git([
     'diff', '--no-color', '--no-ext-diff', '--find-renames', '--src-prefix=a/', '--dst-prefix=b/',
     `${range.base}...${range.branch}`,
   ], cwd);
-  return parseUnifiedDiff(out);
 }

@@ -21,17 +21,17 @@ no_grove() {
   exit 127
 }
 
-if [ "${1:-}" = "grove" ]; then
-  shift
-  command -v grove >/dev/null 2>&1 || no_grove
-  exec grove "$@"
-fi
-
 # `dev pr review …` — the plugin's own PR review surface, not a repo branch.
 if [ "${1:-}" = "pr" ] && [ "${2:-}" = "review" ]; then
   shift 2
   here=$(cd "$(dirname "$0")" && pwd -P)
   exec node "$here/../lib/pr-review/main.mjs" "$@"
+fi
+
+if [ "${1:-}" = "grove" ]; then
+  shift
+  command -v grove >/dev/null 2>&1 || no_grove
+  exec grove "$@"
 fi
 
 # Nearest committed .dev/ manifest at or above cwd.
