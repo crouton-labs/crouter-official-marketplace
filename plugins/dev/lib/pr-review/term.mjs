@@ -24,14 +24,17 @@ export const CYAN = `${ESC}36m`;
 export const GRAY = `${ESC}90m`;
 export const WHITE = `${ESC}97m`;
 export const BG_CARD = `${ESC}48;5;234m`;
-export const BG_SELECT = `${ESC}48;5;239m`;
+export const BG_SELECT = `${ESC}48;5;237m`;
 // Muted truecolor tints a step off the card (#1c1c1c): readable as green
-// and red without lighting the line up.
+// and red without lighting the line up. Selection lifts the same tint
+// instead of swapping to gray, so the text keeps its color contrast.
 export const BG_ADD = `${ESC}48;2;30;58;30m`;
 export const BG_DEL = `${ESC}48;2;70;30;30m`;
+export const BG_SELECT_ADD = `${ESC}48;2;44;84;44m`;
+export const BG_SELECT_DEL = `${ESC}48;2;96;44;44m`;
 export const FG_ADD = `${ESC}38;2;180;240;180m`;
 export const FG_DEL = `${ESC}38;2;250;170;170m`;
-export const BG_COMMENT = `${ESC}48;5;237m`;
+export const BG_COMMENT = `${ESC}48;5;236m`;
 
 const ANSI_RE = /\x1b\[[0-9;?]*[ -/]*[@-~]/g;
 
