@@ -9,7 +9,7 @@
 
 import { execFileSync, spawnSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { buildBrief } from './companion.mjs';
 import { GitError, branchCommits, collectDiff, rawDiff, resolveRange } from './git.mjs';
@@ -113,4 +113,24 @@ export function launchReview(input, cwd) {
     comments_store: store,
     guidance: `The review window is open: the diff on the left, the companion node ${nodeId} on the right. Comments written in the review reach the companion as they are saved; press ? in the review for keys.`,
   };
+}
+
+// Run directly (`node launch.mjs [branch] [--base ref]`) to open the review
+// window without going through crtr's command tree — the same launch, printed
+// as JSON.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const input = {};
+  const argv = process.argv.slice(2);
+  for (let i = 0; i < argv.length; i++) {
+    if (argv[i] === '--base') input.base = argv[++i];
+    else if (argv[i].startsWith('--base=')) input.base = argv[i].slice('--base='.length);
+    else input.branch = argv[i];
+  }
+  try {
+    process.stdout.write(`${JSON.stringify(launchReview(input, process.cwd()), null, 2)}\n`);
+  } catch (error) {
+    if (!(error instanceof PrReviewError)) throw error;
+    process.stderr.write(`pr review: ${error.message}\n${error.next}\n`);
+    process.exitCode = 1;
+  }
 }
