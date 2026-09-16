@@ -162,9 +162,9 @@ function prBranch() {
   return {
     kind: "branch",
     name: "pr",
-    description: "pull-request work on the current repository",
-    whenToUse: "a branch is ready to be looked at as a pull request — reviewed against its base with a companion agent that holds the diff.",
-    summary: "pull-request surfaces for the current repository",
+    description: "pull-request review by a person, on the current repository",
+    whenToUse: "a branch is ready for a person to look at as a pull request — reviewed against its base with a companion agent that holds the diff.",
+    summary: "pull-request review surfaces for the current repository",
     model: "Pull-request surfaces work on a local branch against a base ref; nothing here needs the PR to exist on a forge yet. `review` opens the review window.",
     children: [
       {
@@ -246,10 +246,13 @@ export function buildDevCommandManifest() {
               },
               children: [],
             },
-            prBranch(),
             tutorialBranch(),
           ],
         },
+      },
+      {
+        parent: ["human"],
+        node: prBranch(),
       },
     ],
   };
