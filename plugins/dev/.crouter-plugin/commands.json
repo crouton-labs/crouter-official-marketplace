@@ -32,102 +32,6 @@
           },
           {
             "kind": "branch",
-            "name": "pr",
-            "description": "pull-request work on the current repository",
-            "whenToUse": "a branch is ready to be looked at as a pull request — reviewed against its base with a companion agent that holds the diff.",
-            "summary": "pull-request surfaces for the current repository",
-            "model": "Pull-request surfaces work on a local branch against a base ref; nothing here needs the PR to exist on a forge yet. `review` opens the review window.",
-            "children": [
-              {
-                "kind": "leaf",
-                "name": "review",
-                "description": "review a branch's diff against its base beside a companion agent that holds the diff",
-                "whenToUse": "the user wants to review a branch as a pull request before or instead of opening it on GitHub: read the diff file by file in a lazygit-style surface, leave comments on line ranges, and have an agent beside them that already has the whole diff in context and can answer why the code is the way it is. Must run from a shell inside tmux; it opens a new window there.",
-                "summary": "open a PR review window — diff surface on the left, companion agent on the right",
-                "params": [
-                  {
-                    "kind": "positional",
-                    "name": "branch",
-                    "type": "string",
-                    "required": false,
-                    "constraint": "The branch under review. Defaults to the checked-out branch. `base...branch` is accepted in place of --base."
-                  },
-                  {
-                    "kind": "flag",
-                    "name": "base",
-                    "type": "string",
-                    "required": false,
-                    "constraint": "The ref the branch would merge into. Defaults to origin's HEAD branch, else `main`, else `master`. The diff is `base...branch`, exactly what a pull-request page shows."
-                  }
-                ],
-                "output": [
-                  {
-                    "name": "node_id",
-                    "type": "string",
-                    "required": true,
-                    "constraint": "The companion node created for this review; it stays open after the review surface quits."
-                  },
-                  {
-                    "name": "window",
-                    "type": "string",
-                    "required": true,
-                    "constraint": "The tmux window id holding the review: surface on the left, companion viewer on the right."
-                  },
-                  {
-                    "name": "branch",
-                    "type": "string",
-                    "required": true,
-                    "constraint": "The branch under review, as resolved."
-                  },
-                  {
-                    "name": "base",
-                    "type": "string",
-                    "required": true,
-                    "constraint": "The base ref, as resolved."
-                  },
-                  {
-                    "name": "files",
-                    "type": "number",
-                    "required": true,
-                    "constraint": "How many files the diff touches."
-                  },
-                  {
-                    "name": "commits",
-                    "type": "number",
-                    "required": true,
-                    "constraint": "How many commits the branch has past the base."
-                  },
-                  {
-                    "name": "brief_chars",
-                    "type": "number",
-                    "required": true,
-                    "constraint": "Size of the companion's first message (framing plus the diff, truncated past 160000 characters of diff)."
-                  },
-                  {
-                    "name": "comments_store",
-                    "type": "string",
-                    "required": true,
-                    "constraint": "Where the review's comments persist: a JSON file under the repository's git dir, keyed by base...branch."
-                  },
-                  {
-                    "name": "guidance",
-                    "type": "string",
-                    "required": true,
-                    "constraint": "What is on screen now and how comments reach the companion."
-                  }
-                ],
-                "outputKind": "object",
-                "effects": [
-                  "Creates one resident root node (kind general) with cwd at the repository top, whose first message is the PR-reviewer framing, the commit list, the file list, any comments saved from an earlier session, and the diff (truncated past 160000 characters; omitted files are named).",
-                  "Opens one tmux window in the caller's session: the viewer window `crtr node new --root` opens for the companion, with the review surface split in on its left. Fails with no_tmux outside tmux.",
-                  "Comments the reviewer saves, revises, or deletes in the surface are delivered to the companion's inbox by `crtr node message send`, and persist under <git-dir>/crtr/pr-review/.",
-                  "The companion is not closed when the surface quits; close it from its viewer or with `crtr node lifecycle close`."
-                ]
-              }
-            ]
-          },
-          {
-            "kind": "branch",
             "name": "tutorial",
             "description": "guided walkthrough that teaches a user to drive crouter",
             "whenToUse": "a user is new to crouter and needs to learn to operate it, or an experienced user wants the runtime model behind orchestration and node lifecycles. Distinct from `crtr sys setup`, which installs providers and dependencies but teaches nothing — a user can finish setup and still be unable to open the menu.",
@@ -414,6 +318,107 @@
                   }
                 ]
               }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "parent": [
+        "human"
+      ],
+      "node": {
+        "kind": "branch",
+        "name": "pr",
+        "description": "pull-request review by a person, on the current repository",
+        "whenToUse": "a branch is ready for a person to look at as a pull request — reviewed against its base with a companion agent that holds the diff.",
+        "summary": "pull-request review surfaces for the current repository",
+        "model": "Pull-request surfaces work on a local branch against a base ref; nothing here needs the PR to exist on a forge yet. `review` opens the review window.",
+        "children": [
+          {
+            "kind": "leaf",
+            "name": "review",
+            "description": "review a branch's diff against its base beside a companion agent that holds the diff",
+            "whenToUse": "the user wants to review a branch as a pull request before or instead of opening it on GitHub: read the diff file by file in a lazygit-style surface, leave comments on line ranges, and have an agent beside them that already has the whole diff in context and can answer why the code is the way it is. Must run from a shell inside tmux; it opens a new window there.",
+            "summary": "open a PR review window — diff surface on the left, companion agent on the right",
+            "params": [
+              {
+                "kind": "positional",
+                "name": "branch",
+                "type": "string",
+                "required": false,
+                "constraint": "The branch under review. Defaults to the checked-out branch. `base...branch` is accepted in place of --base."
+              },
+              {
+                "kind": "flag",
+                "name": "base",
+                "type": "string",
+                "required": false,
+                "constraint": "The ref the branch would merge into. Defaults to origin's HEAD branch, else `main`, else `master`. The diff is `base...branch`, exactly what a pull-request page shows."
+              }
+            ],
+            "output": [
+              {
+                "name": "node_id",
+                "type": "string",
+                "required": true,
+                "constraint": "The companion node created for this review; it stays open after the review surface quits."
+              },
+              {
+                "name": "window",
+                "type": "string",
+                "required": true,
+                "constraint": "The tmux window id holding the review: surface on the left, companion viewer on the right."
+              },
+              {
+                "name": "branch",
+                "type": "string",
+                "required": true,
+                "constraint": "The branch under review, as resolved."
+              },
+              {
+                "name": "base",
+                "type": "string",
+                "required": true,
+                "constraint": "The base ref, as resolved."
+              },
+              {
+                "name": "files",
+                "type": "number",
+                "required": true,
+                "constraint": "How many files the diff touches."
+              },
+              {
+                "name": "commits",
+                "type": "number",
+                "required": true,
+                "constraint": "How many commits the branch has past the base."
+              },
+              {
+                "name": "brief_chars",
+                "type": "number",
+                "required": true,
+                "constraint": "Size of the companion's first message (framing plus the diff, truncated past 160000 characters of diff)."
+              },
+              {
+                "name": "comments_store",
+                "type": "string",
+                "required": true,
+                "constraint": "Where the review's comments persist: a JSON file under the repository's git dir, keyed by base...branch."
+              },
+              {
+                "name": "guidance",
+                "type": "string",
+                "required": true,
+                "constraint": "What is on screen now and how comments reach the companion."
+              }
+            ],
+            "outputKind": "object",
+            "effects": [
+              "Creates one resident root node (kind general) with cwd at the repository top, whose first message is the PR-reviewer framing, the commit list, the file list, any comments saved from an earlier session, and the diff (truncated past 160000 characters; omitted files are named).",
+              "Opens one tmux window in the caller's session: the viewer window `crtr node new --root` opens for the companion, with the review surface split in on its left. Fails with no_tmux outside tmux.",
+              "Comments the reviewer saves, revises, or deletes in the surface are delivered to the companion's inbox by `crtr node message send`, and persist under <git-dir>/crtr/pr-review/.",
+              "The companion is not closed when the surface quits; close it from its viewer or with `crtr node lifecycle close`."
             ]
           }
         ]

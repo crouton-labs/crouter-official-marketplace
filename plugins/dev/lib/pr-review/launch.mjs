@@ -1,4 +1,4 @@
-// launch.mjs — `crtr dev pr review`: open the review surface beside a
+// launch.mjs — `crtr human pr review`: open the review surface beside a
 // companion node.
 //
 // One tmux window: the diff review surface on the left, a viewer on the

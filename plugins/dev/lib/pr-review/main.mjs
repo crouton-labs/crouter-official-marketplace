@@ -4,7 +4,7 @@
 //
 // Comments are written to <git-dir>/crtr/pr-review/<base>...<branch>.json as
 // they are made, so quitting and reopening resumes the review. With
-// --companion <node-id> (how `crtr dev pr review` launches it) each saved,
+// --companion <node-id> (how `crtr human pr review` launches it) each saved,
 // revised, or deleted comment is also delivered to that node's inbox.
 
 import { formatComment, sendToCompanion } from './companion.mjs';
@@ -25,7 +25,7 @@ Review the changes <branch> would bring to <ref> (default: the checked-out
 branch against origin's default branch), file by file, and comment on them.
 Comments are saved under the repository's .git directory as you write them.
 With --companion, each comment is also delivered to that crtr node's inbox;
-\`crtr dev pr review\` opens this surface beside such a node.`;
+\`crtr human pr review\` opens this surface beside such a node.`;
 
 function parseArgs(argv) {
   const opts = { branch: null, base: null, cwd: process.cwd(), companion: null };
