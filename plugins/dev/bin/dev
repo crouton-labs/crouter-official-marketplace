@@ -2,6 +2,7 @@
 # dev — front door for a repository's own development surface.
 #
 # Dispatch, in order:
+#   0. `dev pr review …`  → the plugin's PR review surface (lib/pr-review).
 #   1. `dev grove …`      → the grove binary's full surface: declarative apply
 #                           and drift, labels and selectors, pool/claim/release,
 #                           rollout/rollback, and pending-operation recovery.
@@ -24,6 +25,13 @@ if [ "${1:-}" = "grove" ]; then
   shift
   command -v grove >/dev/null 2>&1 || no_grove
   exec grove "$@"
+fi
+
+# `dev pr review …` — the plugin's own PR review surface, not a repo branch.
+if [ "${1:-}" = "pr" ] && [ "${2:-}" = "review" ]; then
+  shift 2
+  here=$(cd "$(dirname "$0")" && pwd -P)
+  exec node "$here/../lib/pr-review/main.mjs" "$@"
 fi
 
 # Nearest committed .dev/ manifest at or above cwd.
