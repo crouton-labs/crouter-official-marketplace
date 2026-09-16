@@ -11,14 +11,15 @@ import { wrapText } from './term.mjs';
 
 /**
  * @typedef {{ kind: 'file', file: number }
- *   | { kind: 'note', file: number, text: string }
  *   | { kind: 'hunk', file: number, hunk: number }
  *   | { kind: 'line', file: number, hunk: number, line: number }
  *   | { kind: 'comment', file: number, id: string, part: number, total: number, text: string }
  *   | { kind: 'gap' }} Row
  *
  * A comment occupies one row per wrapped line at `state.commentWidth`, so the
- * row list is rebuilt when the pane width changes.
+ * row list is rebuilt when the pane width changes. A `gap` row is the blank
+ * line between files: painted, never landed on. A file with nothing to expand
+ * (binary, mode change, pure rename) is its header row alone.
  */
 
 export function createState({ range, files, commits, comments }) {
@@ -43,7 +44,13 @@ export function createState({ range, files, commits, comments }) {
     dirty: false,
   };
   rebuildRows(state);
+  // Open on the first change, selected as a block.
+  if (!nextChange(state, 1, { from: -1 })) jumpTo(state, 0);
   return state;
+}
+
+function landable(row) {
+  return row !== undefined && row.kind !== 'gap';
 }
 
 export function setCommentWidth(state, width) {
@@ -66,11 +73,10 @@ export function rebuildRows(state) {
     rows.push({ kind: 'file', file: fi });
     for (const c of state.comments) if (c.path === file.path && c.hunk === null) pushComment(fi, c);
     if (state.folded.has(fi)) return;
-    if (file.note !== null && file.hunks.length === 0) rows.push({ kind: 'note', file: fi, text: file.note });
     file.hunks.forEach((hunk, hi) => {
       rows.push({ kind: 'hunk', file: fi, hunk: hi });
-      hunk.lines.forEach((_, li) => {
-        rows.push({ kind: 'line', file: fi, hunk: hi, line: li });
+      hunk.lines.forEach((l, li) => {
+        rows.push({ kind: 'line', file: fi, hunk: hi, line: li, lineKind: l.kind });
         for (const c of state.comments) {
           if (c.path === file.path && c.hunk === hi && c.lineTo === li) pushComment(fi, c);
         }
@@ -85,9 +91,10 @@ export function rebuildRows(state) {
 export function clampCursor(state) {
   const max = Math.max(0, state.rows.length - 1);
   state.cursor = Math.max(0, Math.min(state.cursor, max));
+  if (state.rows[state.cursor]?.kind === 'gap') state.cursor = Math.min(max, state.cursor + 1);
   if (state.anchor !== null) state.anchor = Math.max(0, Math.min(state.anchor, max));
   const row = state.rows[state.cursor];
-  if (row && row.kind !== 'gap') state.fileIndex = row.file;
+  if (landable(row)) state.fileIndex = row.file;
 }
 
 export function commentById(state, id) {
@@ -126,10 +133,32 @@ export function commentedRows(state) {
 
 // ── Movement ───────────────────────────────────────────────────────────────
 
+/** Move by `delta` landable rows. From a block selection, one step down
+ *  leaves from the block's end and one step up from its start, so a selected
+ *  change is stepped over rather than re-walked. */
 export function moveCursor(state, delta) {
+  const { lo, hi } = selectionBounds(state);
   state.anchor = null;
-  state.cursor = Math.max(0, Math.min(state.rows.length - 1, state.cursor + delta));
+  let cursor = delta > 0 ? hi : lo;
+  const step = Math.sign(delta);
+  for (let n = Math.abs(delta); n > 0; n--) {
+    let next = cursor + step;
+    while (state.rows[next] !== undefined && !landable(state.rows[next])) next += step;
+    if (state.rows[next] === undefined) break;
+    cursor = next;
+  }
+  state.cursor = cursor;
   clampCursor(state);
+}
+
+/** The cursor `delta` landable rows away, without moving — the target an
+ *  animated move paints toward. */
+export function cursorAfterMove(state, delta) {
+  const saved = { cursor: state.cursor, anchor: state.anchor, fileIndex: state.fileIndex };
+  moveCursor(state, delta);
+  const target = state.cursor;
+  Object.assign(state, saved);
+  return target;
 }
 
 /** Extend the selection over line rows within one hunk. The anchor is set on
@@ -157,9 +186,46 @@ function findRow(state, from, delta, pred) {
   return null;
 }
 
-export function nextHunk(state, delta) {
-  const i = findRow(state, state.cursor, delta, (r) => r.kind === 'hunk' || r.kind === 'file');
-  if (i !== null) jumpTo(state, i);
+function isChange(row) {
+  return row.kind === 'line' && row.lineKind !== ' ';
+}
+
+/** Bounds of the run of changed lines containing row `i`. */
+function changeBlockAt(state, i) {
+  const rows = state.rows;
+  const same = (j) => rows[j] !== undefined && (isChange(rows[j]) || rows[j].kind === 'comment') && rows[j].file === rows[i].file && rows[j].hunk === rows[i].hunk;
+  let lo = i;
+  let hi = i;
+  while (same(lo - 1)) lo--;
+  while (same(hi + 1)) hi++;
+  // Comments hang under the block; the selection covers only the lines.
+  while (rows[hi].kind === 'comment') hi--;
+  while (rows[lo].kind === 'comment') lo++;
+  return { lo, hi };
+}
+
+/** Jump to the next/previous run of changed lines and select the whole run.
+ *  Returns false when there is none in that direction. */
+export function nextChange(state, delta, { from = null } = {}) {
+  const { lo, hi } = selectionBounds(state);
+  const start = from ?? (delta > 0 ? hi : lo);
+  const i = findRow(state, start, delta, (r) => isChange(r));
+  if (i === null) return false;
+  const block = changeBlockAt(state, i);
+  state.anchor = block.lo;
+  state.cursor = block.hi;
+  clampCursor(state);
+  return true;
+}
+
+/** Select the whole change block under the cursor, if it is on one. */
+export function selectChangeAtCursor(state) {
+  const row = state.rows[state.cursor];
+  if (!row || !isChange(row)) return false;
+  const block = changeBlockAt(state, state.cursor);
+  state.anchor = block.lo;
+  state.cursor = block.hi;
+  return true;
 }
 
 export function nextFile(state, delta) {
@@ -182,13 +248,23 @@ export function selectFile(state, fileIndex) {
   if (row !== undefined) { state.anchor = null; state.cursor = row; }
 }
 
+/** Fold the file under the cursor and move on to the next file; unfolding
+ *  stays put. Returns which happened. */
 export function toggleFold(state) {
   const row = state.rows[state.cursor];
-  if (!row || row.kind === 'gap') return;
+  if (!row || row.kind === 'gap') return null;
   const fi = row.file;
-  if (state.folded.has(fi)) state.folded.delete(fi); else state.folded.add(fi);
+  if (state.folded.has(fi)) {
+    state.folded.delete(fi);
+    rebuildRows(state);
+    jumpTo(state, state.rowOfFile[fi]);
+    return 'unfolded';
+  }
+  state.folded.add(fi);
   rebuildRows(state);
-  jumpTo(state, state.rowOfFile[fi]);
+  const next = state.rowOfFile[fi + 1] ?? state.rowOfFile[fi];
+  jumpTo(state, next);
+  return 'folded';
 }
 
 export function foldAll(state, folded) {
@@ -220,7 +296,7 @@ export function composeTarget(state) {
   const row = state.rows[state.cursor];
   if (!row || row.kind === 'gap') return { error: 'nothing to comment on here' };
   const file = state.files[row.file];
-  if (row.kind === 'file' || row.kind === 'note' || row.kind === 'hunk') {
+  if (row.kind === 'file' || row.kind === 'hunk') {
     return { path: file.path, hunk: null, lineFrom: null, lineTo: null, oldFrom: null, newFrom: null, oldTo: null, newTo: null };
   }
   if (row.kind === 'comment') return { error: 'press e to edit this comment' };
@@ -230,8 +306,10 @@ export function composeTarget(state) {
   const hunk = file.hunks[row.hunk];
   const a = hunk.lines[first.line];
   const b = hunk.lines[last.line];
+  let lines = 0;
+  for (let i = lo; i <= hi; i++) if (state.rows[i].kind === 'line') lines++;
   return {
-    path: file.path, hunk: row.hunk, lineFrom: first.line, lineTo: last.line,
+    path: file.path, hunk: row.hunk, lineFrom: first.line, lineTo: last.line, lines,
     oldFrom: a.oldNo, newFrom: a.newNo, oldTo: b.oldNo, newTo: b.newNo,
   };
 }

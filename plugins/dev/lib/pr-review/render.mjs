@@ -112,7 +112,7 @@ function viewHints(state) {
   }
   return [
     hint('j/k', 'move'), hint('J/K', 'select'), hint('c', 'comment'), hint('e', 'edit'), hint('x', 'delete'),
-    hint(']/[', 'hunk'), hint('}/{', 'file'), hint('n/N', 'comment'), hint('z', 'fold'), hint('tab', 'files'),
+    hint(']/[', 'change'), hint('}/{', 'file'), hint('n/N', 'comment'), hint('z', 'fold'), hint('tab', 'files'),
     hint('?', 'help'), hint('q', 'quit'),
   ].join(sep);
 }
@@ -124,9 +124,10 @@ function helpLines() {
     `  ${BOLD}Diff${RESET}`,
     row(k('j/k ↑/↓', 'move one row'), k('J/K', 'extend the selection (same hunk)')),
     row(k('d/u ^d/^u', 'half page down/up'), k('g/G', 'top / bottom')),
-    row(k(']/[', 'next / previous hunk'), k('}/{', 'next / previous file')),
-    row(k('n/N', 'next / previous comment'), k('z  Z', 'fold this file / fold or unfold all')),
+    row(k(']/[', 'next / previous change, selected'), k('}/{', 'next / previous file')),
+    row(k('n/N', 'next / previous comment'), k('z  Z', 'fold file and move on / fold or unfold all')),
     row(k('c', 'comment on the selection'), k('e / enter', 'edit the comment under the cursor')),
+    row(k('v', 'select the change block under the cursor'), k('esc', 'clear the selection')),
     row(k('x', 'delete the comment here'), k('tab h/l', 'switch between files and diff')),
     `  ${BOLD}Files${RESET}`,
     row(k('j/k', 'move'), k('enter l', 'open the file in the diff')),
@@ -148,7 +149,8 @@ function composeLines(state, width) {
     const from = t.newFrom ?? t.oldFrom;
     const to = t.newTo ?? t.oldTo;
     const side = t.newFrom === null ? ` ${DIM}(removed lines)${RESET}` : '';
-    where = `${t.path} ${DIM}L${from === to ? from : `${from}–${to}`}${RESET}${side}`;
+    const n = t.lines > 1 ? ` ${DIM}· ${t.lines} lines selected${RESET}` : '';
+    where = `${t.path} ${DIM}L${from === to ? from : `${from}–${to}`}${RESET}${side}${n}`;
   }
   const label = c.editingId !== null ? 'Edit comment' : 'Comment';
   const lines = [`  ${YELLOW}${label} on${RESET} ${where}`];
@@ -221,12 +223,12 @@ function diffRow(state, rowIndex, width, gw, commented, sel) {
   if (row.kind === 'file') {
     const fold = state.folded.has(row.file) ? '▸' : '▾';
     const rename = file.oldPath !== null ? `${DIM}${file.oldPath} → ${RESET}` : '';
-    const head = `${marker} ${DIM}${fold}${RESET} ${statusChip(file.status)} ${rename}${BOLD}${file.path}${RESET}  ${counts(file)} `;
+    const note = file.note !== null ? `${DIM}(${file.note})${RESET} ` : '';
+    const head = `${marker} ${DIM}${fold}${RESET} ${statusChip(file.status)} ${rename}${BOLD}${file.path}${RESET}  ${counts(file)} ${note}`;
     const fill = Math.max(0, width - visibleWidth(head));
     const line = `${head}${DIM}${hline(fill)}${RESET}`;
     return isCursor ? tint(line, width, BG_SELECT) : line;
   }
-  if (row.kind === 'note') return `${marker}   ${DIM}(${row.text})${RESET}`;
   if (row.kind === 'hunk') {
     const h = file.hunks[row.hunk];
     const line = `${marker} ${CYAN}@@ -${h.oldStart},${h.oldCount} +${h.newStart},${h.newCount} @@${RESET} ${DIM}${truncate(h.header, Math.max(0, width - 30))}${RESET}`;
