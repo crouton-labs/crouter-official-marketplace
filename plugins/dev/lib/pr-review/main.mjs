@@ -13,7 +13,7 @@ import { GitError, branchCommits, collectDiff, resolveRange } from './git.mjs';
 import { commentWidthFor, renderFrame } from './render.mjs';
 import {
   anchorLabel, closeCompose, commentsAtCursor, commitCompose, composeTarget, deleteComment, extendSelection,
-  foldAll, followCursor, followFile, jumpTo, moveCursor, nextComment, nextFile, nextHunk, openCompose,
+  cursorAfterMove, foldAll, followCursor, followFile, jumpTo, moveCursor, nextChange, nextComment, nextFile, openCompose, selectChangeAtCursor,
   createState, selectFile, setCommentWidth, textBackspace, textDelete, textInsert, textLineEnd, textLineHome,
   textMove, textVertical, textWordBackspace, textWordMove, toggleFold,
 } from './state.mjs';
@@ -137,6 +137,37 @@ function halfPage() {
   return Math.max(1, Math.floor((state.layout?.bodyHeight ?? 20) / 2));
 }
 
+// A half-page move is painted in steps so the eye can follow where the
+// viewport went: three midpoints, then the destination, 24ms apart. A key
+// pressed mid-animation lands the move immediately and handles the key.
+const SCROLL_STEPS = 4;
+const SCROLL_STEP_MS = 24;
+let animation = null;
+
+function finishAnimation() {
+  if (animation === null) return;
+  clearTimeout(animation.timer);
+  jumpTo(state, animation.target);
+  animation = null;
+}
+
+function animateCursorTo(target) {
+  finishAnimation();
+  const from = state.cursor;
+  const distance = target - from;
+  const steps = Math.min(SCROLL_STEPS, Math.abs(distance));
+  if (steps <= 1) { jumpTo(state, target); return; }
+  let step = 0;
+  const tick = () => {
+    step++;
+    if (step >= steps) { animation = null; jumpTo(state, target); paint(); return; }
+    jumpTo(state, from + Math.round((distance * step) / steps));
+    paint();
+    animation.timer = setTimeout(tick, SCROLL_STEP_MS);
+  };
+  animation = { target, timer: setTimeout(tick, SCROLL_STEP_MS) };
+}
+
 function beginCompose(editing = null) {
   if (editing) { openCompose(state, editing, editing); return; }
   const target = composeTarget(state);
@@ -193,6 +224,7 @@ function onViewKey(ev) {
   if (name === '?') { state.mode = 'help'; return; }
   if (name === 'tab' || name === 'shifttab') { state.focus = state.focus === 'diff' ? 'files' : 'diff'; return; }
   if (name === 'z' && state.files.length > 0) { toggleFold(state); return; }
+  if (name === 'v') { if (!selectChangeAtCursor(state)) state.notice = 'not on a changed line'; return; }
   if (name === 'Z') { foldAll(state, state.folded.size < state.files.length); return; }
   if (name === 'c' && !alt) { beginCompose(); return; }
 
@@ -211,12 +243,12 @@ function onViewKey(ev) {
   if (name === 'k' || name === 'up') { moveCursor(state, -1); return; }
   if (name === 'J') { extendSelection(state, 1); return; }
   if (name === 'K') { extendSelection(state, -1); return; }
-  if (name === 'd' || name === 'pagedown') { moveCursor(state, halfPage()); return; }
-  if (name === 'u' || name === 'pageup') { moveCursor(state, -halfPage()); return; }
+  if (name === 'd' || name === 'pagedown') { animateCursorTo(cursorAfterMove(state, halfPage())); return; }
+  if (name === 'u' || name === 'pageup') { animateCursorTo(cursorAfterMove(state, -halfPage())); return; }
   if (name === 'g' || name === 'home') { jumpTo(state, 0); return; }
   if (name === 'G' || name === 'end') { jumpTo(state, state.rows.length - 1); return; }
-  if (name === ']') { nextHunk(state, 1); return; }
-  if (name === '[') { nextHunk(state, -1); return; }
+  if (name === ']') { if (!nextChange(state, 1)) state.notice = 'no more changes below'; return; }
+  if (name === '[') { if (!nextChange(state, -1)) state.notice = 'no more changes above'; return; }
   if (name === '}') { nextFile(state, 1); return; }
   if (name === '{') { nextFile(state, -1); return; }
   if (name === 'n') { nextComment(state, 1); return; }
@@ -250,6 +282,7 @@ function onMouse(ev) {
 
 function onEvent(ev) {
   state.notice = null;
+  finishAnimation();
   if (state.mode === 'compose') onComposeKey(ev);
   else if (state.mode === 'help') {
     if (ev.type === 'key' && (ev.name === '?' || ev.name === 'escape' || ev.name === 'q' || ev.name === 'enter')) state.mode = 'view';
