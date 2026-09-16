@@ -194,6 +194,12 @@
       ]
     },
     {
+      "name": "symbols",
+      "source": "./plugins/symbols",
+      "version": "1.0.0",
+      "description": "Mounts `crtr symbols` as a transparent passthrough to the external symbols CLI (@crouton-kit/symbols) — symbol-level reading of a TypeScript codebase from the compiler's own resolution."
+    },
+    {
       "name": "search",
       "source": "./plugins/search",
       "version": "0.1.0",

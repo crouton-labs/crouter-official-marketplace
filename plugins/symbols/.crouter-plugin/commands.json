@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "mounts": [
+    {
+      "parent": [],
+      "node": {
+        "kind": "branch",
+        "name": "symbols",
+        "description": "transparent alias for the external `symbols` CLI",
+        "whenToUse": "a question is about a TypeScript symbol rather than about text — where it is declared, its resolved type, who calls it, what it calls, what implements it, what breaks if it changes.",
+        "passthrough": {
+          "bin": "symbols",
+          "installHint": "Install the symbols CLI: npm install -g @crouton-kit/symbols"
+        },
+        "rootEntry": {
+          "concept": "what the TypeScript compiler knows about a codebase, exposed for progressive disclosure",
+          "description": "forwards verbatim to the external `symbols` binary",
+          "whenToUse": "Reach for this whenever a question is about a TypeScript symbol rather than about text — where X is declared, what X's real type is after generics resolve, who calls X, what X calls, what implements this interface, what would break if X changed. It is more reliable than grep for these, because the answers come from the type checker, and you can act on them without re-reading files to confirm. Use grep instead for text that is not a symbol: a log message, a comment, a config key."
+        },
+        "summary": "transparent alias for the external `symbols` CLI — every argument forwards verbatim",
+        "model": "This branch owns no schema of its own: it execs `symbols` with whatever args follow, inherits stdio, and propagates its exit code. Run `crtr symbols -h` for the real command tree.",
+        "children": []
+      }
+    }
+  ]
+}
