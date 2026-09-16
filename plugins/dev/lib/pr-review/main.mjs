@@ -3,12 +3,11 @@
 // against its base, lazygit-style, and leave comments on it.
 //
 // Comments are written to <git-dir>/crtr/pr-review/<base>...<branch>.json as
-// they are made, so quitting and reopening resumes the review. Nothing is
-// sent anywhere yet: this is the reviewing surface on its own.
+// they are made, so quitting and reopening resumes the review. With
+// --companion <node-id> (how `crtr dev pr review` launches it) each saved,
+// revised, or deleted comment is also delivered to that node's inbox.
 
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-
+import { formatComment, sendToCompanion } from './companion.mjs';
 import { GitError, branchCommits, collectDiff, resolveRange } from './git.mjs';
 import { commentWidthFor, renderFrame } from './render.mjs';
 import {
@@ -17,21 +16,26 @@ import {
   createState, selectFile, setCommentWidth, textBackspace, textDelete, textInsert, textLineEnd, textLineHome,
   textMove, textVertical, textWordBackspace, textWordMove, toggleFold,
 } from './state.mjs';
+import { loadComments, saveComments, storePath } from './store.mjs';
 import { openScreen } from './term.mjs';
 
-const USAGE = `usage: dev pr review [<branch>] [--base <ref>] [-C <dir>]
+const USAGE = `usage: dev pr review [<branch>] [--base <ref>] [-C <dir>] [--companion <node-id>]
 
 Review the changes <branch> would bring to <ref> (default: the checked-out
 branch against origin's default branch), file by file, and comment on them.
-Comments are saved under the repository's .git directory as you write them.`;
+Comments are saved under the repository's .git directory as you write them.
+With --companion, each comment is also delivered to that crtr node's inbox;
+\`crtr dev pr review\` opens this surface beside such a node.`;
 
 function parseArgs(argv) {
-  const opts = { branch: null, base: null, cwd: process.cwd() };
+  const opts = { branch: null, base: null, cwd: process.cwd(), companion: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '-h' || a === '--help') { process.stdout.write(`${USAGE}\n`); process.exit(0); }
     else if (a === '--base') opts.base = argv[++i] ?? null;
     else if (a.startsWith('--base=')) opts.base = a.slice('--base='.length);
+    else if (a === '--companion') opts.companion = argv[++i] ?? null;
+    else if (a.startsWith('--companion=')) opts.companion = a.slice('--companion='.length);
     else if (a === '-C') opts.cwd = argv[++i] ?? opts.cwd;
     else if (a.startsWith('-')) { process.stderr.write(`unknown option: ${a}\n${USAGE}\n`); process.exit(2); }
     else if (opts.branch === null) opts.branch = a;
@@ -43,41 +47,6 @@ function parseArgs(argv) {
     opts.branch = branch;
   }
   return opts;
-}
-
-// ── Comment store ──────────────────────────────────────────────────────────
-
-function storePath(range) {
-  const slug = `${range.base}...${range.branch}`.replaceAll('/', '__');
-  return join(range.gitDir, 'crtr', 'pr-review', `${slug}.json`);
-}
-
-function loadComments(path, files) {
-  let raw;
-  try { raw = JSON.parse(readFileSync(path, 'utf8')); } catch { return { comments: [], dropped: 0 }; }
-  const known = new Map(files.map((f) => [f.path, f]));
-  const comments = [];
-  let dropped = 0;
-  for (const c of Array.isArray(raw.comments) ? raw.comments : []) {
-    const file = known.get(c.path);
-    const ok = file !== undefined && (c.hunk === null || (file.hunks[c.hunk] !== undefined && c.lineTo < file.hunks[c.hunk].lines.length));
-    if (ok) comments.push(c); else dropped++;
-  }
-  return { comments, dropped };
-}
-
-function saveComments(path, state) {
-  mkdirSync(dirname(path), { recursive: true });
-  const doc = {
-    version: 1,
-    base: state.range.base,
-    branch: state.range.branch,
-    mergeBase: state.range.mergeBase,
-    savedAt: new Date().toISOString(),
-    comments: state.comments,
-  };
-  writeFileSync(path, `${JSON.stringify(doc, null, 2)}\n`);
-  state.dirty = false;
 }
 
 // ── Main ───────────────────────────────────────────────────────────────────
@@ -115,7 +84,31 @@ function quit() {
     process.stdout.write(`pr review: ${range.branch} → ${range.base}, ${n} comment${n === 1 ? '' : 's'} saved to ${store}\n`);
     for (const c of state.comments) process.stdout.write(`  • ${anchorLabel(c)}: ${c.text.split('\n')[0]}\n`);
   }
-  process.exit(0);
+  if (opts.companion) process.stdout.write(`companion node ${opts.companion} is still open; close it from its viewer when the review is done.\n`);
+  // A comment sent in the last moment is still on its way; give it a beat.
+  const deadline = Date.now() + 3000;
+  const exit = () => { if (inFlight > 0 && Date.now() < deadline) setTimeout(exit, 50); else process.exit(0); };
+  exit();
+}
+
+// ── Companion delivery ─────────────────────────────────────────────────────
+
+// Sends run in the background so a slow daemon never stalls a keypress; the
+// footer reports each outcome when it lands.
+let inFlight = 0;
+
+function deliver(comment, action) {
+  if (!opts.companion) return;
+  inFlight++;
+  state.notice = action === 'withdrawn' ? 'comment deleted — telling the companion…' : 'comment saved — sending to the companion…';
+  sendToCompanion(opts.companion, formatComment(comment, files, action)).then((failure) => {
+    inFlight--;
+    if (quitting) return;
+    state.notice = failure === null
+      ? (action === 'withdrawn' ? 'companion told the comment was withdrawn' : `comment ${action === 'revised' ? 'revision ' : ''}sent to the companion`)
+      : `send failed: ${failure}`;
+    paint();
+  });
 }
 
 function paint() {
@@ -188,6 +181,7 @@ function deleteUnderCursor() {
   const target = row.kind === 'comment' ? here[0] : here[here.length - 1];
   deleteComment(state, target.id);
   state.notice = `deleted comment on ${anchorLabel(target)}`;
+  deliver(target, 'withdrawn');
 }
 
 function onComposeKey(ev) {
@@ -196,7 +190,15 @@ function onComposeKey(ev) {
   if (ev.type !== 'key') return;
   const { name, ctrl, alt } = ev;
   if (name === 'escape') { closeCompose(state); state.notice = c.editingId ? 'edit canceled' : 'comment canceled'; return; }
-  if (name === 'enter' && !alt) { if (commitCompose(state)) state.notice = 'comment saved'; return; }
+  if (name === 'enter' && !alt) {
+    const editing = c.editingId;
+    if (commitCompose(state)) {
+      state.notice = 'comment saved';
+      const saved = editing === null ? state.comments[state.comments.length - 1] : state.comments.find((k) => k.id === editing);
+      if (saved) deliver(saved, editing === null ? 'new' : 'revised');
+    }
+    return;
+  }
   if ((name === 'enter' && alt) || (name === 'j' && ctrl)) { textInsert(c, '\n'); return; }
   if (name === 'backspace' && (alt || ctrl)) { textWordBackspace(c); return; }
   if (name === 'w' && ctrl) { textWordBackspace(c); return; }

@@ -18,6 +18,7 @@ import { spawn } from 'node:child_process';
 import { realpath } from 'node:fs/promises';
 import { relative } from 'node:path';
 
+import { launchReview, PrReviewError } from '../lib/pr-review/launch.mjs';
 import { runTrack, scenarioList, scenarioStart, scenarioClean, TutorialError } from '../lib/tutorial/run.mjs';
 
 const PROTOCOL_VERSION = 1;
@@ -27,6 +28,7 @@ const GROVE_CLOSE_OP = 'grove.cleanup-owned-instances';
 
 /** Command path (after the `dev` root) → handler. */
 const LEAVES = new Map([
+  ['pr review', (input) => launchReview(input, process.cwd())],
   ['tutorial basic', (input) => runTrack('basic', input)],
   ['tutorial advanced', (input) => runTrack('advanced', input)],
   ['tutorial scenario list', () => scenarioList()],
@@ -335,7 +337,7 @@ async function runCommand(request) {
   const handler = LEAVES.get(path);
   if (handler === undefined) {
     return fail('unknown_command', `no such command: ${(request.command ?? []).join(' ') || '(empty)'}`, {
-      next: 'Run `crtr dev tutorial -h` to list this plugin\'s commands.',
+      next: 'Run `crtr dev -h` to list this plugin\'s commands.',
     });
   }
 
@@ -343,7 +345,7 @@ async function runCommand(request) {
   try {
     return ok(await handler(input));
   } catch (err) {
-    if (err instanceof TutorialError) {
+    if (err instanceof TutorialError || err instanceof PrReviewError) {
       return fail(err.code, err.message, { next: err.next });
     }
     const message = err instanceof Error ? err.message : String(err);
