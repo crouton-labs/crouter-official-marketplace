@@ -7,7 +7,7 @@
 // changes, and the body absorbs the difference.
 
 import {
-  BG_ADD, BG_CARD, BG_COMMENT, BG_DEL, BG_SELECT, BOLD, CYAN, DIM, FG_ADD, FG_DEL, GRAY, GREEN, MAGENTA, RED, RESET, REVERSE, YELLOW,
+  BG_ADD, BG_CARD, BG_COMMENT, BG_DEL, BG_SELECT, BG_SELECT_ADD, BG_SELECT_DEL, BOLD, CYAN, DIM, FG_ADD, FG_DEL, GRAY, GREEN, MAGENTA, RED, RESET, REVERSE, YELLOW,
   clipAnsi, expandTabs, padAnsi, textWidth, truncate, truncateLeft, visibleWidth, wrapText,
 } from './term.mjs';
 import { commentById, commentedRows, selectionBounds } from './state.mjs';
@@ -249,14 +249,15 @@ function diffRow(state, rowIndex, width, gw, commented, sel) {
   let sign;
   let body;
   let bg = null;
-  if (l.kind === '+') { sign = `${FG_ADD}+${RESET}`; body = `${FG_ADD}${text}${RESET}`; bg = BG_ADD; }
-  else if (l.kind === '-') { sign = `${FG_DEL}-${RESET}`; body = `${FG_DEL}${text}${RESET}`; bg = BG_DEL; }
+  let selBg = BG_SELECT;
+  if (l.kind === '+') { sign = `${FG_ADD}+${RESET}`; body = `${FG_ADD}${text}${RESET}`; bg = BG_ADD; selBg = BG_SELECT_ADD; }
+  else if (l.kind === '-') { sign = `${FG_DEL}-${RESET}`; body = `${FG_DEL}${text}${RESET}`; bg = BG_DEL; selBg = BG_SELECT_DEL; }
   else if (l.kind === '\\') { sign = ' '; body = `${DIM}${text}${RESET}`; }
   else { sign = ' '; body = text; }
   const line = `${marker} ${DIM}${oldNo} ${newNo}${RESET} ${sign} ${body}`;
   // Every row of a file sits on the card background; the blank row between
   // files stays on the terminal's own, so each file reads as one block.
-  return tint(line, width, inSel ? BG_SELECT : bg ?? BG_CARD);
+  return tint(line, width, inSel ? selBg : bg ?? BG_CARD);
 }
 
 // ── Frame ───────────────────────────────────────────────────────────────────
