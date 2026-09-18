@@ -1,6 +1,6 @@
 {
   "name": "tsym",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Mounts `crtr tsym` as a transparent passthrough to the external tsym CLI (@crouton-kit/tsym) — symbol-level reading of a TypeScript codebase from the compiler's own resolution.",
   "commands": ".crouter-plugin/commands.json",
   "transport": { "kind": "exec" },
