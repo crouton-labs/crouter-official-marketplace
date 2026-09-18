@@ -7,7 +7,7 @@
         "kind": "branch",
         "name": "tsym",
         "description": "transparent alias for the external `tsym` CLI",
-        "whenToUse": "a question is about a TypeScript symbol rather than about text — where it is declared, its resolved type, who calls it, what it calls, what implements it, what breaks if it changes.",
+        "whenToUse": "a question is about how TypeScript code is structured or connected — the shape of a directory or file, where a symbol is declared, its resolved type, who calls it, what it calls, what renders or implements it, what breaks if it changes — rather than about text.",
         "passthrough": {
           "bin": "tsym",
           "installHint": "Install the tsym CLI: npm install -g @crouton-kit/tsym"
@@ -15,7 +15,7 @@
         "rootEntry": {
           "concept": "what the TypeScript compiler knows about a codebase, exposed for progressive disclosure",
           "description": "forwards verbatim to the external `tsym` binary",
-          "whenToUse": "Reach for this whenever a question is about a TypeScript symbol rather than about text — where X is declared, what X's real type is after generics resolve, who calls X, what X calls, what implements this interface, what would break if X changed. It is more reliable than grep for these, because the answers come from the type checker, and you can act on them without re-reading files to confirm. Use grep instead for text that is not a symbol: a log message, a comment, a config key."
+          "whenToUse": "Use this before reading or grepping TypeScript to understand how code is structured or connected: `outline` a directory or file instead of opening it, `inspect` a symbol for who calls it, what it calls, what renders or implements it, `show`/`type` for one declaration without its file. Answers come from the type checker, so act on them without re-reading to confirm. Grep only for text the compiler cannot see — log strings, comments, config keys, SQL."
         },
         "summary": "transparent alias for the external `tsym` CLI — every argument forwards verbatim",
         "model": "This branch owns no schema of its own: it execs `tsym` with whatever args follow, inherits stdio, and propagates its exit code. Run `crtr tsym -h` for the real command tree.",
