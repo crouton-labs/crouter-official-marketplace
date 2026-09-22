@@ -19,21 +19,17 @@ import { realpath } from 'node:fs/promises';
 import { relative } from 'node:path';
 
 import { launchReview, PrReviewError } from '../lib/pr-review/launch.mjs';
-import { runTrack, scenarioList, scenarioStart, scenarioClean, TutorialError } from '../lib/tutorial/run.mjs';
+import { runTrack, TutorialError } from '../lib/tutorial/run.mjs';
 
 const PROTOCOL_VERSION = 1;
 const GROVE_CREATE_OP = 'grove.one-resident-owner';
 const GROVE_START_OP = 'grove.stamp-owner';
 const GROVE_CLOSE_OP = 'grove.cleanup-owned-instances';
 
-/** Command path (after the `dev` root) → handler. */
+/** Full command path → handler. */
 const LEAVES = new Map([
-  ['pr review', (input) => launchReview(input, process.cwd())],
-  ['tutorial basic', (input) => runTrack('basic', input)],
-  ['tutorial advanced', (input) => runTrack('advanced', input)],
-  ['tutorial scenario list', () => scenarioList()],
-  ['tutorial scenario start', (input) => scenarioStart(input)],
-  ['tutorial scenario clean', (input) => scenarioClean(input)],
+  ['human pr review', (input) => launchReview(input, process.cwd())],
+  ['sys tutorial dev', (input) => runTrack(input)],
 ]);
 
 async function readStdin() {
@@ -333,11 +329,11 @@ async function runCommand(request) {
     });
   }
 
-  const path = (request.command ?? []).slice(1).join(' ');
+  const path = (request.command ?? []).join(' ');
   const handler = LEAVES.get(path);
   if (handler === undefined) {
     return fail('unknown_command', `no such command: ${(request.command ?? []).join(' ') || '(empty)'}`, {
-      next: 'Run `crtr dev -h` to list this plugin\'s commands.',
+      next: 'Run `crtr human pr review -h` or `crtr sys tutorial dev -h` for this plugin\'s commands.',
     });
   }
 
