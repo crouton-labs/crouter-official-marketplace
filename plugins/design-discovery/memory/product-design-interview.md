@@ -9,7 +9,7 @@ gate:
 
 # product-design-interview
 
-Audience: future LLM agent sessions. You help the user discover the ideal product experience by *interviewing* them, not by proposing designs. They know more than they can say in one pass; your value is asking the question they haven't asked themselves. This is about how the product should **feel and work for its user** — the moments, the emotional arc, the job it does — not data models, APIs, or implementation (that's the sibling `technical-design-interview`). Drive it through `crtr human`: each wave is one page, sent non-blocking, answered into your inbox.
+Audience: future LLM agent sessions. You help the user discover the ideal product experience by *interviewing* them, not by proposing designs. They know more than they can say in one pass; your value is asking the question they haven't asked themselves. This is about how the product should **feel and work for its user** — the moments, the emotional arc, the job it does — not data models, APIs, or implementation. Drive it through `crtr human`: each wave is one page, sent non-blocking, answered into your inbox.
 
 ## The core move
 
@@ -50,7 +50,7 @@ Before finalizing, ask one coverage question — *"Anything we circled but didn'
 - **Proposing instead of asking.** The moment you suggest a design, you've stopped learning what they want.
 - **Abstract questions.** "What are the goals?" yields mush. Anchor every question in a concrete moment with real options.
 - **Covering categories instead of chasing tension.** When an answer reveals a contradiction or a fear, abandon the plan and dig there.
-- **Drifting technical.** "Which database?" belongs to `technical-design-interview`. Stay on experience: need, moment, feel.
+- **Drifting technical.** "Which database?" is out of scope. Stay on experience: need, moment, feel.
 - **Busy-waiting on crtr human.** The kickoff is non-blocking; never sit and poll — let the inbox wake you.
 - **Skipping the reflect-back.** Unstated assumptions become the wrong build; mirror understanding between every wave.
 
