@@ -48,6 +48,8 @@ The provider cannot push into the canvas, so watching is polling with change det
 
 Build one stable, sorted PR-state summary from the provider API or CLI: PR state plus an explicit merge outcome derived from the provider's merge field or timestamp, so a merged PR prints `merged` rather than merely `closed`; whether every check is terminal; whether every check is terminal AND passing, as its own field, so the moment the PR goes green is itself a change; every non-success terminal check; and non-pending review or comment activity with stable identifiers. Treat running or pending checks as pending, never as failures, and never emit an empty conclusion as a failure. Sort every collection so ordering alone cannot produce an event.
 
+On GitHub, `CheckRun` uses `status` and `conclusion`, while `StatusContext` uses `state` and identifies the check with `context` instead of `name`. A missing `status` does not mean completion, and `PENDING` is never a failure. Cross-check any red classification with `gh pr checks` before reporting a failure.
+
 Emit aggregates, not per-check status. A summary listing each job's state changes on every single job completion and wakes you dozens of times per run for nothing; a boolean plus the terminal failures wakes you only when a decision is actually available.
 
 Arm two watchers, both with a `node:$CRTR_NODE_ID` sink, `--anchor-self`, and a dynamic name carrying the repository and PR identity:
