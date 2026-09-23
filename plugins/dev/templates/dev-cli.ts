@@ -476,7 +476,7 @@ function errorCode(violations: Violation[]): string {
 function renderError(path: string[], code: string, violations: Violation[], json: boolean, next?: string, message = "Command input did not satisfy its declared constraints."): string {
   const recovery = next ?? (violations.some((violation) => violation.schema) ? `Run \`${path.join(" ")} -h\` and read the schema before re-issuing.` : "Correct every listed value and retry.");
   if (json) return JSON.stringify({ error: code, message, violations: violations.map((violation) => ({ field: violation.field, received: violation.received, expected: violation.expected })), next: recovery });
-  return `<error code="${escapeXml(code)}">\nviolations:\n${violations.map((violation) => `- ${escapeXml(violation.field)}: received ${escapeXml(violation.received)}; expected ${escapeXml(violation.expected)}.`).join("\n")}\nNext: ${escapeXml(recovery)}\n</error>`;
+  return `<error code="${escapeXml(code)}">\n${escapeXml(message)}\nviolations:\n${violations.map((violation) => `- ${escapeXml(violation.field)}: received ${escapeXml(violation.received)}; expected ${escapeXml(violation.expected)}.`).join("\n")}\nNext: ${escapeXml(recovery)}\n</error>`;
 }
 
 async function renderRootHelp(definition: CliDefinition): Promise<string> {
