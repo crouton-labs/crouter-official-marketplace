@@ -87,6 +87,8 @@ Still not a test run. You're at the surface, typing what a user would type wrong
 
 Stdout, response bodies, screenshots, pane dumps. Captured output is evidence; your memory isn't. Something unexpected? Don't route around it — capture, note, decide if it's the change or the environment. Unrelated breakage is a finding, not noise.
 
+For example, to claim that a local cache or optimistic update caused a render, correlate the render with network evidence from before the action through the relevant update interval. Final pixels alone cannot distinguish that update from a refetch. Verify that instrumentation stayed active throughout the interval and covered the relevant request transports before treating an absence of requests as evidence.
+
 Shared process state (tmux, ports, lockfiles) — isolate. `tmux -L name`, bind `:0`, `mktemp -d`. You share a namespace with your host.
 
 ## Report
