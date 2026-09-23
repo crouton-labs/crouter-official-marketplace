@@ -16,7 +16,7 @@ const DEV = [
       '',
       'Explain the distinction between a source checkout, an isolated git worktree for a branch, and a Grove instance checkout with its own resolved development services and data state. Grove registers a source and plants separate instances so distinct work does not collide with the user’s current checkout or running services.',
       '',
-      'Inspect the actual cwd and registered instance before making a change. A correct edit in the wrong checkout is still the wrong result. If the user wants fresh isolated work, read the repository’s `/dev` guidance and `grove plant -h` before choosing code and data provenance; do not plant an instance solely for this lesson.',
+      'Inspect the actual cwd and registered instance before making a change. A correct edit in the wrong checkout is still the wrong result. If the user wants fresh isolated work, read the `/dev` guidance and `grove plant -h` before choosing code and data provenance; do not plant an instance solely for this lesson.',
     ].join('\n'),
   },
   {

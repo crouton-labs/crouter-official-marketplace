@@ -23,7 +23,7 @@ A workflow is a pair sharing one name: an executable the repository owns, and an
 
 ## Where each piece lives
 
-The executable sits in the repository beside the code it drives. The entry document is a project memory document named for the command, linked from the project's existing memory front door — add the workflow to that store rather than standing up a competing one.
+The executable sits in the repository beside the code it drives. The entry document is named for the command and lives in the memory store of the profile that covers the repository, not in the repository's own store. A project document loads only inside that checkout, so a slash command authored there is missing from workspace roots, sibling repositories, and Grove instance roots. Link the entry document from the project's existing memory front door. Add the workflow to the profile store rather than standing up a competing one.
 
 ## Keep them honest
 

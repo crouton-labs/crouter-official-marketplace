@@ -1,7 +1,7 @@
 ---
 kind: knowledge
 when-and-why-to-read: "When reconciling a repository for development work — through /dev:init or after finding a partial setup — this knowledge should be read because every future change otherwise begins with rediscovery and risks running in the wrong checkout or against colliding services."
-short-form: "Reconcile the repository memory, Grove contract, project /dev intent front door, machine registration, and live lifecycle proof."
+short-form: "Reconcile the repository memory, Grove contract, profile /dev intent front door, machine registration, and live lifecycle proof."
 slash: true
 rationale: "Unguided initialization produced either no project front door or a monolithic manual, while separate memory and lifecycle setup left repositories half-ready. The generated /dev command then covered only current-stack operation, forcing developers to translate new isolated feature work into Grove and node mechanics themselves."
 surfaces:
@@ -11,7 +11,7 @@ surfaces:
 
 # /dev:init — reconcile this repository for development
 
-Give the source repository its two durable halves: a lean memory front door, and one Grove-backed development path whose project `/dev` command understands the developer's intent while live CLI help owns mechanics. Treat existing files and registration as input, not as a reason to stop. Add or repair only what is missing or incorrect, update owned files in place, and never leave a wrapper, duplicate script, or competing configuration behind.
+Give the source repository its two durable halves: a lean memory front door, and one Grove-backed development path whose `/dev` command understands the developer's intent while live CLI help owns mechanics. Treat existing files and registration as input, not as a reason to stop. Add or repair only what is missing or incorrect, update owned files in place, and never leave a wrapper, duplicate script, or competing configuration behind.
 
 First confirm the source repository. If the current directory is a planted instance, resolve its registered source and perform repository setup there; instance checkouts inherit the source contract and are never setup targets. If the directory plainly is not the repository the user named, stop and ask one focused question.
 
@@ -56,9 +56,9 @@ Read the repository contract from `grove setup -h`; do not reproduce its schema 
 
 Honor Grove's resolved context and ports so simultaneous instances remain isolated. Update a valid existing contract surgically; never replace it with a generic template.
 
-## 5. Author the project `/dev` intent front door
+## 5. Author the `/dev` intent front door
 
-Create or update `.crouter/memory/dev.md` as a project memory document with `slash: true`. Its routing line names the consequence of reading it rather than summarizing its contents; for this surface, the relevant consequence is that work begun in the wrong checkout or data state becomes disposable even when the implementation itself is correct.
+Create or update `dev` as a document with `slash: true` in the memory store of the profile that covers this repository, not in the repository's own store. A project document loads only inside that repository's checkout, so `/dev` would be missing from a workspace root above it, from a sibling repository, and from any Grove instance root that is not the repository itself. A profile holds one `dev` document: when it covers several Grove projects, the document routes by the project of the current checkout. Link to it by its name, `dev`, from the repository's memory front door. When no profile is selected, ask the user which profile owns the repository. Its routing line names the consequence of reading it rather than summarizing its contents; for this surface, the relevant consequence is that work begun in the wrong checkout or data state becomes disposable even when the implementation itself is correct.
 
 The document treats `$ARGUMENTS` as the developer's desired outcome and gives the agent this decision framework:
 
