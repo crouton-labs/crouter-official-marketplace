@@ -1,4 +1,4 @@
-// Single source of truth for the `crtr search` command surface.
+// Single source of truth for the `crtr exa-search` command surface.
 //
 // Each leaf carries BOTH its declaration (the help/param/output descriptors crtr
 // renders and validates against) and the `run` that answers an invocation. The
@@ -89,7 +89,7 @@ const webLeaf = {
       type: 'string',
       required: true,
       constraint:
-        'Decision road sign: either read selected result URLs through `crtr search contents` after checking its schema, or refine the query.',
+        'Decision road sign: either read selected result URLs through `crtr exa-search contents` after checking its schema, or refine the query.',
     },
   ],
   outputKind: 'object',
@@ -113,7 +113,7 @@ const webLeaf = {
       query,
       results: (res.results ?? []).map(projectResult),
       follow_up:
-        'Fetch full content for selected result URLs with `crtr search contents` after checking its schema. No good hits? Broaden the query, drop domain filters, or try --type deep.',
+        'Fetch full content for selected result URLs with `crtr exa-search contents` after checking its schema. No good hits? Broaden the query, drop domain filters, or try --type deep.',
     };
   },
 };
@@ -163,7 +163,7 @@ const answerLeaf = {
       answer: typeof res.answer === 'string' ? res.answer : '',
       citations: (res.citations ?? []).map(projectCitation),
       follow_up:
-        'Read any cited source in full with `crtr search contents` after checking its schema. Want raw ranked results instead of a synthesized answer? Use `crtr search web`.',
+        'Read any cited source in full with `crtr exa-search contents` after checking its schema. Want raw ranked results instead of a synthesized answer? Use `crtr exa-search web`.',
     };
   },
 };
@@ -173,7 +173,7 @@ const contentsLeaf = {
   name: 'contents',
   description: 'extract clean content from URLs you already have',
   whenToUse:
-    'you already hold one or more URLs — from a prior `search web`/`answer`, a database, an RSS feed, or user input — and need their cleaned content or highlights. This does NOT search; it only extracts from the URLs you give it. Reach for `web` when you still need to find the pages, and `answer` when you want a synthesized response rather than raw page content.',
+    'you already hold one or more URLs — from a prior `exa-search web`/`answer`, a database, an RSS feed, or user input — and need their cleaned content or highlights. This does NOT search; it only extracts from the URLs you give it. Reach for `web` when you still need to find the pages, and `answer` when you want a synthesized response rather than raw page content.',
   summary: 'content extraction via Exa — cleaned highlights or full text for URLs you already have',
   params: [
     {
@@ -262,16 +262,16 @@ const contentsLeaf = {
       results,
       failures,
       follow_up:
-        'Stale or empty content? Re-run with --max-age-hours 0 to force a fresh crawl. Need to find more pages? Use `crtr search web` after checking its schema.',
+        'Stale or empty content? Re-run with --max-age-hours 0 to force a fresh crawl. Need to find more pages? Use `crtr exa-search web` after checking its schema.',
     };
   },
 };
 
-/** The whole contributed forest: one top-level `search` branch with three
+/** The whole contributed forest: one top-level `exa-search` branch with three
  *  leaves. Mounted at parent [] by the generated command manifest. */
-export const searchBranch = {
+export const exaSearchBranch = {
   kind: 'branch',
-  name: 'search',
+  name: 'exa-search',
   description: 'search the web, answer a question with citations, or extract content from known URLs',
   whenToUse:
     'you need information from the live web — current events, documentation, sources, facts beyond your training.',
@@ -287,10 +287,10 @@ export const searchBranch = {
   children: [webLeaf, answerLeaf, contentsLeaf],
 };
 
-/** Resolve a command path (e.g. ['search', 'web']) to its leaf, or null. */
+/** Resolve a command path (e.g. ['exa-search', 'web']) to its leaf, or null. */
 export function findLeaf(commandPath) {
-  if (!Array.isArray(commandPath) || commandPath[0] !== searchBranch.name) return null;
-  let node = searchBranch;
+  if (!Array.isArray(commandPath) || commandPath[0] !== exaSearchBranch.name) return null;
+  let node = exaSearchBranch;
   for (const token of commandPath.slice(1)) {
     if (node.kind !== 'branch') return null;
     const child = node.children.find((c) => c.name === token);
@@ -305,7 +305,7 @@ export function findLeaf(commandPath) {
 export function buildCommandManifest() {
   return {
     schemaVersion: 1,
-    mounts: [{ parent: [], node: stripRuns(searchBranch) }],
+    mounts: [{ parent: [], node: stripRuns(exaSearchBranch) }],
   };
 }
 

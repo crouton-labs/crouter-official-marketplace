@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Exec-transport entrypoint for the `search` plugin.
+// Exec-transport entrypoint for the `exa-search` plugin.
 //
 // crtr spawns this with `--crtr-command-protocol 1`, writes exactly one JSON
 // request to stdin, and reads exactly one JSON envelope from stdout. Diagnostics
@@ -59,7 +59,7 @@ async function run() {
   const leaf = findLeaf(request.command);
   if (leaf === null) {
     return fail('unknown_command', `no such command: ${(request.command ?? []).join(' ') || '(empty)'}`, {
-      next: 'Run `crtr search -h` to list this plugin\'s commands.',
+      next: 'Run `crtr exa-search -h` to list this plugin\'s commands.',
     });
   }
 
@@ -79,7 +79,7 @@ async function run() {
 
 const envelope = await run().catch((err) => {
   process.stderr.write(`${err instanceof Error ? err.stack ?? err.message : String(err)}\n`);
-  return fail('command_failed', 'the search plugin crashed before producing a result', {
+  return fail('command_failed', 'the exa-search plugin crashed before producing a result', {
     next: 'Check stderr for the stack trace and report it.',
   });
 });

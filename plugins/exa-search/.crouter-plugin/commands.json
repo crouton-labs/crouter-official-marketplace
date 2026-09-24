@@ -5,7 +5,7 @@
       "parent": [],
       "node": {
         "kind": "branch",
-        "name": "search",
+        "name": "exa-search",
         "description": "search the web, answer a question with citations, or extract content from known URLs",
         "whenToUse": "you need information from the live web — current events, documentation, sources, facts beyond your training.",
         "rootEntry": {
@@ -93,7 +93,7 @@
                 "name": "follow_up",
                 "type": "string",
                 "required": true,
-                "constraint": "Decision road sign: either read selected result URLs through `crtr search contents` after checking its schema, or refine the query."
+                "constraint": "Decision road sign: either read selected result URLs through `crtr exa-search contents` after checking its schema, or refine the query."
               }
             ],
             "outputKind": "object",
@@ -145,7 +145,7 @@
             "kind": "leaf",
             "name": "contents",
             "description": "extract clean content from URLs you already have",
-            "whenToUse": "you already hold one or more URLs — from a prior `search web`/`answer`, a database, an RSS feed, or user input — and need their cleaned content or highlights. This does NOT search; it only extracts from the URLs you give it. Reach for `web` when you still need to find the pages, and `answer` when you want a synthesized response rather than raw page content.",
+            "whenToUse": "you already hold one or more URLs — from a prior `exa-search web`/`answer`, a database, an RSS feed, or user input — and need their cleaned content or highlights. This does NOT search; it only extracts from the URLs you give it. Reach for `web` when you still need to find the pages, and `answer` when you want a synthesized response rather than raw page content.",
             "summary": "content extraction via Exa — cleaned highlights or full text for URLs you already have",
             "params": [
               {

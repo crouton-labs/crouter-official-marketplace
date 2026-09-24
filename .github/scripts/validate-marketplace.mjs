@@ -221,32 +221,32 @@ if (captureManifest) {
   }
 }
 
-const searchManifest = manifests.get('search');
-if (searchManifest) {
-  const searchRoot = path.join(pluginsDir, 'search');
-  if (searchManifest.transport?.kind !== 'exec') fail('search: transport.kind must be exec');
-  if (searchManifest.transport?.executable !== 'bin/crtr-search.mjs') {
-    fail('search: transport.executable must be bin/crtr-search.mjs');
+const exaSearchManifest = manifests.get('exa-search');
+if (exaSearchManifest) {
+  const exaSearchRoot = path.join(pluginsDir, 'exa-search');
+  if (exaSearchManifest.transport?.kind !== 'exec') fail('exa-search: transport.kind must be exec');
+  if (exaSearchManifest.transport?.executable !== 'bin/crtr-exa-search.mjs') {
+    fail('exa-search: transport.executable must be bin/crtr-exa-search.mjs');
   }
-  if (searchManifest.commands !== '.crouter-plugin/commands.json') {
-    fail('search: commands must reference .crouter-plugin/commands.json');
+  if (exaSearchManifest.commands !== '.crouter-plugin/commands.json') {
+    fail('exa-search: commands must reference .crouter-plugin/commands.json');
   }
-  const executable = path.join(searchRoot, 'bin', 'crtr-search.mjs');
+  const executable = path.join(exaSearchRoot, 'bin', 'crtr-exa-search.mjs');
   if (!fs.existsSync(executable)) {
-    fail('search: bin/crtr-search.mjs is missing');
+    fail('exa-search: bin/crtr-exa-search.mjs is missing');
   } else if ((fs.statSync(executable).mode & 0o111) === 0) {
-    fail('search: bin/crtr-search.mjs must carry the exec bit');
+    fail('exa-search: bin/crtr-exa-search.mjs must carry the exec bit');
   }
   // The command tree in lib/commands.mjs is the single source of truth; the
   // checked-in commands.json is its build product and must not drift.
-  const { buildCommandManifest } = await import(pathToFileURL(path.join(searchRoot, 'lib', 'commands.mjs')));
+  const { buildCommandManifest } = await import(pathToFileURL(path.join(exaSearchRoot, 'lib', 'commands.mjs')));
   const expected = `${JSON.stringify(buildCommandManifest(), null, 2)}\n`;
-  const commandsPath = path.join(searchRoot, '.crouter-plugin', 'commands.json');
+  const commandsPath = path.join(exaSearchRoot, '.crouter-plugin', 'commands.json');
   const actual = fs.existsSync(commandsPath) ? fs.readFileSync(commandsPath, 'utf8') : null;
   if (actual === null) {
-    fail('search: .crouter-plugin/commands.json is missing');
+    fail('exa-search: .crouter-plugin/commands.json is missing');
   } else if (actual !== expected) {
-    fail('search: commands.json is stale — run node plugins/search/scripts/generate-commands.mjs');
+    fail('exa-search: commands.json is stale — run node plugins/exa-search/scripts/generate-commands.mjs');
   }
 }
 
