@@ -201,7 +201,7 @@
       "name": "bird",
       "source": "./plugins/bird",
       "version": "0.1.0",
-      "description": "Mounts `crtr bird` as a transparent passthrough to the external bird CLI (github.com/jawond/bird) — read, search, post, and reply on X/Twitter using the person's browser cookies.",
+      "description": "Mounts `crtr bird` as a transparent passthrough to the external bird CLI (github.com/CaptainCrouton89/bird) — read, search, post, and reply on X/Twitter using the person's browser cookies.",
       "keywords": [
         "bird",
         "x",

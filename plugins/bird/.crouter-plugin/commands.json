@@ -10,12 +10,12 @@
         "whenToUse": "you need to read, search, post, or reply on X/Twitter as the person — a tweet, its replies or thread, a search, mentions, or a new tweet or reply.",
         "passthrough": {
           "bin": "bird",
-          "installHint": "Build bird from source: git clone https://github.com/jawond/bird && cd bird && pnpm install && pnpm run binary (needs bun), then install -m 755 bird ~/.local/bin/bird"
+          "installHint": "Build bird from source: git clone https://github.com/CaptainCrouton89/bird && cd bird && pnpm install && pnpm run binary (needs bun), then install -m 755 bird ~/.local/bin/bird"
         },
         "rootEntry": {
           "concept": "X/Twitter from the terminal via the external bird CLI — read tweets, threads, replies, search, mentions, and post tweets or replies",
           "description": "forwards verbatim to the external `bird` binary",
-          "whenToUse": "a task needs X/Twitter content or must post there. bird signs in with the person's X cookies from Firefox or Chrome (`--chrome-profile`, `--firefox-profile`), so it acts as their real account: `whoami` or `check` confirms which account first, and `tweet` and `reply` publish immediately and publicly. Reads take `--json`. X rate-limits aggressively, so expect 429s on bursts."
+          "whenToUse": "a task needs X/Twitter content or must post there. bird signs in with the person's X cookies from Arc, Firefox, or Chrome (`--arc-profile`, `--chrome-profile`, `--firefox-profile`), so it acts as their real account: `whoami` confirms which account first, and `tweet` and `reply` publish immediately and publicly. Reads take `--json`. X rate-limits aggressively, so expect 429s on bursts."
         },
         "summary": "transparent alias for the external `bird` CLI — every argument forwards verbatim",
         "model": "This branch owns no schema of its own: it execs `bird` with whatever args follow, inherits stdio, and propagates its exit code. Run `crtr bird -h` for bird's real command tree.",
