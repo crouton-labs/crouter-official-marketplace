@@ -198,6 +198,19 @@
       "description": "Mounts `crtr tsym` as a transparent passthrough to the external tsym CLI (@crouton-kit/tsym) — symbol-level reading of a TypeScript codebase from the compiler's own resolution."
     },
     {
+      "name": "bird",
+      "source": "./plugins/bird",
+      "version": "0.1.0",
+      "description": "Mounts `crtr bird` as a transparent passthrough to the external bird CLI (github.com/jawond/bird) — read, search, post, and reply on X/Twitter using the person's browser cookies.",
+      "keywords": [
+        "bird",
+        "x",
+        "twitter",
+        "social",
+        "passthrough"
+      ]
+    },
+    {
       "name": "exa-search",
       "source": "./plugins/exa-search",
       "version": "0.1.0",

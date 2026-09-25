@@ -11,7 +11,7 @@ surfaces:
   - on: read
     match: ./**
     at: content
-last-updated: 2026-09-24T01:17:24.962Z
+last-updated: 2026-09-25T16:16:23.574Z
 origin:
   created: 2026-08-01T19:00:18.879Z
   cwd: /Users/silasrhyneer/Code/cli/crouter-official-marketplace
@@ -35,12 +35,13 @@ The official marketplace for optional crtr plugins. Every plugin here must be re
 - Web and frontend: `web` — visual direction, interface craft, UX heuristics, the design workflow, HTML mockups, the UX-consultant role, and frontend debugging, all routed from `plugins/web/memory/INDEX.md`.
 - Provider kits: `cloudflare`, `vercel`, `railway`, `fly`.
 - Browser automation: `capture`.
+- X/Twitter: `bird`.
 - Web search: `exa-search`.
 - Development workflow and practice: `dev` — owns the `/dev:spec`, `/dev:design`, and `/dev:plan` front doors and their shared guidance; the architecture-memory corpus process, template, gating, and maintenance rules under `dev/arch-memories`; developer overlays and playbook; testing guidance; plan-reviewer and spec-requirements sub-personas; the `code-craft` preferences; `dev/verify-runtime`; `dev/pr-description`; `/dev:init`; `/dev:create-workflow`; the bare `dev` dispatcher (routes `dev grove …` to the grove binary, `dev <name>` to an executable `.dev/<name>` in the caller's nearest committed `.dev/` directory with cwd at that repo root, and everything else to `grove dev`), plus the `crtr dev` passthrough mount over exec transport; and `templates/dev.ts` plus `templates/dev-cli.ts`, the zero-dependency TypeScript declared-tree lifecycle CLI `/dev:init` copies into a repository. It owns no lifecycle behavior: Grove resolves the caller's registered source or instance and the repository's own CLI performs the work.
 
 ## Command-contributing plugins
 
-`capture`, `exa-search`, and `dev` contribute top-level `crtr` commands over exec transport (`dev`'s is a transparent passthrough branch to its own `bin/dev`). `exa-search` generates its `.crouter-plugin/commands.json` from `plugins/exa-search/lib/commands.mjs` — edit the command tree there and run `node plugins/exa-search/scripts/generate-commands.mjs`; `.github/scripts/validate-marketplace.mjs` fails CI on drift, on a missing exec bit, and on a transport/commands mismatch.
+`capture`, `tsym`, `bird`, `exa-search`, and `dev` contribute top-level `crtr` commands over exec transport. `capture`, `tsym`, and `bird` are transparent passthrough branches to an external CLI on `PATH`; `dev`'s passes through to its own `bin/dev`. `exa-search` generates its `.crouter-plugin/commands.json` from `plugins/exa-search/lib/commands.mjs` — edit the command tree there and run `node plugins/exa-search/scripts/generate-commands.mjs`; `.github/scripts/validate-marketplace.mjs` fails CI on drift, on a missing exec bit, and on a transport/commands mismatch.
 
 A plugin may also declare `bin` (bare executables placed on an agent's `PATH`, as `dev` does) and `requires` (a map of bare executable name to a one-line install hint, advisory only — crtr warns at install and in `crtr sys doctor` without blocking). The same validator checks both shapes.
 

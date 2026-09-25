@@ -1,0 +1,9 @@
+{
+  "name": "bird",
+  "version": "0.1.0",
+  "description": "Mounts `crtr bird` as a transparent passthrough to the external bird CLI (github.com/jawond/bird) — read, search, post, and reply on X/Twitter using the person's browser cookies.",
+  "commands": ".crouter-plugin/commands.json",
+  "transport": { "kind": "exec" },
+  "source": "https://github.com/crouton-labs/crouter-official-marketplace",
+  "owner": { "name": "Silas Rhyneer", "email": "rhyneer.silas@gmail.com" }
+}
