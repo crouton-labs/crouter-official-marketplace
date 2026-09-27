@@ -14,7 +14,7 @@ surfaces:
 
 A design fixes the load-bearing structure before anyone writes code: component boundaries and responsibilities, interface contracts and data models, key flows, and the decisions that close real options. The altitude ceiling: a planner reading it has no design questions left, a coder reading it still has implementation choices, and nothing in it could be pasted into source. Design enough to close the expensive decisions and unblock parallel work, and no further — over-specification creates brittleness and rework when reality disagrees with the paper.
 
-Write it as `design-<subject>.md` under the shared contract in [[dev/artifacts]], with the schema in [[dev/artifacts/design]]. A request that outgrows or undershoots design gets re-routed to the work it actually is, not forced through this method.
+Write it as the document `design-<subject>` under the shared contract in [[dev/artifacts]], with the schema in [[dev/artifacts/design]]. A request that outgrows or undershoots design gets re-routed to the work it actually is, not forced through this method.
 
 ## Ground before you draft
 
@@ -36,4 +36,4 @@ Give a consequential design one independent review pass. Prime the reviewer to h
 
 ## Finish and report
 
-End by reporting the artifact's absolute path, then one sentence per decision — what was chosen and what it closed off — then any real concern and your recommendation, omitted entirely when none exists. Promote into a design orchestrator only when the artifact itself splits into parts with written contracts between them ([[dev/design/roadmap]]); tightly coupled architecture stays base across yields so one mind owns its coherence.
+End by reporting the document's `[[name]]`, then one sentence per decision — what was chosen and what it closed off — then any real concern and your recommendation, omitted entirely when none exists. Promote into a design orchestrator only when the artifact itself splits into parts with written contracts between them ([[dev/design/roadmap]]); tightly coupled architecture stays base across yields so one mind owns its coherence.

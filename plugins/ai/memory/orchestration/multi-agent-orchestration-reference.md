@@ -41,7 +41,7 @@ Self-contained instructions are non-negotiable. Passing references to "the exist
 > "Look at how the existing middleware works and implement something similar for auth."
 
 **Good instruction:**
-> "Implement auth middleware per `context/requirements-auth.md` and `context/design-auth.md`. Reference `context/conventions.md` for middleware patterns. Write implementation to `src/middleware/auth.ts`. If you find design gaps or ambiguities, stop and report via `<report-cmd>`."
+> "Implement auth middleware per `[[<node-id>/requirements-auth]]` and `[[<node-id>/design-auth]]`. Reference `[[<node-id>/conventions]]` for middleware patterns. Write implementation to `src/middleware/auth.ts`. If you find design gaps or ambiguities, stop and report via `<report-cmd>`."
 
 Every agent instruction needs: an objective, output format/location, scope boundaries, and a reporting protocol. [Anthropic (2024) — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents)
 
@@ -49,21 +49,20 @@ Every agent instruction needs: an objective, output format/location, scope bound
 
 ## File-Based Artifact Passing
 
-The most robust communication mechanism. Agents write structured artifacts to a shared filesystem rather than passing everything through conversation history.
+The most robust communication mechanism. Agents write structured artifacts to a shared store — in crtr, documents written with `crtr doc write` and pointed at as `[[name]]` links — rather than passing everything through conversation history.
 
 **Why not message passing?** Every hand-off through conversation history puts shared memory at risk. When one model's output exceeds another's context window, critical details vanish silently. [Cemri et al. (2025) — Why Do Multi-Agent LLM Systems Fail?](https://arxiv.org/abs/2503.13657)
 
 **Anthropic's approach**: "Subagent output goes to a filesystem to minimize miscommunication, and specialized agents can create outputs that persist independently." [Anthropic (2025) — Multi-Agent Research System](https://www.anthropic.com/engineering/multi-agent-research-system)
 
 ```
-$SESSION_DIR/context/
-  requirements-auth.md      # written by requirements agent
-  design-auth.md            # written by design agent (reads requirements)
-  plan-backend.md           # written by planner (reads design)
-  explore-auth-patterns.md  # written by explore agent
+[[<node-id>/requirements-auth]]      # written by requirements agent
+[[<node-id>/design-auth]]            # written by design agent (reads requirements)
+[[<node-id>/plan-backend]]           # written by planner (reads design)
+[[<node-id>/explore-auth-patterns]]  # written by explore agent
 ```
 
-Each agent reads only the files relevant to its task. Context is selective by design — no context window pollution. Artifacts persist across agent lifecycles and can be referenced in future cycles.
+Each agent reads only the documents relevant to its task. Context is selective by design — no context window pollution. Artifacts persist across agent lifecycles and can be referenced in future cycles.
 
 ---
 
@@ -152,7 +151,7 @@ For complex research tasks, a living draft evolves with each researcher round ra
 ```
 1. Decompose the question into an explicit inventory of independent sub-questions
 2. Spawn one researcher per sub-question that can proceed now
-3. After the batch, update `context/research-{topic}.md` and mark which inventory items have evidence
+3. After the batch, update the document `research-{topic}` and mark which inventory items have evidence
 4. Run another research batch only for named unanswered items, within a predeclared round or cost budget
 5. Optionally give the complete draft one independent critique pass; integrate its findings once
 6. Stop when the inventory is answered or the declared budget is reached, then perform one final synthesis rewrite
@@ -184,7 +183,7 @@ The biggest token consumer is usually tool outputs, not prompts. Shopify found t
 
 **Savings levers in priority order:**
 
-1. **Selective context** — agents read only files relevant to their task, not the full context directory
+1. **Selective context** — agents read only the artifacts relevant to their task, not every artifact the run produced
 2. **Prune tool outputs** — truncate large file reads, summarize search results before passing to next agent
 3. **Stateless orchestrator** — orchestrator gets a compressed state summary each cycle, not full history
 4. **Model matching** — workers on well-scoped tasks don't need Opus; Sonnet or Haiku suffice
@@ -230,9 +229,9 @@ These can't run in parallel — the implementer needs the design to exist first.
 
 **Good decomposition — independent work streams:**
 ```
-agent-001: Implement auth middleware (reads context/design-auth.md)
-agent-002: Implement session store  (reads context/design-auth.md)
-agent-003: Implement token verifier (reads context/design-auth.md)
+agent-001: Implement auth middleware (reads [[<node-id>/design-auth]])
+agent-002: Implement session store  (reads [[<node-id>/design-auth]])
+agent-003: Implement token verifier (reads [[<node-id>/design-auth]])
 ```
 Three agents read the same settled design and own disjoint implementation surfaces. Their outputs can land independently and are integrated once.
 

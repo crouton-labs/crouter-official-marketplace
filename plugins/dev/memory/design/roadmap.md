@@ -16,12 +16,12 @@ Decompose only when the artifact itself splits into parts with contracts between
 
 ## Contracts before delegation
 
-Write the shared interface contracts between the parts to `$CRTR_CONTEXT_DIR/design-contracts.md` before delegating anything, and give that absolute path to every sub-designer — the contracts are the seams, and parallel sub-designs without them invent incompatible assumptions.
+Write the shared interface contracts between the parts as the document `design-contracts` before delegating anything, and point every sub-designer at its `[[name]]` — the contracts are the seams, and parallel sub-designs without them invent incompatible assumptions.
 
-Each sub-design brief carries: the overall architecture diagram, the contracts doc path, the scope of its part, and the constraints from the parent design. The sub-designer follows [[dev/design/guide]], covers its part end-to-end, writes `design-<subject>-<part>.md`, and reports the absolute path.
+Each sub-design brief carries: the overall architecture diagram, the contracts document's `[[name]]`, the scope of its part, and the constraints from the parent design. The sub-designer follows [[dev/design/guide]], covers its part end-to-end, writes the document `design-<subject>-<part>`, and reports its `[[name]]`.
 
 ## Integration
 
 After the parts land, integration is your work, not a formality: read every part; check each contract is honored on both sides; check responsibilities neither gap nor overlap; check the data models are consistent; check the key flows compose across part boundaries. Reconcile every inconsistency before declaring the design done.
 
-Stitch the result into `design-<subject>.md` — the same schema at stitched altitude per [[dev/artifacts]], lean, its Pointers naming every part by absolute path — never a concatenation of the parts.
+Stitch the result into the document `design-<subject>` — the same schema at stitched altitude per [[dev/artifacts]], lean, its Pointers linking every part as a `[[name]]` link — never a concatenation of the parts.

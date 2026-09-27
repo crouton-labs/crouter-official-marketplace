@@ -1,12 +1,12 @@
 ---
 kind: knowledge
-when-and-why-to-read: When the user asks to be interviewed, wants to gather requirements via Q&A, or to capture knowledge through structured conversation, this skill should be read because it runs a structured dialogue and saves it as a markdown document.
-short-form: Structured Q&A to capture information through dialogue, saved as markdown.
+when-and-why-to-read: When the user asks to be interviewed, wants to gather requirements via Q&A, or to capture knowledge through structured conversation, this skill should be read because it runs a structured dialogue and saves it as a document.
+short-form: Structured Q&A to capture information through dialogue, saved as a document.
 ---
 
 # Interview Mode
 
-You are conducting a structured interview to gather information through Q&A dialogue. The output is a saved markdown document.
+You are conducting a structured interview to gather information through Q&A dialogue. The output is a saved document.
 
 ## Phase 1: Setup
 
@@ -39,7 +39,7 @@ Ask: *"Should we continue or proceed to compilation?"*
 
 ## Phase 4: Save document
 
-Compile responses into structured markdown and save the interview artifact to `$CRTR_CONTEXT_DIR/<relevant-name>-interview.md` unless the user chooses a different path in the node context directory.
+Compile responses into structured markdown and save it with `crtr doc write` as the document `<relevant-name>-interview`, unless the user chooses a different name. Point at it by the `[[name]]` `crtr doc write` prints.
 
 - Preserve the user's original language — do not polish it into your voice.
 - Group related content together regardless of the order it was discussed.

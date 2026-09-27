@@ -31,9 +31,9 @@ Pick one style as your primary frame before you order the units. Each fits a dif
 Each list is the order of units a development orchestrator hands out, one child (or one parallel batch) per unit, typically spec, then design, then plan, then build. It stays at the orchestrator's level: a unit's internal steps belong to the child that holds it. Your roadmap's Where things stand names which units are settled, which are in flight, and what remains, by what each unit is rather than which child holds it. Adapt names and granularity; don't add a unit that serves no exit criterion.
 
 ### New feature
-1. **Explore** — map the affected subsystems, identify entry points and constraints, and report the absolute path to the exploration artifact.
-2. **Spec** — define the interface, behavior, and acceptance criteria, then report the absolute path to the spec.
-3. **Plan** — decompose the spec into file-level tasks with dependency order, then report the absolute path to the plan.
+1. **Explore** — map the affected subsystems, identify entry points and constraints, and report the exploration document's `[[name]]`.
+2. **Spec** — define the interface, behavior, and acceptance criteria, then report the spec document's `[[name]]`.
+3. **Plan** — decompose the spec into file-level tasks with dependency order, then report the plan document's `[[name]]`.
 4. **Vertical slice** — implement the thinnest end-to-end path; validate it works before widening.
 5. **Harden** — fill out the remaining logic, edge cases, error paths.
 6. **Review** — non-implementer critique pass on the whole surface.
@@ -56,7 +56,7 @@ Each list is the order of units a development orchestrator hands out, one child 
 ### Greenfield
 1. **Explore/research** — understand the problem domain, constraints, and comparable systems.
 2. **Spec** — define the interface and top-level behaviour in enough detail to plan.
-3. **Architecture decision** — commit to the structural shape and report the absolute path to the architecture artifact.
+3. **Architecture decision** — commit to the structural shape and report the architecture document's `[[name]]`.
 4. **Spike** (if technical unknowns exist) — validate the risky piece before building around it.
 5. **Bottom-up build** — primitives first, then composition; validate each layer before building on it.
 6. **Integration** — assemble layers; validate end-to-end.
@@ -102,7 +102,7 @@ This is the delegation pipeline from spec to shipped, with the coupling that mak
 
 **Spec → Plan.** The plan agent receives the spec as input; it does not re-derive requirements. If the spec is ambiguous, the plan agent reports the ambiguity — the orchestrator resolves it and re-delegates, not the plan agent by guessing.
 
-**Plan → Implement (parallel where safe).** Tasks with disjoint file sets run concurrently. Before spawning parallel implementers, verify file-level independence; if two tasks touch the same file, serialize them. Every implementation agent receives: the goal in one sentence, its specific task and done condition, the relevant context files by path, and the e2e validation recipe.
+**Plan → Implement (parallel where safe).** Tasks with disjoint file sets run concurrently. Before spawning parallel implementers, verify file-level independence; if two tasks touch the same file, serialize them. Every implementation agent receives: the goal in one sentence, its specific task and done condition, the relevant context documents as `[[name]]` links, and the e2e validation recipe.
 
 **Implement → Review (non-implementer).** The reviewer receives the full diff and the relevant context docs. It produces a report sorted by severity — Critical, Major, Minor — and does not propose fixes inline. One review pass per implementation batch; do not re-review after fixes, validate instead.
 

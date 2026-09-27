@@ -12,7 +12,7 @@ surfaces:
 
 ## Planning from a contract
 
-A plan is a map, not a script: resolve the ambiguity the plan needs, define the boundaries, and structure the work for parallelism — then leave the implementer what they can decide without risk. Point at an existing pattern to follow rather than re-describing code the implementer will read. Write it as `plan-<subject>.md` under the shared contract in [[dev/artifacts]], with the schema in [[dev/artifacts/plan]]. A request that outgrows or undershoots planning gets re-routed to the work it actually is, not forced through this method.
+A plan is a map, not a script: resolve the ambiguity the plan needs, define the boundaries, and structure the work for parallelism — then leave the implementer what they can decide without risk. Point at an existing pattern to follow rather than re-describing code the implementer will read. Write it as the document `plan-<subject>` under the shared contract in [[dev/artifacts]], with the schema in [[dev/artifacts/plan]]. A request that outgrows or undershoots planning gets re-routed to the work it actually is, not forced through this method.
 
 ## Ground before you draft
 
@@ -32,4 +32,4 @@ Give a consequential plan one independent review pass — one `review` node, one
 
 ## Finish and report
 
-End by reporting the artifact's absolute path and a plain overview of the approach, then any real concern and your recommendation — omitted entirely when none exists, never manufactured. Do not implement — plan only. Promote into a plan orchestrator only when settled boundaries expose independent planning slices along domain seams ([[dev/plan/roadmap]]); a large sequential plan stays base across yields so later decisions build on earlier ones.
+End by reporting the document's `[[name]]` and a plain overview of the approach, then any real concern and your recommendation — omitted entirely when none exists, never manufactured. Do not implement — plan only. Promote into a plan orchestrator only when settled boundaries expose independent planning slices along domain seams ([[dev/plan/roadmap]]); a large sequential plan stays base across yields so later decisions build on earlier ones.

@@ -8,7 +8,7 @@ rationale: >-
 
 # Plan schema
 
-Write `plan-<subject>.md` with an **overview**, **ordered phases** broken into tasks, and a **verification** section stating how the finished work is checked against its contract. Close with the **Pointers** section per [[dev/artifacts]], naming the spec, design, and exploration maps the plan rests on.
+Write the document `plan-<subject>` with an **overview**, **ordered phases** broken into tasks, and a **verification** section stating how the finished work is checked against its contract. Close with the **Pointers** section per [[dev/artifacts]], naming the spec, design, and exploration maps the plan rests on.
 
 ## The task row
 
@@ -34,4 +34,4 @@ Before finishing, walk the task table once: for every input a task assumes — a
 
 ## Index-plan form
 
-A decomposed plan produces an index plan in this same schema at stitched altitude: the task table the implementation orchestrator executes, phases and dependencies across parts, and Pointers naming each `plan-<subject>-<part>.md` by absolute path. Detail lives in the part-plans; the index is not allowed to carry it.
+A decomposed plan produces an index plan in this same schema at stitched altitude: the task table the implementation orchestrator executes, phases and dependencies across parts, and Pointers linking each `plan-<subject>-<part>` as a `[[name]]` link. Detail lives in the part-plans; the index is not allowed to carry it.

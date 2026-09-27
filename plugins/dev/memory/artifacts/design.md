@@ -8,7 +8,7 @@ rationale: >-
 
 # Design schema
 
-Write `design-<subject>.md` with these sections, in order:
+Write the document `design-<subject>` with these sections, in order:
 
 **Context & constraints** — the problem being solved, the non-goals, and the constraints that are not negotiable (existing systems, performance envelopes, team conventions). This is the frame everything else hangs on.
 

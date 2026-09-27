@@ -1,7 +1,7 @@
 ---
 kind: knowledge
-when-and-why-to-read: When a spec, design, or plan node is about to write, name, or hand off its artifact, this knowledge should be read because downstream nodes locate, trust, and build on the artifact only when the chain's filenames, pointers, and purity rules hold.
-short-form: The shared contract for dev artifacts — the typed chain, filenames, stitching, pointers, purity, scope, and links to the spec, design, and plan schemas.
+when-and-why-to-read: When a spec, design, or plan node is about to write, name, or hand off its artifact, this knowledge should be read because downstream nodes locate, trust, and build on the artifact only when the chain's names, pointers, and purity rules hold.
+short-form: The shared contract for dev artifacts — the typed chain, document names, stitching, pointers, purity, scope, and links to the spec, design, and plan schemas.
 rationale: >-
   The three artifact kinds carried three incompatible notions of naming, hand-off, and master documents, so the spec→design→plan chain had no typed handoff and every downstream node reconstructed its inputs from conversation. The scope-expansion ask and the ASD-STE100 style paragraph were also duplicated near-verbatim across six files, drifting independently. This document states each shared rule once; the schema leaves carry only what differs per artifact. The parallelism threshold for orchestrator promotion is deliberately absent from this cluster — the builtin orchestration layer owns it.
 surfaces:
@@ -14,15 +14,15 @@ surfaces:
 
 Dev work moves through typed artifacts: exploration map → spec → design → plan, each stage consumed by the next. A stage is skipped when nothing needs it; the order never reverses.
 
-## Filenames
+## Names
 
-Write the artifact in `$CRTR_CONTEXT_DIR` as `spec-<subject>.md`, `design-<subject>.md`, or `plan-<subject>.md`. A part of a decomposed artifact is `<kind>-<subject>-<part>.md`.
+Write the artifact as a document with `crtr doc write`, named `spec-<subject>`, `design-<subject>`, or `plan-<subject>`. A part of a decomposed artifact is `<kind>-<subject>-<part>`. Reports, briefs, and downstream artifacts point at it by the name `crtr doc write` prints, `[[<node-id>/<name>]]` — never by a file path.
 
 A stitched top document is the same artifact type at stitched altitude: it follows the same schema, stays lean, and its Pointers section names the parts. It is never a third document shape — an "index" or "master" with its own rules would leave the reader two schemas to reconcile.
 
 ## Pointers
 
-Every artifact ends with a **Pointers** section naming its upstream inputs by absolute path — the exploration maps, spec, or design it rests on. Downstream nodes reuse that evidence instead of re-exploring; an artifact without pointers forces the next node to rebuild the ground it stands on.
+Every artifact ends with a **Pointers** section naming its upstream inputs as `[[name]]` links — the exploration maps, spec, or design it rests on. Each link also makes crtr attach the linked document's preview wherever the artifact is read, so the reader sees what every input holds before opening it. Downstream nodes reuse that evidence instead of re-exploring; an artifact without pointers forces the next node to rebuild the ground it stands on.
 
 ## Purity
 

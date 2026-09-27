@@ -42,7 +42,7 @@ After each wave, mirror understanding before asking more — open the next page 
 
 ## Close with the picture, then a coverage check
 
-Before finalizing, ask one coverage question — *"Anything we circled but didn't land? Anything deliberately off the table?"*. When they confirm it's covered, write the **experience picture** to `$CRTR_CONTEXT_DIR/design-<subject>.md`: the user & their moment, the target feeling, the hero path (the one flow 80% will take), what's explicitly out of scope, open questions, and the single concrete next step. Hand the exact artifact path to a managed `design` node with `crtr node new --kind design` when architectural design is next, or a `spec` node with `crtr node new --kind spec` when the behavior still needs acceptance criteria.
+Before finalizing, ask one coverage question — *"Anything we circled but didn't land? Anything deliberately off the table?"*. When they confirm it's covered, write the **experience picture** as the document `design-<subject>` with `crtr doc write`: the user & their moment, the target feeling, the hero path (the one flow 80% will take), what's explicitly out of scope, open questions, and the single concrete next step. Point a managed `design` node at its `[[name]]` with `crtr node new --kind design` when architectural design is next, or a `spec` node with `crtr node new --kind spec` when the behavior still needs acceptance criteria.
 
 ## Failure modes
 
@@ -57,4 +57,4 @@ Before finalizing, ask one coverage question — *"Anything we circled but didn'
 ## Related
 
 - `crtr human -h` — the current ask and review handoff surface.
-- `crtr node new --kind design` or `crtr node new --kind spec` — managed follow-on nodes that receive the experience-picture artifact path.
+- `crtr node new --kind design` or `crtr node new --kind spec` — managed follow-on nodes that receive the experience picture's `[[name]]`.
