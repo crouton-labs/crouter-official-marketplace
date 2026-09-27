@@ -11,6 +11,6 @@ surfaces:
 ---
 
 ## When shaping a software roadmap
-Before you shape a software roadmap, read `crtr memory read dev/development/guide` for development styles, roadmap shapes, and exit criteria that fit the goal's risk.
+Before you shape a software roadmap, read `crtr memory read dev/development/guide` for development styles, the order of units to hand out, and exit criteria that fit the goal's risk.
 
 Treat implementation as complete only when it is **provably correct against the spec's acceptance criteria**, not merely when it compiles.

@@ -1,7 +1,7 @@
 ---
 kind: knowledge
-when-and-why-to-read: When shaping or reshaping a build roadmap — choosing a development style, selecting a phase skeleton, or setting exit criteria for a software goal — this knowledge should be read so each phase matches the goal's risk and clears an objective done-bar before downstream work compounds an upstream mistake.
-short-form: Use when shaping or reshaping a build roadmap — choosing a development style, selecting a phase skeleton, or setting exit criteria for a software goal.
+when-and-why-to-read: When shaping or reshaping a build roadmap — choosing a development style, choosing the order of units to hand out, or setting exit criteria for a software goal — this knowledge should be read so each unit matches the goal's risk and clears an objective done-bar before downstream work compounds an upstream mistake.
+short-form: Use when shaping or reshaping a build roadmap — choosing a development style, choosing the order of units to hand out, or setting exit criteria for a software goal.
 gate: {kind: developer}
 surfaces:
   - on: boot
@@ -12,7 +12,7 @@ surfaces:
 
 ## Development Styles
 
-Pick one style as your primary frame before you write phases. Each fits a different risk/knowledge profile.
+Pick one style as your primary frame before you order the units. Each fits a different risk/knowledge profile.
 
 **Vertical slice.** Start with the thinnest path end-to-end — one real request touching every layer — before thickening any of them. Use when the integration seams are the riskiest unknowns and a working skeleton keeps the team aligned on "done". Fits new features where you know what to build but not how the layers will talk.
 
@@ -26,9 +26,9 @@ Pick one style as your primary frame before you write phases. Each fits a differ
 
 ---
 
-## Roadmap Shapes by Scenario
+## Unit Order by Scenario
 
-These are concrete phase skeletons. Adapt names and granularity; don't add phases that serve no exit criterion.
+Each list is the order of units a development orchestrator hands out, one child (or one parallel batch) per unit, typically spec, then design, then plan, then build. It stays at the orchestrator's level: a unit's internal steps belong to the child that holds it. Your roadmap's Where things stand names which units are settled, which are in flight, and what remains, by what each unit is rather than which child holds it. Adapt names and granularity; don't add a unit that serves no exit criterion.
 
 ### New feature
 1. **Explore** — map the affected subsystems, identify entry points and constraints, and report the absolute path to the exploration artifact.
@@ -79,9 +79,9 @@ These are concrete phase skeletons. Adapt names and granularity; don't add phase
 
 ---
 
-## Setting Exit Criteria per Phase
+## Setting Exit Criteria per Unit
 
-Every phase needs a concrete, evaluable condition that tells you it is genuinely done — not "looks good" or "mostly working". Write exit criteria when you write the phase, not after.
+Every unit needs a concrete, evaluable condition that tells you it is genuinely done — not "looks good" or "mostly working". Write it into the child's task when you hand the unit out, not after.
 
 - **Explore:** a context doc exists that accurately describes the relevant subsystem; a reviewer or subsequent spec agent should not need to re-explore to write the spec.
 - **Spec:** acceptance criteria are concrete enough that an implementer can derive test cases from them without ambiguity.
@@ -92,7 +92,7 @@ How much of that proof is new test coverage is the repo's call, never this playb
 - **Review:** a non-implementer has read the diff once and produced a report; every Critical, Major, or acceptance-violating finding is fixed, always. A Minor or cosmetic finding that doesn't affect acceptance is fixed when the fix is net-neutral-or-simpler, or else closed with a one-line reason. The gate is met by that one pass — never by re-reviewing until the reviewer reports nothing, which is an asymptote, not a bar.
 - **Validation:** end-to-end confirmation against the spec's acceptance criteria passes in the real runtime, not just in isolation.
 
-If you cannot write a concrete exit criterion for a phase, the phase is underspecified — split it or spec it further before adding it to the roadmap.
+If you cannot write a concrete exit criterion for a unit, the unit is underspecified — split it or spec it further before handing it out.
 
 ---
 
@@ -110,4 +110,4 @@ This is the delegation pipeline from spec to shipped, with the coupling that mak
 
 **Fix → Validate.** Validation confirms the thing works end-to-end in the real runtime by executing acceptance criteria, targeted tests, or a real behavior probe. It produces evidence rather than another opinion on the artifact. If validation fails, spawn fix agents against the observed failure and repeat that check; do not advance until it passes.
 
-**When review or validation exposes a phase gap** — a wrong assumption in the spec, a plan that missed a dependency, an implementation that reveals the design is wrong — re-delegate the affected phase rather than patching forward. A corrected spec or plan paid for in one extra wake costs less than an implementation built on a bad foundation.
+**When review or validation exposes a gap upstream** — a wrong assumption in the spec, a plan that missed a dependency, an implementation that reveals the design is wrong — re-delegate the affected unit rather than patching forward. A corrected spec or plan paid for in one extra wake costs less than an implementation built on a bad foundation.
