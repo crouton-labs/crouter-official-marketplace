@@ -16,7 +16,7 @@ The decomposition trigger is a domain seam, not size: three backend files and th
 
 ## Delegating part-plans
 
-Each slice goes to a `plan` child with the contract it plans from, its explicit scope, its place in the dependency graph, and the paths to the upstream artifacts. The child follows [[dev/plan/guide]], stays in its lane, writes `plan-<subject>-<part>.md`, and reports the absolute path.
+Each slice goes to a `plan` child with the contract it plans from, its explicit scope, its place in the dependency graph, and the `[[name]]` of each upstream artifact. The child follows [[dev/plan/guide]], stays in its lane, writes the document `plan-<subject>-<part>`, and reports its `[[name]]`.
 
 ## Synthesis
 

@@ -11,7 +11,7 @@ surfaces:
 
 # Writing requirements
 
-Work as a cold reader from the canonical specification and any approved design artifacts, without the originating conversation. Produce the complete behavioral contract a planner and validator will use. If the canonical artifacts leave an implementation-changing gap, report it to the owning spec node instead of inventing an answer. Deliver the finished requirements artifact's absolute path.
+Work as a cold reader from the canonical specification and any approved design artifacts, without the originating conversation. Produce the complete behavioral contract a planner and validator will use. If the canonical artifacts leave an implementation-changing gap, report it to the owning spec node instead of inventing an answer. Deliver the finished requirements document's `[[name]]`.
 
 Requirements state the behavior and constraints the finished system must satisfy. The requirements artifact is the complete behavioral contract: a design may remain normative for structure, but required external behavior must not be recoverable only by inference from design prose. Requirements are not architecture choices, implementation tasks, or a list containing only what the design forgot to say.
 

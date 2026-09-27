@@ -12,7 +12,7 @@ surfaces:
 
 ## Writing a specification
 
-A specification settles what outcome and behavior are required, at a depth that follows the stakes: a small reversible change needs a few paragraphs, a consequential product surface needs collaborative discovery and perhaps separate design. Write it as `spec-<subject>.md` under the shared contract in [[dev/artifacts]], with the schema in [[dev/artifacts/spec]]. A request that outgrows or undershoots specification gets re-routed to the work it actually is, not forced through this method.
+A specification settles what outcome and behavior are required, at a depth that follows the stakes: a small reversible change needs a few paragraphs, a consequential product surface needs collaborative discovery and perhaps separate design. Write it as the document `spec-<subject>` under the shared contract in [[dev/artifacts]], with the schema in [[dev/artifacts/spec]]. A request that outgrows or undershoots specification gets re-routed to the work it actually is, not forced through this method.
 
 ## Ground a code-touching spec
 
@@ -36,4 +36,4 @@ Exploration is unbounded; the document is not. What you explored and the user di
 
 Read the finished spec once as a stranger: remove placeholders and contradictions, resolve wording with two plausible interpretations, and confirm every acceptance signal can be observed. Fix the artifact in place rather than creating a review log.
 
-End by reporting the artifact's absolute path and a plain overview of what it settles, then any real concern and your recommendation — omitted entirely when none exists, never manufactured. Promote into a spec orchestrator only when settled boundaries expose independent specification, design, or requirements surfaces ([[dev/spec/roadmap]]); consequential collaboration or multi-window work stays base across yields.
+End by reporting the document's `[[name]]` and a plain overview of what it settles, then any real concern and your recommendation — omitted entirely when none exists, never manufactured. Promote into a spec orchestrator only when settled boundaries expose independent specification, design, or requirements surfaces ([[dev/spec/roadmap]]); consequential collaboration or multi-window work stays base across yields.
