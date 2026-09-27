@@ -279,11 +279,11 @@ export const exaSearchBranch = {
     concept: 'web search for agents — find pages, get grounded answers, extract page content (Exa)',
     description: 'search the web, answer a question with citations, or extract content from known URLs',
     whenToUse:
-      'you need information from the live web — current events, documentation, sources, facts beyond your training. Use web for relevant pages with excerpts, answer for one synthesized cited answer, and contents for clean text from URLs you already hold. This reaches public pages read-only, not logged-in pages or service APIs. Needs an Exa API key (EXA_API_KEY or ~/.crouter/exa.key).',
+      'you need information from the live web — current events, documentation, sources, facts beyond your training. Use web for relevant pages with excerpts, answer for one synthesized cited answer, and contents for clean text from URLs you already hold. This reaches public pages read-only, not logged-in pages or service APIs. Needs an Exa API key (EXA_API_KEY set with `crtr sys env set --name EXA_API_KEY` (or at install)).',
   },
   summary: 'web search via the Exa API — find pages, answer questions with citations, extract page content',
   model:
-    'Three leaves split by what you have and what you want. `web` is the default: a query in, ranked pages out with query-relevant highlight excerpts (or full text with --text) — use it for discovery and research. `answer` collapses a question into one synthesized, source-cited answer — use it when you want the conclusion, not a reading list. `contents` does no searching; it extracts cleaned content from URLs you already hold. Highlights are the default content mode everywhere (token-predictable); full text is opt-in and length-capped. Every leaf needs an Exa API key resolved on this machine from EXA_API_KEY or ~/.crouter/exa.key; a keyless call fails before any request is sent.',
+    'Three leaves split by what you have and what you want. `web` is the default: a query in, ranked pages out with query-relevant highlight excerpts (or full text with --text) — use it for discovery and research. `answer` collapses a question into one synthesized, source-cited answer — use it when you want the conclusion, not a reading list. `contents` does no searching; it extracts cleaned content from URLs you already hold. Highlights are the default content mode everywhere (token-predictable); full text is opt-in and length-capped. Every leaf needs an Exa API key supplied to the calling app as EXA_API_KEY set with `crtr sys env set --name EXA_API_KEY` (or at install); a keyless call fails before any request is sent.',
   children: [webLeaf, answerLeaf, contentsLeaf],
 };
 

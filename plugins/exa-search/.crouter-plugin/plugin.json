@@ -1,7 +1,7 @@
 {
   "name": "exa-search",
   "version": "0.1.0",
-  "description": "Mounts `crtr exa-search` — web search, grounded cited answers, and clean content extraction through the Exa API, using a locally resolved key (EXA_API_KEY or ~/.crouter/exa.key).",
+  "description": "Mounts `crtr exa-search` — web search, grounded cited answers, and clean content extraction through the Exa API, using EXA_API_KEY set at install or with `crtr sys env set --name EXA_API_KEY`.",
   "commands": ".crouter-plugin/commands.json",
   "transport": {
     "kind": "exec",
@@ -11,5 +11,13 @@
   "owner": {
     "name": "Silas Rhyneer",
     "email": "rhyneer.silas@gmail.com"
+  },
+  "env": {
+    "EXA_API_KEY": {
+      "description": "Exa API key used for every exa-search call.",
+      "required": true,
+      "secret": true,
+      "url": "https://dashboard.exa.ai/api-keys"
+    }
   }
 }
