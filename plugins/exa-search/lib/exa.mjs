@@ -4,10 +4,6 @@
 // build HTTP requests directly. Node built-ins and global fetch only — this
 // plugin has no dependencies and no build step.
 
-import { homedir } from 'node:os';
-import { join } from 'node:path';
-import { readFileSync, existsSync } from 'node:fs';
-
 const EXA_BASE = 'https://api.exa.ai';
 
 /** Cap (characters) applied to full-text extraction so a single call cannot
@@ -26,26 +22,12 @@ export class PluginError extends Error {
   }
 }
 
-/** Absolute path of the local key file, second in the resolution order. */
-export function keyFilePath() {
-  return join(homedir(), '.crouter', 'exa.key');
-}
-
-/** Resolve the Exa API key: EXA_API_KEY first, then ~/.crouter/exa.key. Never
- *  prompts and never proceeds keyless — throws a typed error naming both
- *  options when neither holds a non-empty value. */
+/** An agent receives the calling app's key from the daemon-managed env store. */
 export function resolveApiKey() {
   const env = process.env['EXA_API_KEY'];
   if (typeof env === 'string' && env.trim() !== '') return env.trim();
-
-  const keyFile = keyFilePath();
-  if (existsSync(keyFile)) {
-    const fromFile = readFileSync(keyFile, 'utf8').trim();
-    if (fromFile !== '') return fromFile;
-  }
-
   throw new PluginError('missing_credential', 'no Exa API key found', {
-    next: `Set the EXA_API_KEY environment variable, or write the key to ${keyFile}.`,
+    next: 'Set the key with crtr sys env set --name EXA_API_KEY.',
   });
 }
 
@@ -88,7 +70,7 @@ async function exaPost(endpoint, body) {
     const message = `Exa returned ${res.status} ${res.statusText}${detail ? `: ${detail}` : ''}`;
     if (res.status === 401 || res.status === 403) {
       throw new PluginError('credential_rejected', message, {
-        next: `Exa rejected the API key. Verify EXA_API_KEY or ${keyFilePath()}.`,
+        next: 'Exa rejected the API key. Set a valid key with crtr sys env set --name EXA_API_KEY.',
       });
     }
     throw new PluginError('exa_request_failed', message, {
