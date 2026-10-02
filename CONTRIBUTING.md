@@ -4,14 +4,14 @@ Issues and pull requests are welcome at [github.com/crouton-labs/crouter-officia
 
 ## Before you start
 
-- **Bugs:** open an issue with the plugin name and version (`crtr pkg plugin show <plugin>`), the `crtr` version (`npm ls -g crouter`), your OS, and the command that failed with its output.
+- **Bugs:** open an issue with the plugin name and version (`crtr pkg plugin show <plugin>`), the `crtr` version (`crtr --version`), your OS, and the command that failed with its output.
 - **Features and larger changes:** open an issue first, so the direction is agreed before you write the code. A new plugin that is only a bundle of documents can go straight to a pull request.
 - **Questions:** ask in [Discord](https://discord.gg/afwW4saEtr) or open an issue. Plugin authoring is covered in the [plugin guide](https://docs.crouter.ai/docs/plugin).
 - **Security problems:** do not open a public issue. See [SECURITY.md](SECURITY.md).
 
 ## Set up
 
-You need Git and Node.js to run the validator. The repository pins no Node version, and CI uses whatever Node GitHub's `ubuntu-latest` runner provides. To try a plugin, you also need [crouter](https://github.com/crouton-labs/crouter) (`npm install -g crouter`). There is nothing to install or build.
+You need Git and Node.js to run the validator. The repository pins no Node version, and CI uses whatever Node GitHub's `ubuntu-latest` runner provides. To try a plugin, you also need [crouter](https://github.com/crouton-labs/crouter) installed. There is nothing to install or build.
 
 ```bash
 git clone git@github.com:crouton-labs/crouter-official-marketplace.git
