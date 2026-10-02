@@ -4,7 +4,7 @@
 
 Please report security vulnerabilities privately, by email to **rhyneer.silas@gmail.com**. Do not open a public GitHub issue or pull request for a suspected vulnerability.
 
-Include what you found, the plugin name and version (`crtr pkg plugin show <plugin>`), the crouter version (`npm ls -g crouter`) and platform, and the steps or a proof of concept that reproduce it. If the report involves a token or credential, redact it.
+Include what you found, the plugin name and version (`crtr pkg plugin show <plugin>`), the crouter version (`crtr --version`) and platform, and the steps or a proof of concept that reproduce it. If the report involves a token or credential, redact it.
 
 Reports are read by a single maintainer, and no response time is guaranteed. Fix timelines depend on severity and on what the fix involves. Say in your report if you want credit in the fix.
 
