@@ -1,4 +1,6 @@
-# crouter official marketplace
+# crouter-official-marketplace — the official plugin marketplace for crouter
+
+![crouter-official-marketplace](https://raw.githubusercontent.com/crouton-labs/crouter-official-marketplace/main/assets/banner.svg)
 
 The official plugin marketplace for [crouter](https://github.com/crouton-labs/crouter), maintained by Crouton Labs. It is a git repository of 15 plugins that `crtr`, crouter's command line, can install. Some plugins add commands (`crtr exa-search`, `crtr capture`); the rest add markdown documents that agents are shown when they become relevant.
 
