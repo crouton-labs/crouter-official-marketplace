@@ -13,7 +13,7 @@ The same list, with install notes, is on the docs site: [docs.crouter.ai/docs/cl
 
 ## Install
 
-You need crouter installed (`npm install -g crouter`). `crtr sys setup` offers to register this marketplace and install `capture` and `exa-search` from it. To do it by hand, add the marketplace, then install a plugin by its ref, `crouter-official-marketplace/<plugin>`:
+You need crouter installed (`npm install -g @crouter/cli`). `crtr sys setup` offers to register this marketplace and install `capture` and `exa-search` from it. To do it by hand, add the marketplace, then install a plugin by its ref, `crouter-official-marketplace/<plugin>`:
 
 ```bash
 crtr pkg market add https://github.com/crouton-labs/crouter-official-marketplace.git
