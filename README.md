@@ -4,6 +4,7 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="license" src="https://img.shields.io/badge/license-GPL--3.0-blue"></a>
+  <a href="https://discord.gg/afwW4saEtr"><img alt="discord" src="https://img.shields.io/badge/discord-join-5865F2?logo=discord&logoColor=white"></a>
 </p>
 
 The official plugin marketplace for [crouter](https://github.com/crouton-labs/crouter), maintained by Crouton Labs. It is a git repository of 15 plugins that `crtr`, crouter's command line, can install. Some plugins add commands (`crtr exa-search`, `crtr capture`); the rest add markdown documents that agents are shown when they become relevant.
