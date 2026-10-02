@@ -2,6 +2,10 @@
 
 ![crouter-official-marketplace](https://raw.githubusercontent.com/crouton-labs/crouter-official-marketplace/main/assets/banner.svg)
 
+<p align="center">
+  <a href="LICENSE"><img alt="license" src="https://img.shields.io/badge/license-GPL--3.0-blue"></a>
+</p>
+
 The official plugin marketplace for [crouter](https://github.com/crouton-labs/crouter), maintained by Crouton Labs. It is a git repository of 15 plugins that `crtr`, crouter's command line, can install. Some plugins add commands (`crtr exa-search`, `crtr capture`); the rest add markdown documents that agents are shown when they become relevant.
 
 The same list, with install notes, is on the docs site: [docs.crouter.ai/docs/cli/official-marketplace](https://docs.crouter.ai/docs/cli/official-marketplace).
