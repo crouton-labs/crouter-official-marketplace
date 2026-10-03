@@ -9,9 +9,6 @@ surfaces:
   - on: memory-read
     match: git/pr-loop
     at: content
-  - on: memory-read
-    match: northlight/git/branch-and-pr
-    at: content
 ---
 
 # /dev:pr-loop — prepare and watch a pull request
