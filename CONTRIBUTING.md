@@ -6,7 +6,7 @@ Issues and pull requests are welcome at [github.com/crouton-labs/crouter-officia
 
 - **Bugs:** open an issue with the plugin name and version (`crtr pkg plugin show <plugin>`), the `crtr` version (`crtr --version`), your OS, and the command that failed with its output.
 - **Features and larger changes:** open an issue first, so the direction is agreed before you write the code. A new plugin that is only a bundle of documents can go straight to a pull request.
-- **Questions:** ask in [Discord](https://discord.gg/afwW4saEtr) or open an issue. Plugin authoring is covered in the [plugin guide](https://docs.crouter.ai/docs/plugin).
+- **Questions:** ask in [Discord](https://discord.gg/txKS3swtWY) or open an issue. Plugin authoring is covered in the [plugin guide](https://docs.crouter.ai/docs/plugin).
 - **Security problems:** do not open a public issue. See [SECURITY.md](SECURITY.md).
 
 ## Set up
