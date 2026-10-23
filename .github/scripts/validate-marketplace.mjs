@@ -250,6 +250,33 @@ if (exaSearchManifest) {
   }
 }
 
+const slackBotManifest = manifests.get('slack-bot');
+if (slackBotManifest) {
+  const slackBotRoot = path.join(pluginsDir, 'slack-bot');
+  if (slackBotManifest.transport?.kind !== 'exec') fail('slack-bot: transport.kind must be exec');
+  if (slackBotManifest.transport?.executable !== 'bin/crtr-slack-bot.mjs') {
+    fail('slack-bot: transport.executable must be bin/crtr-slack-bot.mjs');
+  }
+  if (slackBotManifest.commands !== '.crouter-plugin/commands.json') {
+    fail('slack-bot: commands must reference .crouter-plugin/commands.json');
+  }
+  const executable = path.join(slackBotRoot, 'bin', 'crtr-slack-bot.mjs');
+  if (!fs.existsSync(executable)) {
+    fail('slack-bot: bin/crtr-slack-bot.mjs is missing');
+  } else if ((fs.statSync(executable).mode & 0o111) === 0) {
+    fail('slack-bot: bin/crtr-slack-bot.mjs must carry the exec bit');
+  }
+  const { buildCommandManifest } = await import(pathToFileURL(path.join(slackBotRoot, 'lib', 'commands.mjs')));
+  const expected = `${JSON.stringify(buildCommandManifest(), null, 2)}\n`;
+  const commandsPath = path.join(slackBotRoot, '.crouter-plugin', 'commands.json');
+  const actual = fs.existsSync(commandsPath) ? fs.readFileSync(commandsPath, 'utf8') : null;
+  if (actual === null) {
+    fail('slack-bot: .crouter-plugin/commands.json is missing');
+  } else if (actual !== expected) {
+    fail('slack-bot: commands.json is stale — run node plugins/slack-bot/scripts/generate-commands.mjs');
+  }
+}
+
 const githubAssetManifest = manifests.get('github-asset');
 if (githubAssetManifest) {
   const pluginRoot = path.join(pluginsDir, 'github-asset');

@@ -228,6 +228,21 @@
       ]
     },
     {
+      "name": "slack-bot",
+      "source": "./plugins/slack-bot",
+      "version": "0.1.0",
+      "description": "Mounts `crtr slack-bot` — posts Slack messages as a bot user (DMs, group DMs, channels, thread replies) so the people addressed are notified, using SLACK_BOT_TOKEN set at install or with `crtr sys env set --name SLACK_BOT_TOKEN`.",
+      "keywords": [
+        "slack",
+        "notify",
+        "notification",
+        "dm",
+        "group-dm",
+        "bot",
+        "message"
+      ]
+    },
+    {
       "name": "github-asset",
       "source": "./plugins/github-asset",
       "version": "0.1.0",
