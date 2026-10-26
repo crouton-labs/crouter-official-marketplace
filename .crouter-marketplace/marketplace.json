@@ -214,7 +214,7 @@
       "name": "exa-search",
       "source": "./plugins/exa-search",
       "version": "0.1.0",
-      "description": "Mounts `crtr exa-search` — web search, grounded cited answers, and clean content extraction through the Exa API, using a locally resolved key (EXA_API_KEY or ~/.crouter/exa.key).",
+      "description": "Mounts `crtr exa-search` — web search, grounded cited answers, and clean content extraction through the Exa API, using EXA_API_KEY set at install or with `crtr sys env set --name EXA_API_KEY`.",
       "keywords": [
         "search",
         "web-search",

@@ -16,7 +16,7 @@ Dev work moves through typed artifacts: exploration map → spec → design → 
 
 ## Names
 
-Write the artifact as a document with `crtr doc write`, named `spec-<subject>`, `design-<subject>`, or `plan-<subject>`. A part of a decomposed artifact is `<kind>-<subject>-<part>`. Reports, briefs, and downstream artifacts point at it by the name `crtr doc write` prints, `[[<node-id>/<name>]]` — never by a file path.
+Write the artifact as a document with `crtr doc write`, named `spec-<subject>`, `design-<subject>`, or `plan-<subject>`. A part of a decomposed artifact is `<kind>-<subject>-<part>`. Reports, briefs, and downstream artifacts point at it by the name `crtr doc write` prints, `[[node-id/name]]` — never by a file path.
 
 A stitched top document is the same artifact type at stitched altitude: it follows the same schema, stays lean, and its Pointers section names the parts. It is never a third document shape — an "index" or "master" with its own rules would leave the reader two schemas to reconcile.
 
