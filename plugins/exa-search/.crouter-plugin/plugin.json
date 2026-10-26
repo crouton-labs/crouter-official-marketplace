@@ -1,6 +1,6 @@
 {
   "name": "exa-search",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Mounts `crtr exa-search` — web search, grounded cited answers, and clean content extraction through the Exa API, using EXA_API_KEY set at install or with `crtr sys env set --name EXA_API_KEY`.",
   "commands": ".crouter-plugin/commands.json",
   "transport": {

@@ -1,6 +1,6 @@
 {
   "name": "crouter-official-marketplace",
-  "version": "7.3.0",
+  "version": "7.4.0",
   "owner": {
     "name": "Silas Rhyneer",
     "email": "rhyneer.silas@gmail.com"
@@ -9,7 +9,7 @@
     {
       "name": "ai",
       "source": "./plugins/ai",
-      "version": "1.4.0",
+      "version": "1.5.0",
       "description": "Skills for building with LLMs and designing for agents — prompt architecture, agent interface design (UI/UX/CLI/tools), multi-agent orchestration, LLM output quality, and agentic testing.",
       "keywords": [
         "llm",
@@ -47,7 +47,7 @@
     {
       "name": "knowledge-capture",
       "source": "./plugins/knowledge-capture",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "description": "Skills for capturing knowledge through interviews, peer collaboration, breakthrough thinking, and session takeaways.",
       "keywords": [
         "interview",
@@ -103,7 +103,7 @@
     {
       "name": "design-discovery",
       "source": "./plugins/design-discovery",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Socratic, crtr human-led product-design discovery interview — grill the user to shape the ideal product experience before building.",
       "keywords": [
         "design",
@@ -213,7 +213,7 @@
     {
       "name": "exa-search",
       "source": "./plugins/exa-search",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "description": "Mounts `crtr exa-search` — web search, grounded cited answers, and clean content extraction through the Exa API, using EXA_API_KEY set at install or with `crtr sys env set --name EXA_API_KEY`.",
       "keywords": [
         "search",
@@ -261,7 +261,7 @@
     {
       "name": "dev",
       "source": "./plugins/dev",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "description": "Provides development workflows, PR-writing guidance, code-craft preferences, runtime verification, a development workflow track in `crtr sys tutorial`, and the bare `dev` dispatcher for Grove-backed projects — routes `dev grove …` to grove, repo-defined `.dev/<branch>` executables, and everything else to `grove dev`; `crtr dev` is a native extensible branch for repository-generated command fragments, with `crtr dev grove …` forwarded to Grove.",
       "keywords": [
         "workflow",
