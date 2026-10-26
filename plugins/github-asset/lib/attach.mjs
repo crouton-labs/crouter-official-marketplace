@@ -24,24 +24,43 @@ export async function attachAsset(input) {
   const uploadPage = target.kind === 'issue' ? await resolveIssueUploadPage(repo, target.url) : target.url;
   const browser = await findSignedInBrowser();
 
-  const targetTab = await captureJson(['tab', 'open', uploadPage, '--new', '--port', String(browser.port)], 20_000);
-  const openedTarget = targetTab?.attrs?.target;
-  if (typeof openedTarget !== 'string' || openedTarget.length < 4) {
+  const openedTarget = await openTab(uploadPage, browser.port);
+  if (openedTarget === undefined) {
     throw new PluginError('target_open_failed', 'Capture did not return a target tab after opening the GitHub page', {
       next: `Open ${uploadPage} in the signed-in browser, then retry.`,
     });
   }
 
-  await delay(3_000);
-  const uploaded = await uploadInPage(openedTarget.slice(0, 8), source);
-  if (typeof uploaded?.href !== 'string' || !uploaded.href.startsWith('https://github.com/user-attachments/assets/')) {
-    const detail = typeof uploaded?.error === 'string' ? `: ${uploaded.error}` : '';
-    throw new PluginError('upload_failed', `GitHub did not return an attachment URL${detail}`, {
-      next: `Open ${uploadPage} in the signed-in browser and verify its comment editor is available, then retry.`,
-    });
+  try {
+    await delay(3_000);
+    const uploaded = await uploadInPage(browser.port, openedTarget.slice(0, 8), source);
+    if (typeof uploaded?.href !== 'string' || !uploaded.href.startsWith('https://github.com/user-attachments/assets/')) {
+      const detail = typeof uploaded?.error === 'string' ? `: ${uploaded.error}` : '';
+      throw new PluginError('upload_failed', `GitHub did not return an attachment URL${detail}`, {
+        next: `Open ${uploadPage} in the signed-in browser and verify its comment editor is available, then retry.`,
+      });
+    }
+    return { url: uploaded.href, target: target.url, browser: `CDP port ${browser.port}` };
+  } finally {
+    await closeTab(openedTarget, browser.port);
   }
+}
 
-  return { url: uploaded.href, target: target.url, browser: `CDP port ${browser.port}` };
+// Opens a fresh tab in the browser at `port` and returns its full target id.
+async function openTab(url, port) {
+  const tab = await captureJson(['tab', 'open', url, '--new', '--port', String(port)], 20_000);
+  const target = tab?.attrs?.target;
+  return typeof target === 'string' && target.length >= 4 ? target : undefined;
+}
+
+// A tab this command opened is closed again so it never accumulates in the person's browser.
+// A close that fails must not replace the command's own result or error, so it is reported on stderr.
+async function closeTab(target, port) {
+  try {
+    await captureJson(['tab', 'close', target, '--port', String(port)], 20_000);
+  } catch (error) {
+    process.stderr.write(`github-asset: could not close tab ${target.slice(0, 8)} on CDP port ${port}: ${error.message}\n`);
+  }
 }
 
 function requireString(value, field) {
@@ -152,15 +171,17 @@ async function findSignedInBrowser() {
 
   const candidates = [...firstTabByPort.values()].sort((left, right) => Number(right.preferred) - Number(left.preferred));
   for (const { port } of candidates) {
+    let probe;
     try {
-      const tab = await captureJson(['tab', 'open', 'https://github.com/', '--new', '--port', String(port)], 20_000);
-      const target = tab?.attrs?.target;
-      if (typeof target !== 'string' || target.length < 4) continue;
+      probe = await openTab('https://github.com/', port);
+      if (probe === undefined) continue;
       await delay(3_000);
-      const login = await pageResult(target.slice(0, 8), SIGNED_IN_LOGIN, 20_000);
-      if (typeof login === 'string' && login !== '') return { port, target, url: 'https://github.com/' };
+      const login = await pageResult(port, probe.slice(0, 8), SIGNED_IN_LOGIN, 20_000);
+      if (typeof login === 'string' && login !== '') return { port };
     } catch {
       // The next endpoint may be the browser with the usable GitHub session.
+    } finally {
+      if (probe !== undefined) await closeTab(probe, port);
     }
   }
 
@@ -176,29 +197,30 @@ function parseGitHubTabs(list) {
     if (portMatch === null) continue;
     const port = Number(portMatch[1]);
     for (const line of section.split('\n').slice(1)) {
-      const match = /^\s+([A-F0-9]{8})\s+".*"\s+(https:\/\/github\.com\/\S+)$/i.exec(line);
+      const match = /^\s+([A-F0-9]{8})\s+".*"\s+(https:\/\/github\.com\/\S*)$/i.exec(line);
       if (match !== null) candidates.push({ port, target: match[1], url: match[2], preferred: section.includes('[preferred]') });
     }
   }
   return candidates;
 }
 
-async function uploadInPage(target, source) {
+async function uploadInPage(port, target, source) {
   const directory = await mkdtemp(join(tmpdir(), 'github-asset-'));
   const scriptPath = join(directory, 'upload.mjs');
   try {
     await writeFile(scriptPath, uploadScript(source));
-    return await pageResult(target, undefined, 60_000, scriptPath);
+    return await pageResult(port, target, undefined, 60_000, scriptPath);
   } finally {
     await rm(directory, { recursive: true, force: true });
   }
 }
 
-async function pageResult(target, code, timeoutMs, scriptPath) {
+// `--port` is always passed: with a caller session active, capture otherwise looks for `--target` only on the session's endpoint.
+async function pageResult(port, target, code, timeoutMs, scriptPath) {
   const args = ['page', 'exec'];
   if (scriptPath === undefined) args.push(code);
   else args.push('--file', scriptPath);
-  args.push('--target', target, '--timeout', String(timeoutMs), '--settle', '0');
+  args.push('--target', target, '--port', String(port), '--timeout', String(timeoutMs), '--settle', '0');
   const response = await captureJson(args, timeoutMs + 5_000);
   const result = response?.sections?.find(section => section.startsWith('result: '));
   if (typeof result !== 'string') {
@@ -216,7 +238,9 @@ async function pageResult(target, code, timeoutMs, scriptPath) {
 }
 
 async function captureJson(args, timeoutMs) {
-  const result = await runProcess('capture', [...args, '--json'], { timeoutMs });
+  // Every call names its endpoint (--port) or lists all of them, so an ambient CDP_PORT/CDP_TARGET must not narrow it.
+  const { CDP_PORT, CDP_TARGET, ...env } = process.env;
+  const result = await runProcess('capture', [...args, '--json'], { timeoutMs, env });
   if (!result.ok) {
     throw new PluginError('capture_failed', `Capture failed${result.stderr ? `: ${result.stderr.trim()}` : ''}`, {
       next: 'Install the Capture CLI (`crtr capture`), then confirm a CDP-enabled browser is already running.',
@@ -235,12 +259,12 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function runProcess(command, args, { timeoutMs }) {
+function runProcess(command, args, { timeoutMs, env = process.env }) {
   return new Promise(resolve => {
     let settled = false;
     let stdout = '';
     let stderr = '';
-    const child = spawn(command, args, { stdio: ['ignore', 'pipe', 'pipe'] });
+    const child = spawn(command, args, { stdio: ['ignore', 'pipe', 'pipe'], env });
     const finish = result => {
       if (settled) return;
       settled = true;
