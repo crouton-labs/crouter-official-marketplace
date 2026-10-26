@@ -41,7 +41,7 @@ Self-contained instructions are non-negotiable. Passing references to "the exist
 > "Look at how the existing middleware works and implement something similar for auth."
 
 **Good instruction:**
-> "Implement auth middleware per `[[<node-id>/requirements-auth]]` and `[[<node-id>/design-auth]]`. Reference `[[<node-id>/conventions]]` for middleware patterns. Write implementation to `src/middleware/auth.ts`. If you find design gaps or ambiguities, stop and report via `<report-cmd>`."
+> "Implement auth middleware per `[[node-id/requirements-auth]]` and `[[node-id/design-auth]]`. Reference `[[node-id/conventions]]` for middleware patterns. Write implementation to `src/middleware/auth.ts`. If you find design gaps or ambiguities, stop and report via `<report-cmd>`."
 
 Every agent instruction needs: an objective, output format/location, scope boundaries, and a reporting protocol. [Anthropic (2024) — Building Effective AI Agents](https://www.anthropic.com/research/building-effective-agents)
 
@@ -56,10 +56,10 @@ The most robust communication mechanism. Agents write structured artifacts to a 
 **Anthropic's approach**: "Subagent output goes to a filesystem to minimize miscommunication, and specialized agents can create outputs that persist independently." [Anthropic (2025) — Multi-Agent Research System](https://www.anthropic.com/engineering/multi-agent-research-system)
 
 ```
-[[<node-id>/requirements-auth]]      # written by requirements agent
-[[<node-id>/design-auth]]            # written by design agent (reads requirements)
-[[<node-id>/plan-backend]]           # written by planner (reads design)
-[[<node-id>/explore-auth-patterns]]  # written by explore agent
+[[node-id/requirements-auth]]      # written by requirements agent
+[[node-id/design-auth]]            # written by design agent (reads requirements)
+[[node-id/plan-backend]]           # written by planner (reads design)
+[[node-id/explore-auth-patterns]]  # written by explore agent
 ```
 
 Each agent reads only the documents relevant to its task. Context is selective by design — no context window pollution. Artifacts persist across agent lifecycles and can be referenced in future cycles.
@@ -229,9 +229,9 @@ These can't run in parallel — the implementer needs the design to exist first.
 
 **Good decomposition — independent work streams:**
 ```
-agent-001: Implement auth middleware (reads [[<node-id>/design-auth]])
-agent-002: Implement session store  (reads [[<node-id>/design-auth]])
-agent-003: Implement token verifier (reads [[<node-id>/design-auth]])
+agent-001: Implement auth middleware (reads [[node-id/design-auth]])
+agent-002: Implement session store  (reads [[node-id/design-auth]])
+agent-003: Implement token verifier (reads [[node-id/design-auth]])
 ```
 Three agents read the same settled design and own disjoint implementation surfaces. Their outputs can land independently and are integrated once.
 

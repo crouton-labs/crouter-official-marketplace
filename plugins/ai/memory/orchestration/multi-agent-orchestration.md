@@ -94,7 +94,7 @@ A delivered verdict is settled evidence. The owner fixes or dismisses findings a
 
 ## Common Failure Modes
 
-**1. Vague agent instructions** — "Look at the existing auth middleware" fails. "Implement auth middleware per `[[<node-id>/requirements-auth]]` and `[[<node-id>/design-auth]]`. Reference `[[<node-id>/conventions]]` for middleware patterns." works. Each agent instruction must be self-contained.
+**1. Vague agent instructions** — "Look at the existing auth middleware" fails. "Implement auth middleware per `[[node-id/requirements-auth]]` and `[[node-id/design-auth]]`. Reference `[[node-id/conventions]]` for middleware patterns." works. Each agent instruction must be self-contained.
 
 **2. Spawning too many agents** — Early versions of Anthropic's research system spawned 50+ subagents for simple queries. Start with the smallest set implied by independent units and add another only when it owns uncovered work that can proceed now. [Anthropic (2025)](https://www.anthropic.com/engineering/multi-agent-research-system)
 
