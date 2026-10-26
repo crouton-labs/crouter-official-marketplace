@@ -1,6 +1,6 @@
 {
   "name": "crouter-official-marketplace",
-  "version": "7.2.1",
+  "version": "7.3.0",
   "owner": {
     "name": "Silas Rhyneer",
     "email": "rhyneer.silas@gmail.com"
@@ -245,7 +245,7 @@
     {
       "name": "github-asset",
       "source": "./plugins/github-asset",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "description": "Uploads a local file through GitHub's browser attachment flow and prints its permanent user-attachments URL.",
       "keywords": [
         "github",
