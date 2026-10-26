@@ -22,7 +22,7 @@ export async function attachAsset(input) {
   const repo = await resolveRepo(input.repo);
   const target = await resolveTarget(repo, number);
   const uploadPage = target.kind === 'issue' ? await resolveIssueUploadPage(repo, target.url) : target.url;
-  const browser = await findSignedInBrowser();
+  const browser = input.port === undefined ? await findSignedInBrowser() : await requireSignedInBrowser(requirePort(input.port));
 
   const openedTarget = await openTab(uploadPage, browser.port);
   if (openedTarget === undefined) {
@@ -66,6 +66,13 @@ async function closeTab(target, port) {
 function requireString(value, field) {
   if (typeof value !== 'string' || value.trim() === '') {
     throw new PluginError('invalid_input', `${field} is required`, { field });
+  }
+  return value;
+}
+
+function requirePort(value) {
+  if (!Number.isSafeInteger(value) || value < 1 || value > 65535) {
+    throw new PluginError('invalid_input', 'port must be an integer from 1 to 65535', { field: 'port' });
   }
   return value;
 }
@@ -171,23 +178,38 @@ async function findSignedInBrowser() {
 
   const candidates = [...firstTabByPort.values()].sort((left, right) => Number(right.preferred) - Number(left.preferred));
   for (const { port } of candidates) {
-    let probe;
     try {
-      probe = await openTab('https://github.com/', port);
-      if (probe === undefined) continue;
-      await delay(3_000);
-      const login = await pageResult(port, probe.slice(0, 8), SIGNED_IN_LOGIN, 20_000);
-      if (typeof login === 'string' && login !== '') return { port };
+      if (await isSignedIn(port)) return { port };
     } catch {
       // The next endpoint may be the browser with the usable GitHub session.
-    } finally {
-      if (probe !== undefined) await closeTab(probe, port);
     }
   }
 
   throw new PluginError('github_login_not_found', 'no responsive GitHub tab had a signed-in user', {
     next: 'Open github.com in the browser where you are signed in, then retry. The plugin checks existing GitHub tabs across discovered CDP endpoints and never launches a browser.',
   });
+}
+
+// The caller named this browser, so it is used without looking for an existing GitHub tab.
+async function requireSignedInBrowser(port) {
+  if (await isSignedIn(port)) return { port };
+  throw new PluginError('github_login_not_found', `the browser on CDP port ${port} has no signed-in GitHub user`, {
+    field: 'port',
+    next: `Sign in to github.com in the browser on CDP port ${port}, or omit --port to search the discovered CDP endpoints. The plugin never launches a browser.`,
+  });
+}
+
+// Opens a github.com tab on `port`, reads the signed-in user from it, and closes the tab again.
+async function isSignedIn(port) {
+  const probe = await openTab('https://github.com/', port);
+  if (probe === undefined) return false;
+  try {
+    await delay(3_000);
+    const login = await pageResult(port, probe.slice(0, 8), SIGNED_IN_LOGIN, 20_000);
+    return typeof login === 'string' && login !== '';
+  } finally {
+    await closeTab(probe, port);
+  }
 }
 
 function parseGitHubTabs(list) {

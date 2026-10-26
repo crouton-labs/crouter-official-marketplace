@@ -14,7 +14,7 @@
           "whenToUse": "a local video, image, or other file must be attached to a GitHub pull request or issue. Requires the external Capture CLI (`crtr capture`) and a running CDP browser already signed in to GitHub; this command attaches to that browser and never launches one."
         },
         "summary": "GitHub attachment uploads through an existing signed-in browser",
-        "model": "`attach` validates and reads one local file, lists CDP endpoints with an existing GitHub tab, opens a GitHub page in each candidate browser, and checks `meta[name=user-login]` there to find the signed-in session. It then opens or reuses the requested pull request or issue and runs GitHub’s attachment upload flow in that page. It prints the permanent attachment URL but does not change the body.",
+        "model": "`attach` validates and reads one local file, uses the CDP endpoint named by `--port`, or else lists CDP endpoints with an existing GitHub tab, opens a GitHub page in each candidate browser, and checks `meta[name=user-login]` there to find the signed-in session. It then opens or reuses the requested pull request or issue and runs GitHub’s attachment upload flow in that page. It prints the permanent attachment URL but does not change the body.",
         "children": [
           {
             "kind": "leaf",
@@ -43,6 +43,13 @@
                 "type": "string",
                 "required": false,
                 "constraint": "GitHub repository as owner/name. Omit to use the repository resolved by `gh repo view` in the current directory."
+              },
+              {
+                "kind": "flag",
+                "name": "port",
+                "type": "int",
+                "required": false,
+                "constraint": "CDP port of the browser to upload through, as listed by `crtr capture tab list`. Omit to search discovered CDP endpoints that already have a GitHub tab. With a port, no search happens: the command opens a GitHub page on that endpoint and fails with `github_login_not_found` if no user is signed in there. Use it for a signed-in browser with no GitHub tab open, such as Arc, which lists only tabs opened over CDP."
               }
             ],
             "output": [
@@ -69,7 +76,7 @@
             "effects": [
               "Reads the local file into memory and uploads it through GitHub from an already-running browser signed in to GitHub.",
               "Uses `gh` to resolve the repository and whether the supplied number is a pull request or issue. It does not edit the pull request or issue body.",
-              "Opens or reuses the target pull request tab, or for an issue one open pull request in the same repository that supplies GitHub’s attachment form, in the browser with a signed-in GitHub tab. It never launches a browser."
+              "Opens or reuses the target pull request tab, or for an issue one open pull request in the same repository that supplies GitHub’s attachment form, in the browser on `--port`, or else in the first discovered browser with a signed-in GitHub tab. It never launches a browser."
             ]
           }
         ]

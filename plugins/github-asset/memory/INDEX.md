@@ -13,4 +13,4 @@ surfaces:
 
 Use [[github-asset/attach]] to upload a local file through GitHub's own attachment flow and receive its permanent `https://github.com/user-attachments/assets/...` URL.
 
-The command requires the Capture CLI (`crtr capture`), `gh`, and an already-running CDP-enabled browser with a GitHub tab. It lists CDP endpoints, opens a GitHub page in each browser that already has a GitHub tab, and checks `meta[name=user-login]` there; it does not assume a browser or port and never launches one.
+The command requires the Capture CLI (`crtr capture`), `gh`, and an already-running CDP-enabled browser with a GitHub tab. It lists CDP endpoints, opens a GitHub page in each browser that already has a GitHub tab, and checks `meta[name=user-login]` there; without `--port` it does not assume a browser or port, and with `--port <n>` it uses that endpoint directly; it never launches a browser.
