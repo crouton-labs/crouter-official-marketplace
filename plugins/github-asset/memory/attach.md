@@ -21,7 +21,7 @@ The `--pr` number can identify either a pull request or an issue. GitHub's curre
 
 The command reads the file, inlines it into JavaScript (a 12 MB mp4 uploads in about 15 seconds), and runs GitHub's attachment upload flow in the existing signed-in browser. It prints the permanent attachment URL and does not add that URL to the pull request or issue body. Paste the URL into the body with the normal GitHub edit command after the upload.
 
-Before invoking it, ensure `crtr capture tab list` can see a running CDP-enabled browser with a GitHub tab. The command discovers those endpoints, opens a GitHub page in each candidate browser, and checks `meta[name=user-login]` instead of assuming Chrome, Arc, or a port. It never launches a browser.
+Before invoking it, ensure `crtr capture tab list` can see a running CDP-enabled browser with a GitHub tab. The command discovers those endpoints, opens a GitHub page in each candidate browser, and checks `meta[name=user-login]` instead of assuming Chrome, Arc, or a port. It never launches a browser. It finds the browser independently of your own capture session or `CDP_PORT`, and closes the tabs it opens (the login probe and the upload page) when it finishes or fails.
 
 ## Failures
 
