@@ -28,7 +28,7 @@ Without `--port`, before invoking it, ensure `crtr capture tab list` can see a r
 ## Failures
 
 - `github_login_not_found`: without `--port`, open github.com in the browser where you are signed in, or pass that browser's `--port`; with `--port`, sign in to GitHub in that browser.
-- `capture_failed`: install the Capture CLI so `crtr capture` works, then confirm the selected GitHub tab is responsive.
+- `capture_failed`: the message names the failing `capture` command and the cause Capture reported (for example `exec_timeout_cancelled: Evaluation exceeded 61000ms`). The in-page upload deadline is 60 s plus 20 s per MB, so a timeout means the upload itself stalled: check the connection and the tab, then retry. Only when the message says the process could not run or exited without a report is the Capture CLI missing (`crtr capture -h`).
 - `target_not_found`: correct the number or pass the intended `--repo owner/name`.
 - `GitHub refused the upload (422)`: GitHub's own size limit for the repository's plan (10 MB for images; 10 MB for videos on a free plan, 100 MB on a paid plan). Compress the clip and retry.
 - `issue_upload_page_not_found`: open a pull request in the repository, or use a pull request number directly.
