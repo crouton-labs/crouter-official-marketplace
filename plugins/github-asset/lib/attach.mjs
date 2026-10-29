@@ -144,6 +144,7 @@ async function readUploadSource(file) {
   }
   return {
     name: basename(file),
+    size: info.size,
     type: contentType(file),
     base64: (await readFile(file)).toString('base64'),
   };
@@ -231,10 +232,15 @@ async function uploadInPage(port, target, source) {
   const scriptPath = join(directory, 'upload.mjs');
   try {
     await writeFile(scriptPath, uploadScript(source));
-    return await pageResult(port, target, undefined, 60_000, scriptPath);
+    return await pageResult(port, target, undefined, uploadTimeoutMs(source.size), scriptPath);
   } finally {
     await rm(directory, { recursive: true, force: true });
   }
+}
+
+// The page script fetches the policy, uploads to storage and finalizes; the deadline grows with the file so a slow link does not cancel a healthy upload.
+function uploadTimeoutMs(size) {
+  return 60_000 + Math.ceil(size / 1_000_000) * 20_000;
 }
 
 // `--port` is always passed: with a caller session active, capture otherwise looks for `--target` only on the session's endpoint.
@@ -263,11 +269,7 @@ async function captureJson(args, timeoutMs) {
   // Every call names its endpoint (--port) or lists all of them, so an ambient CDP_PORT/CDP_TARGET must not narrow it.
   const { CDP_PORT, CDP_TARGET, ...env } = process.env;
   const result = await runProcess('capture', [...args, '--json'], { timeoutMs, env });
-  if (!result.ok) {
-    throw new PluginError('capture_failed', `Capture failed${result.stderr ? `: ${result.stderr.trim()}` : ''}`, {
-      next: 'Install the Capture CLI (`crtr capture`), then confirm a CDP-enabled browser is already running.',
-    });
-  }
+  if (!result.ok) throw captureFailure(args, timeoutMs, result);
   try {
     return JSON.parse(result.stdout);
   } catch {
@@ -275,6 +277,32 @@ async function captureJson(args, timeoutMs) {
       next: 'Run `crtr capture tab list` to verify the Capture CLI is available.',
     });
   }
+}
+
+// Capture reports its own failure as a JSON error block on stdout (tag "error", attrs.code, summary); stderr only carries progress lines.
+function captureFailure(args, timeoutMs, { stdout, stderr, timedOut, code }) {
+  const command = `capture ${args.slice(0, 2).join(' ')}`;
+  if (timedOut) {
+    return new PluginError('capture_failed', `${command} did not finish within ${Math.round(timeoutMs / 1000)}s`, {
+      next: 'Check that the browser is responsive and the GitHub tab is open, then retry.',
+    });
+  }
+  let block;
+  try {
+    block = JSON.parse(stdout);
+  } catch {
+    // Not a Capture error block: either the CLI is missing or it crashed before reporting.
+  }
+  if (block?.tag === 'error') {
+    const reason = [block.attrs?.code, block.summary].filter(Boolean).join(': ');
+    return new PluginError('capture_failed', `${command} failed${reason ? ` (${reason})` : ''}`, {
+      next: 'Fix the reported cause and retry; run `crtr capture tab list` to confirm the browser endpoint and tab are still reachable.',
+    });
+  }
+  const detail = (stderr.trim() || stdout.trim()).slice(0, 500);
+  return new PluginError('capture_failed', `${command} exited with ${code ?? 'no exit code'}${detail ? `: ${detail}` : ''}`, {
+    next: 'Confirm the Capture CLI is installed (`crtr capture -h`) and a CDP-enabled browser is running.',
+  });
 }
 
 function delay(ms) {
