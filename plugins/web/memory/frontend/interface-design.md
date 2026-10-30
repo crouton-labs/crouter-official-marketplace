@@ -11,7 +11,7 @@ Build interface design with craft and consistency.
 
 **Use for:** Dashboards, admin panels, SaaS apps, tools, settings pages, data interfaces.
 
-**Not for:** Landing pages, marketing sites, campaigns. Redirect those to [[web/frontend/visual-design]].
+**Not for:** Landing pages, marketing sites, campaigns. Redirect those to [[web/frontend/visual-design]] and [[web/frontend/marketing-pages]].
 
 ---
 
@@ -210,7 +210,7 @@ Patterns for dashboards, admin panels, and tools where users oversee automated p
 Status is the first thing users check. Design for instant comprehension:
 
 - **State indicators** — Idle, running, paused, errored. Hardware buttons (Dieter Rams) are a strong reference for on/off controls that feel solid and intentional
-- **Destructive action protection** — Pair power/pause/stop controls with either blocking confirmation ("Are you sure?") or undo patterns. Pick one per product and be consistent
+- **Destructive action protection** — Power, pause and stop controls that can be reversed run at once and offer Undo; irreversible ones keep a confirmation. See undo over confirm in [[web/frontend/states-and-interactions]]
 - **Liveness signals** — Last-run timestamp, heartbeat indicator, or activity sparkline. Static status labels without temporal context ("Running") don't answer "is it actually working right now?"
 
 ## Activity Logs & Trace Visualization
@@ -277,14 +277,8 @@ Headlines need weight and tight tracking. Body needs readability. Data needs mon
 ## Color & Surfaces
 Build from primitives: foreground (text hierarchy), background (surface elevation), border (separation hierarchy), brand, and semantic (destructive, warning, success). Every color should trace back to these. No random hex values — everything maps to the system.
 
-## Animation
-Fast micro-interactions (~150ms), smooth easing. No bouncy/spring effects.
-
-## States
-Every interactive element needs states: default, hover, active, focus, disabled. Data needs states too: loading, empty, error. Missing states feel broken.
-
-## Controls
-Native `<select>` and `<input type="date">` can't be styled. Build custom components.
+## States, controls and motion
+Every control's eight states, focus rings, hit targets, button and input sizes (32 to 40px in app UI), fields, native selects, modals, menus, toasts, undo, loading and empty screens, and the motion each control uses are in [[web/frontend/states-and-interactions]]. Durations and easings are in [[web/frontend/visual-craft]]. No bouncy or spring effects.
 
 ---
 
@@ -294,7 +288,7 @@ Native `<select>` and `<input type="date">` can't be styled. Build custom compon
 - **Dramatic surface jumps** — elevation changes should be whisper-quiet
 - **Inconsistent spacing** — the clearest sign of no system
 - **Mixed depth strategies** — pick one approach and commit
-- **Missing interaction states** — hover, focus, disabled, loading, error
+- **Missing interaction states** — see [[web/frontend/states-and-interactions]]
 - **Dramatic drop shadows** — shadows should be subtle, not attention-grabbing
 - **Large radius on small elements**
 - **Pure white cards on colored backgrounds**

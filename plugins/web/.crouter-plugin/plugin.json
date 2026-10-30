@@ -1,7 +1,7 @@
 {
   "name": "web",
   "version": "1.2.0",
-  "description": "Knowledge for web development workflows — visual direction for customer-facing pages, interface craft for dashboards and tools, UX heuristics, the interactive design workflow, HTML design-review mockups, the UX-consultant role, and frontend debugging.",
+  "description": "Knowledge for web development workflows — visual direction for customer-facing pages, structure, page shapes and copy for marketing pages, type/colour/motion craft, a checklist of AI-generated tells, imagery and real brands, control states, responsive layout, dark mode, charts, design review and redesign, interface craft for dashboards and tools, UX heuristics, the interactive design workflow, HTML design-review mockups, the UX-consultant role, and frontend debugging.",
   "source": "https://github.com/crouton-labs/crouter-official-marketplace",
   "owner": {
     "name": "Silas Rhyneer",

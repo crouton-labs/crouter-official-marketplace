@@ -1,7 +1,9 @@
 ---
 kind: knowledge
 when-and-why-to-read: When you are about to create a distinctive new customer-facing web component, page, or application rather than an internal tool or an extension of an existing design system, this knowledge should be read because a deliberate visual direction avoids generic AI styling and the redesign that follows it.
-short-form: "Distinctive frontend design: ground in the subject, plan a token system (color/type/layout/signature), self-critique against the three current AI-default looks, spend boldness in one place, treat copy as design material."
+short-form: "Distinctive frontend design: ground in the subject, plan a token system (color/type/layout/signature), self-critique against the AI-default looks in ai-tells, never invent facts, pass the quality checks (which point at visual-craft, responsive, states-and-interactions and design-review), spend boldness in one place, treat copy as design material."
+rationale: >-
+  The no-invented-facts rule is adapted from Hallmark (github.com/Nutlope/hallmark, MIT). The list of AI-default looks, the numeric craft rules, and the screenshot review now live in their own documents ([[web/frontend/ai-tells]], [[web/frontend/visual-craft]], [[web/frontend/design-review]]), and the quality checks here point at them so each rule is stated once. Marketing pages have their own document, [[web/frontend/marketing-pages]], because a page that must make a visitor act needs structure and copy rules a component or app does not.
 ---
 
 # Visual design
@@ -14,9 +16,17 @@ Approach this as the design lead at a small studio known for giving every client
 - **Matching an existing design system** — this creates distinctive new aesthetics. If you're implementing Figma mocks or extending an existing design language, just follow the system.
 - **Performance-critical pages** — the animations, custom fonts, and layered effects this produces add weight. For pages where load time is the feature, skip the creative flourishes.
 
+For a landing page or marketing site, read this document for the visual direction and [[web/frontend/marketing-pages]] for what the page contains, in what order, and what it says.
+
 ## Ground it in the subject
 
 If the brief does not pin down what the product or subject is, pin it yourself before designing: name one concrete subject, its audience, and the page's single job, and state your choice. If there's any information in your memory about the human's preferences, context about what they're building, or designs you've made before — use that as a hint. The subject's own world, its materials, instruments, artifacts, and vernacular, is where distinctive choices come from. Build with the brief's real content and subject matter throughout.
+
+Before inventing content, look for real material. Read the project first: its fonts, palette, tokens, framework, and any design document. If the brief does not settle it, ask once, in one message, for what the page can show (screenshots, a URL or running app you can capture, photos, real numbers, a quote with the name of who said it, logos they may use), who it is for, the one action it should drive, and a tone. A tone is an extreme such as editorial, brutalist, soft, utilitarian, luxury, or playful; "clean and modern" is not a tone. If they skip a field or say go ahead, infer it and state the inference in one line. If no one can answer, do not ask.
+
+## Never invent facts
+
+Never invent a metric, a customer count, a testimonial, a quote, a logo wall, a case study, a price, a date, or a person's name. A visitor reads these as true. Where the design needs a fact nobody gave, place a visible slot that reads as a blank to fill (muted text such as "Venue to be announced" in a dashed outline) and list every slot in the handoff. Sample data inside a built product uses `example.com` and values that obviously read as samples. A form with no endpoint says plainly that nothing was sent and never shows a success state. A link with no known URL points at a section of the same page, never at an invented route.
 
 ## Design principles
 
@@ -34,7 +44,9 @@ Consider written content carefully. Often a design brief may not contain real co
 
 ## Process: brainstorm, explore, plan, critique, build, critique again
 
-For calibration: AI-generated design right now clusters around three looks: (1) a warm cream background (near #F4F1EA) with a high-contrast serif display and a terracotta accent; (2) a near-black background with a single bright acid-green or vermilion accent; (3) a broadsheet-style layout with hairline rules, zero border-radius, and dense newspaper-like columns. All three are legitimate for some briefs, but they are defaults rather than choices, and they appear regardless of subject. Where the brief pins down a visual direction, follow it exactly — the brief's own words always win, including when it asks for one of these looks. Where it leaves an axis free, don't spend that freedom on one of these defaults. Just like a human designer who's hired, there's often a careful balance between doing what you're good at and taking each project as a chance to experiment and learn.
+For calibration: AI-generated design right now clusters around three looks (warm cream with a serif and a terracotta accent, near-black with one acid accent, and a broadsheet of hairline rules and dense columns), plus a set of other defaults that appear regardless of subject. [[web/frontend/ai-tells]] lists all of them with their fixes; check the plan against it. Each is legitimate for some briefs, but they are defaults rather than choices.
+
+Where the brief pins down a visual direction, follow it exactly — the brief's own words always win, including when it asks for one of these looks. Where it leaves an axis free, don't spend that freedom on one of these defaults. Just like a human designer who's hired, there's often a careful balance between doing what you're good at and taking each project as a chance to experiment and learn.
 
 Work in two passes. First, brainstorm a short design plan based on the human's design brief: create a compact token system with color, type, layout, and signature. Color: describe the palette as 4–6 named hex values. Type: the typefaces for 2+ roles (a characterful display face that's used with restraint, a complementary body face, and a utility face for captions or data if needed). Layout: a layout concept, using one-sentence prose descriptions and ASCII wireframes to ideate and compare. Signature: the single unique element this page will be remembered by that embodies the brief in an appropriate way.
 
@@ -46,7 +58,20 @@ Try to do a lot of this planning and iteration in your thinking, and only show i
 
 ## Restraint and self-critique
 
-Spend your boldness in one place. Let the signature element be the one memorable thing, keep everything around it quiet and disciplined, and cut any decoration that does not serve the brief. Not taking a risk can be a risk itself! Build to a quality floor without announcing it: responsive down to mobile, visible keyboard focus, reduced motion respected. Critique your own work as you build, taking screenshots if your environment supports it — a picture is worth 1000 tokens. Consider Chanel's advice: before leaving the house, take a look in the mirror and remove one accessory. Human creators have memory and always try to do something new, so if you have a space to quickly jot down notes about what you've tried, it can help you in future passes.
+Spend your boldness in one place. Let the signature element be the one memorable thing, keep everything around it quiet and disciplined, and cut any decoration that does not serve the brief. Not taking a risk can be a risk itself! Critique your own work as you build, taking screenshots if your environment supports it — a picture is worth 1000 tokens. Consider Chanel's advice: before leaving the house, take a look in the mirror and remove one accessory. Human creators have memory and always try to do something new, so if you have a space to quickly jot down notes about what you've tried, it can help you in future passes.
+
+Before handing back, have someone with fresh context review the rendered page: a child node that sees only the screenshots and the brief, not your plan. It catches what your plan told you was there. How to brief it and act on its reply is in [[web/frontend/design-review]].
+
+## Quality checks
+
+Build to these without announcing them. Each one is checkable in the CSS or in a screenshot.
+
+- Every colour and every font goes through a token declared at `:root` or in a theme block. No literal colour or `font-family` after the token block.
+- Type sizes, colour values, contrast, spacing, shadows and motion timing stay within the numbers in [[web/frontend/visual-craft]].
+- The page holds at every width with no sideways scroll: [[web/frontend/responsive]].
+- Every control has all its states and a visible keyboard focus: [[web/frontend/states-and-interactions]].
+- Nothing on the list in [[web/frontend/ai-tells]] appears unless the brief asked for it.
+- Capture screenshots at a phone width, 1280×800 and 1920 wide, and review them as in [[web/frontend/design-review]], before handing back.
 
 ## More on writing in design
 
