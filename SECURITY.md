@@ -17,7 +17,7 @@ Fixes land on `main`, and the auto-bump workflow tags a new release. Only the la
 The code in this repository: the plugins under [`plugins/`](plugins), the marketplace catalog, and the scripts in [`.github/`](.github). Of particular interest:
 
 - An executable or hook in a plugin doing something its manifest and documentation do not say, such as sending data off the machine or running code at install time. Installing a plugin does not run its executables, but once installed its hooks run implicitly and its commands run when invoked, with your user's permissions.
-- A plugin reading, logging or transmitting a credential it was given, such as the Exa API key used by `exa-search`.
+- A plugin reading, logging or transmitting a credential it was given, such as an API key it was configured with.
 - The auto-bump workflow letting a pull request change what gets released or tagged on `main`.
 
 Commands such as `crtr bird` post to X as you, and `crtr github-asset` uploads files through your signed-in browser. That is what they are for, not a vulnerability. Flaws in the external tools that plugins forward to (Capture, tsym, bird, Grove) belong in those tools' repositories.
