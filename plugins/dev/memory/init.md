@@ -29,7 +29,7 @@ Before creating a repository contract or materially changing existing lifecycle 
 
 ## 2. Author the memory front door
 
-Run `crtr memory write -h` before creating or revising memory. Keep the root INDEX well under lint's cap:
+Run `crtr doc write -h` before creating or revising memory. Keep the root INDEX well under lint's cap:
 
 - **Project in one paragraph** — purpose, major components, dependency direction.
 - **Common commands** — the 3–8 verified commands most changes need.
@@ -78,4 +78,4 @@ When lifecycle behavior was created or changed, prove the chain end to end: the 
 
 Lean toward ASD-STE100 in the artifact and closing response: state each necessary fact once, keep exact constraints, exceptions, numbers, and names, and cut inferable text.
 
-Run `crtr memory lint` and fix findings in the files this invocation owns. End with the separate repository, machine, and health status plus the next useful development action.
+Run `crtr doc lint` and fix findings in the files this invocation owns. End with the separate repository, machine, and health status plus the next useful development action.
