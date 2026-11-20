@@ -41,4 +41,4 @@ Never auto-save silently. Propose the takeaways and ask the user to confirm:
 >
 > Should I save these?"
 
-After the user confirms, run `crtr memory write -h` and use its current routing guidance to find the existing document or create the narrowest durable document that reaches future readers. Update an existing document in place when it covers the same truth; replace superseded guidance rather than preserving conflicting versions.
+After the user confirms, run `crtr doc write -h` and use its current routing guidance to find the existing document or create the narrowest durable document that reaches future readers. Update an existing document in place when it covers the same truth; replace superseded guidance rather than preserving conflicting versions.

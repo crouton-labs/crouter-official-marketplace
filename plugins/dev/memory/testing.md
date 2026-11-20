@@ -34,6 +34,6 @@ Put the draft to the owner through `crtr human send`, as one question answerable
 
 ## 4. Store it as that repo's `testing-stance`
 
-Save the confirmed stance as a `testing-stance` preference in that repo's own project store (`crtr memory write -h`), so every agent working there inherits it and no one repeats this workflow. Keep it to what earns a test, what proves a change instead, and the local-versus-CI split with any per-test bound — the decision, never the conversation that produced it.
+Save the confirmed stance as a `testing-stance` preference in that repo's own project store (`crtr doc write -h`), so every agent working there inherits it and no one repeats this workflow. Keep it to what earns a test, what proves a change instead, and the local-versus-CI split with any per-test bound — the decision, never the conversation that produced it.
 
 A one-or-two-sentence stance belongs in a `{on: boot, at: content}` entry, because the decision it governs — should this change carry a test — happens before any test file is opened. Route it through a read entry instead only for conventions that matter while editing a test, matched to the repo's own test globs.
