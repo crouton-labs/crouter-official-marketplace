@@ -15,7 +15,7 @@
         "rootEntry": {
           "concept": "what the TypeScript compiler knows about a codebase, exposed for progressive disclosure",
           "description": "forwards verbatim to the external `tsym` binary",
-          "whenToUse": "Use this before reading or grepping TypeScript to understand how code is structured or connected: `outline` a directory or file instead of opening it, `inspect` a symbol for who calls it, what it calls, what renders or implements it, `show`/`type` for one declaration without its file. Answers come from the type checker, so act on them without re-reading to confirm. Grep only for text the compiler cannot see — log strings, comments, config keys, SQL."
+          "whenToUse": "In a repo or package with a tsconfig.json, use this before reading or grepping TypeScript to understand how code is structured or connected: `outline` a directory or file instead of opening it, `inspect` a symbol for who calls it, what it calls, what renders or implements it, `show`/`type` for one declaration without its file. Answers come from the type checker, so act on them without re-reading to confirm. Grep only for text the compiler cannot see — log strings, comments, config keys, SQL. A standalone file with no tsconfig is not loaded; read it directly."
         },
         "summary": "transparent alias for the external `tsym` CLI — every argument forwards verbatim",
         "model": "This branch owns no schema of its own: it execs `tsym` with whatever args follow, inherits stdio, and propagates its exit code. Run `crtr tsym -h` for the real command tree.",
