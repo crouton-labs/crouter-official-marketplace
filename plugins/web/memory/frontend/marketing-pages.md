@@ -1,9 +1,9 @@
 ---
 kind: knowledge
 when-and-why-to-read: When you are building or rewriting a landing page, a marketing site, a product homepage, or any page whose job is to make a visitor take one action, this knowledge should be read because a page built from the default hero, features, call-to-action band and email sign-up reads as generated, and real sites in each category are built around what the visitor came to do and are laid out on a grid at sizes a template never reaches.
-short-form: "Marketing pages: name the visitor's job and build the sections its category uses; one capped 12-column container; section heads at 52px and hero heads at 84px at 1440; 120–176px between sections; every section holds something big; pick from 17 section compositions and 8 hero layouts; order sections by the argument, end on the job; decide the nav and footer; few specific words; scroll and squint before shipping."
+short-form: "Marketing pages: name the visitor's job and build the sections its category uses; one capped 12-column container; section heads at 52px and hero heads at 84px at 1440; 120–176px between sections; every section holds something big; pick from 17 section compositions and 8 hero layouts; order sections by the argument, end on the job; decide the nav and footer; few specific words; scroll and squint before shipping; what a landing page (by positioning) and a pricing page optimize for."
 rationale: >-
-  Adapted from Hallmark's anatomy, layout and copy references (github.com/Nutlope/hallmark, MIT), with its scaffold tokens, gate numbers, stamp and log removed. The visual direction and the no-invented-facts rule live in [[web/frontend/visual-design]]; the named whole-page structures in [[web/frontend/page-shapes]]; pictures in [[web/frontend/imagery]]; type, colour, the spacing scale, separators, radii and motion values in [[web/frontend/visual-craft]]; small-screen behaviour in [[web/frontend/responsive]]; the tells checklist in [[web/frontend/ai-tells]]. This document owns what a page contains, in what order, how it is laid out on the grid, and what it says.
+  Adapted from Hallmark's anatomy, layout and copy references (github.com/Nutlope/hallmark, MIT), with its scaffold tokens, gate numbers, stamp and log removed. The visual direction and the no-invented-facts rule live in [[web/frontend/visual-design]]; the named whole-page structures in [[web/frontend/page-shapes]]; pictures in [[web/frontend/imagery]]; type, colour, the spacing scale, separators, radii and motion values in [[web/frontend/visual-craft]]; small-screen behaviour in [[web/frontend/responsive]]; the tells checklist in [[web/frontend/ai-tells]]. This document owns what a page contains, in what order, how it is laid out on the grid, and what it says. The per-artifact-type sections (what each type optimizes for, layout grammar, density, aesthetic range, anti-patterns) are adapted from samber's frontend-design-deslop artifact-types reference (github.com/samber/cc-skills, MIT).
 ---
 
 # Marketing pages
@@ -34,6 +34,37 @@ On every job:
 | **listen** (band, film, publication) | The new release or current issue with its listen, watch, or order buttons | The release with its tracks or contents; dates with ticket links; earlier work; videos | The dates or more of the catalogue |
 
 When the brief gives none of a section's content, build it as a sample the user replaces (an example issue, dishes typical of the cuisine, placeholder track titles) and mark it in the handoff. A sample shows the shape of the real thing; it never states a price, a date, a name, a count, or a review a visitor could take as true. A section whose whole content would be facts nobody gave is one line and a slot, or it is cut.
+
+## What a landing page and a pricing page optimize for
+
+Each type optimizes for a different thing and has its own layout grammar, density, and aesthetic range. The named products under each type are inspiration to study and transpose one move from (an interaction, a layout device, a density choice), never templates to clone. Their specific look may have changed since writing — borrow the durable design quality, not a snapshot.
+
+### Marketing / landing page
+
+- **Optimizes for:** one conversion action — everything serves a single primary CTA.
+- **Layout grammar:** focused single-column narrative, above-the-fold value proposition, proof, then CTA. A landing page (campaign-specific) is tighter and more singular than a homepage (brand hub with navigation).
+- **Density:** airy — one idea per section.
+- **Aesthetic range:** wide, set by positioning below.
+- **Anti-patterns:** no clear primary action; competing CTAs; the generic hero + 3-cards + testimonials + CTA template used by reflex.
+
+Positioning variants (these are different design systems):
+
+- **Corporate / enterprise**: trust and proof first. Restrained palette (often blue/neutral), clear hierarchy, logos, case studies, data-backed claims, professional imagery. Competence personality. Conservative motion. Avoid: looking like a startup toy.
+- **Creative / design-forward**: visual impact and expression first. Bold or unexpected color, strong typographic personality, motion and micro-interactions as features, asymmetry. Conversion is secondary to impression. Think design studios, agencies, premium products. Avoid: timid, templated layouts.
+- **Technical / developer tool**: show the product, not adjectives. Often dark mode, dense, code snippets and live demos, workflow-mirroring structure (for example a three-column build/deploy/run), real interface screenshots over stock imagery, honest performance claims. Avoid: marketing fluff, hidden product, stock photos of people pointing at laptops.
+- **Ecommerce landing (single product/campaign)**: hero image, price, CTA above the fold; trust signals; benefit bullets; reviews. See ecommerce below.
+
+**Inspiration:** Stripe and Linear (technical, product-as-hero, restrained), Vercel (developer landing, blueprint grid, build-log motion), Apple and BMW (premium, full-bleed product), Mercury and Ramp (fintech, disciplined and bold), Anthropic and OpenAI (calm, editorial-leaning AI positioning), Awwwards and Godly entries (creative, design-forward).
+
+### Pricing page
+
+- **Optimizes for:** a confident plan choice — a conversion artifact distinct enough from the landing page to design on its own.
+- **Layout grammar:** a comparable set of tiers (typically 2 to 4), one recommended plan visually emphasized, a feature comparison that is scannable (not an undifferentiated matrix), clear price and billing cadence with a monthly/annual toggle, an FAQ addressing the real objections, and a single primary CTA per tier. Enterprise as a contact tier.
+- **Density:** medium — comparison-heavy but must stay scannable.
+- **Aesthetic range:** matches the product; restraint and clarity beat decoration here because the user is comparing, not browsing.
+- **Anti-patterns:** too many tiers; a giant feature matrix with no hierarchy; hidden total cost; manufactured urgency; no recommended default (Hick's law, see [[web/frontend/ux-principles]]); ambiguous billing.
+
+**Inspiration:** Linear, Vercel, and Stripe pricing (clear tiers, honest comparison), Notion and Figma (per-seat clarity). Inspiration only.
 
 ## Page order
 
@@ -133,7 +164,7 @@ The hero is the first screen at 1440×900 and at 1920×1080, and only the first 
 - **The visual is big:** six or seven columns wide and at least 60% of the screen's height (520px at 1440×900), or a portrait object (a cover, a phone, a bottle) at 75% of the height on four or five columns, its centre within 60px of the text block's. The hero grid is two tracks (`6fr 5fr` or `5fr 7fr`) with its own gap of 48 to 120px; spans on the twelve columns leave an empty column between text and visual. Under 60rem the gap becomes a 40px row gap. What the visual shows is in [[web/frontend/imagery]]; a working form belongs in a section or the close, not in the default hero.
 - **No visual:** the heading grows to the hero size at its largest across eight to twelve columns, or the hero is the short layout and the first section starts by 640px.
 - **The text:** a headline of seven words or fewer, one sentence of twelve words or fewer at the lead size, one or two actions. Under 60rem every hero layout shrinks to its content's height (a full-bleed photograph may stay full height).
-- **Before it ships,** check the hero visual: it is big, it shows the real thing, the accent colour stays within its share (see [[web/frontend/visual-craft]]), it weighs under 2 MB, and any motion in it has a reduced-motion fallback. If a review finds the hero failing, change the visual, not the copy.
+- **Before it ships,** check the hero visual: it is big, it shows the real thing, the accent colour stays within its share (see [[web/frontend/color]]), it weighs under 2 MB, and any motion in it has a reduced-motion fallback. If a review finds the hero failing, change the visual, not the copy.
 
 ## Nav and footer
 
@@ -157,6 +188,7 @@ Write as the owner would say it across a counter: the brief's own nouns, a real 
 - **Rhythm:** a short line beside a longer one; verbs over adjectives; one idea per sentence; no triads of adjectives ("fast, simple, powerful").
 - **Refuse the generated voice:** "Reimagine", "Whether you're X or Y", "It's not just X, it's Y", "Say goodbye to", "game-changer", "journey", a colon title ("Focus: the app for…"), "Click here", "Enter your email below", a version string in marketing copy, em dashes.
 - **Buttons** name the action ("Book a fitting"). "Continue" only as the second step of a flow.
+- **Beyond the page:** voice and prose style in [[web/copy/voice]], AI phrase tells in [[web/copy/ai-writing-tells]], article hooks and titles in [[web/copy/hooks-and-titles]], end-of-article CTAs in [[web/copy/cta]].
 
 ## Opening a section
 

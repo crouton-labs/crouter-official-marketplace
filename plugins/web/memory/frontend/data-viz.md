@@ -1,9 +1,9 @@
 ---
 kind: knowledge
 when-and-why-to-read: When a page, dashboard or app shows charts, figures or tables of data, this knowledge should be read because the default (a chart library's styling, a rainbow palette, a row of gauges and donuts) reads as generated and often misleads, while picking the form from the data and drawing it plainly does neither.
-short-form: "Data viz: pick the form from the data (one value is a figure, many categories a table, parts of a whole a stacked bar, never pie/donut/gauge); hand-written SVG with thin bars, 2px lines, 3–5 solid gridlines, one y-axis; one accent series, others a lightness ramp or muted; text never in the data colour; tabular numerals; bars from zero; no invented data; a dashboard is one figure, one chart, one table."
+short-form: "Data viz: pick the form from the data (one value is a figure, many categories a table, parts of a whole a stacked bar, never pie/donut/gauge); hand-written SVG with thin bars, 2px lines, 3–5 solid gridlines, one y-axis; one accent series, others a lightness ramp or muted; text never in the data colour; tabular numerals; bars from zero; no invented data; a dashboard is one figure, one chart, one table; what a dashboard optimizes for (one named decision, 5 to 9 metrics) and its four variants."
 rationale: >-
-  Adapted from Hallmark's data-viz reference (github.com/Nutlope/hallmark, MIT). The rule against invented figures and the visible-slot pattern live in [[web/frontend/visual-design]]; accent and contrast rules in [[web/frontend/visual-craft]]; the dark-mode colour derivation in [[web/frontend/dark-mode]]; dashboard and app structure in [[web/frontend/interface-design]]. This document owns choosing a chart's form, drawing it, colouring it, and keeping it honest.
+  Adapted from Hallmark's data-viz reference (github.com/Nutlope/hallmark, MIT). The rule against invented figures and the visible-slot pattern live in [[web/frontend/visual-design]]; accent and contrast rules in [[web/frontend/color]]; the dark-mode colour derivation in [[web/frontend/dark-mode]]; dashboard and app structure in [[web/frontend/interface-design]]. This document owns choosing a chart's form, drawing it, colouring it, and keeping it honest. The "Dashboard / data tool" section are adapted from samber's frontend-design-deslop artifact-types reference (github.com/samber/cc-skills, MIT).
 ---
 
 # Data visualisation
@@ -56,3 +56,20 @@ Chart colours re-derive like the accent (chroma down, lightness up), as set out 
 ## Dashboards
 
 A dashboard shows fewer, truer figures: one main figure, one supporting chart, one table. A wall of six gauges and a dozen KPI tiles is the thing to avoid. This applies to app dashboards as much as to marketing pages; for how a dashboard's layout, hierarchy and monitoring views are designed, see [[web/frontend/interface-design]].
+
+### Dashboard / data tool: what it optimizes for
+
+- **Optimizes for:** a specific decision, not data display — if no one can name the decision, the dashboard will fail.
+- **Layout grammar:** 12-column grid, primary elements span 6 to 8 columns and secondary 3 to 4; F or Z scan pattern, most critical data top-left; grouped sections with whitespace; bento grids work for scanning diverse metrics. Keep metric definitions one click away.
+- **Density:** high but disciplined — 5 to 9 prioritized metrics, not everything. Desktop tolerates more density than mobile (touch targets 44x44, 3 to 5 metrics on the go).
+- **Aesthetic range:** restrained and functional. Color is meaning (status, thresholds), not decoration; charts chosen by data structure, not aesthetics.
+- **Anti-patterns:** information overload (the top dashboard failure); charts nobody reads; gradient text on metrics; treating it as a portfolio piece; raw-data dump with no hierarchy.
+
+Type variants:
+
+- **Operational**: live monitoring. Big status indicators, clear ownership, tiles or tables with sparklines, low latency, immediate clarity.
+- **Analytical**: exploration. Filters, drill-downs, range pickers, reset controls, more breathing room for deep dives.
+- **Strategic / executive**: high-level KPIs at a glance. Simplicity, only the critical metrics, trend over detail.
+- **Tactical**: mid-level, daily/weekly, bridges operational and strategic.
+
+**Inspiration:** Grafana and Datadog (operational, dense, status-forward), Vercel and Sentry (developer analytics with restraint), Stripe Dashboard (financial data presented calmly, tabular-nums everywhere), Linear insights and PostHog (analytical exploration), executive KPI views in Geckoboard-style boards (strategic simplicity).

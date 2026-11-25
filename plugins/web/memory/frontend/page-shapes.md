@@ -1,9 +1,9 @@
 ---
 kind: knowledge
 when-and-why-to-read: When you have designed a landing page or marketing site and need to name and check its overall structure, or a brief gives you no sense of what shape the whole page should take, this knowledge should be read because twenty-one recognisable page shapes each carry a coherent set of heading, body, divider, button, image and reveal choices, and a page that mixes choices from different shapes, or always lands on the same three, reads as generated.
-short-form: "Page shapes: 21 whole-page structures (bento grid, long document, statement first screen, led by a figure, product tour, questions and answers, manifesto, photographs first, led by a quote, type and publishing page, catalogue, letter, list of links, stages over time, split rows, pinned feature run, typeface demonstration, portfolio grid, one big diagram, browse page, live examples with code), each described by six choices; three candidate shapes per domain; the honest section set for a software page. A vocabulary to name what you designed, not a menu to pick from first."
+short-form: "Page shapes: 21 whole-page structures (bento grid, long document, statement first screen, led by a figure, product tour, questions and answers, manifesto, photographs first, led by a quote, type and publishing page, catalogue, letter, list of links, stages over time, split rows, pinned feature run, typeface demonstration, portfolio grid, one big diagram, browse page, live examples with code), each described by six choices; three candidate shapes per domain; the honest section set for a software page. A vocabulary to name what you designed, not a menu to pick from first; what ecommerce, docs, blog, portfolio and marketplace pages each optimize for."
 rationale: >-
-  Adapted from Hallmark's macrostructures reference and its 21 shape files (github.com/Nutlope/hallmark, MIT), with its rotation log, stamp, picks block, mirror test and gate numbers removed and its shape names restated plainly. The section compositions, hero layouts, page order, nav and footer that these shapes are built from live in [[web/frontend/marketing-pages]]; pictures and the photograph share in [[web/frontend/imagery]]; motion durations and easings in [[web/frontend/visual-craft]]; scroll-linked patterns in [[web/frontend/scroll-animation]]; disclosures, rails and switchers in [[web/frontend/states-and-interactions]]; charts in [[web/frontend/data-viz]].
+  Adapted from Hallmark's macrostructures reference and its 21 shape files (github.com/Nutlope/hallmark, MIT), with its rotation log, stamp, picks block, mirror test and gate numbers removed and its shape names restated plainly. The section compositions, hero layouts, page order, nav and footer that these shapes are built from live in [[web/frontend/marketing-pages]]; pictures and the photograph share in [[web/frontend/imagery]]; motion durations and easings in [[web/frontend/visual-craft]]; scroll-linked patterns in [[web/frontend/scroll-animation]]; disclosures, rails and switchers in [[web/frontend/states-and-interactions]]; charts in [[web/frontend/data-viz]]. The per-artifact-type sections (what each type optimizes for, layout grammar, density, aesthetic range, anti-patterns) are adapted from samber's frontend-design-deslop artifact-types reference (github.com/samber/cc-skills, MIT).
 ---
 
 # Page shapes
@@ -303,6 +303,62 @@ Interactive previews with their code are the page's main content; each block sho
 - **Reveal:** none.
 - **Use** for design systems, component libraries, snippet sites, framework documentation. **Avoid** for marketing pages; this is a utility, not a pitch. A monospace face appears only inside the code blocks; tab labels and captions stay in the body face.
 - **Compositions:** switcher (for the framework tabs) and full-width examples.
+
+## Other content artifacts: what each optimizes for
+
+A page shape names a structure; the artifact type sets what the structure must serve. Each type optimizes for a different thing and has its own layout grammar, density, and aesthetic range. The named products under each type are inspiration to study and transpose one move from (an interaction, a layout device, a density choice), never templates to clone. Their specific look may have changed since writing — borrow the durable design quality, not a snapshot. Landing and pricing pages are in [[web/frontend/marketing-pages]]; apps, dashboards and settings in [[web/frontend/interface-design]].
+
+### Ecommerce
+
+- **Optimizes for:** confident purchase — reduce uncertainty and friction at the decision point.
+- **Layout grammar (product page):** hero with multiple high-quality images and zoom, product name, price, prominent CTA (Add to Cart) above the fold; benefit bullets; trust section (secure payment, shipping, returns); detailed specs, reviews, FAQs; related items. CTA repeats above fold, mid-page, and below reviews.
+- **Density:** medium, imagery-forward. Trust and proof density matters: reviews and real human signals belong near the point of decision, not buried — proof should be specific and traceable, not generic, and shipping/returns/guarantees stated clearly.
+- **Aesthetic range:** set by brand (luxury = sparse and refined; consumer = bright and energetic), but conversion mechanics are constant.
+- **Anti-patterns:** dark patterns (pre-ticked boxes, manufactured urgency) that erode trust; hidden fees; weak or distant product imagery; proof reduced to a star count.
+
+**Inspiration:** Apple (premium product pages, vast space), Gymshark and Allbirds (consumer, energetic, strong PDPs), Aesop and SSENSE (luxury restraint, editorial), Gumroad (creator commerce, raw confidence), Shopify storefront references (conversion mechanics done well).
+
+### Docs / content site
+
+- **Optimizes for:** reading and findability.
+- **Layout grammar:** clear navigation (sidebar for depth), strong measure (65 to 75ch), generous line-height, good code styling if technical, persistent search, scannable headings.
+- **Density:** text-forward and structured.
+- **Aesthetic range:** editorial or clean technical; restrained so content leads.
+- **Anti-patterns:** marketing-page styling that hurts readability; centered long-form; weak code blocks; poor navigation for depth.
+
+**Inspiration:** Stripe Docs (docs-as-product, live and copyable examples), Tailwind and React docs (clear IA, strong code styling), Mintlify and GitBook (modern docs platforms), Vercel docs (calm technical), Cloudflare and Twilio (deep API references).
+
+### Blog / editorial publication
+
+- **Optimizes for:** sustained reading and return visits — distinct from docs (findability) and from landing (conversion).
+- **Layout grammar:** a strong measure (65 to 75ch), generous line-height and paragraph spacing, a confident type system (a real display face for titles, a refined body face), article furniture (byline, date, reading time, pull quotes, figures with captions, footnotes), an index or archive, and a quiet but present subscribe or follow CTA at the end. Left-aligned long-form, never centered.
+- **Density:** text-forward and airy — the words lead.
+- **Aesthetic range:** editorial and typographic; this is where serif display and real columns shine .
+- **Anti-patterns:** centered body text; weak hierarchy between article and chrome; aggressive popups over the read; code blocks and figures that break the rhythm; a homepage that buries the writing.
+
+**Inspiration:** Stripe Press and editorial sites (The Verge, Pitchfork redesigns), personal sites indexed by Typewolf, Ghost and Substack web posts, paula-scher-grade typographic publications. Inspiration only.
+
+### Portfolio / brand site
+
+- **Optimizes for:** a single strong impression and showcasing the work.
+- **Layout grammar:** the work is the hero; layout can break convention deliberately; strong typographic and motion personality.
+- **Density:** usually airy — the work fills the space.
+- **Aesthetic range:** the widest; this is where maximalism, editorial, and creative directions shine.
+- **Anti-patterns:** hiding the work behind chrome; generic template that says nothing about the maker.
+
+**Inspiration:** Awwwards and Brutalist Websites galleries, designer portfolios indexed by Typewolf, agency sites (Pentagram, Locomotive, Active Theory) for motion and craft.
+
+### Marketplace (two-sided)
+
+- **Optimizes for:** matching supply and demand with trust on both sides — search, filter, listing, and trust are the core.
+- **Layout grammar:** a search and filter surface, a results grid or list with strong scannable cards (image, key facts, price, rating), a detailed listing page with rich media and trust signals (reviews, verification, policies), and a booking or purchase flow. Seller and buyer views differ; map plus list for location-based marketplaces.
+- **Density:** medium — imagery and facts balanced for fast comparison.
+- **Aesthetic range:** set by brand, but trust and clarity are constant; specific, traceable proof beats generic badges.
+- **Anti-patterns:** weak listing cards; filters that do not persist or reset cleanly; trust reduced to a star count; hidden fees revealed late; results with no hierarchy.
+
+**Inspiration:** Airbnb (listing and trust craft), Etsy and eBay (volume and filtering), Vinted and StockX (vertical marketplaces), Booking.com (filter-heavy comparison). Inspiration only.
+
+When an artifact spans two (a marketing site with an embedded app, an AI chat inside a SaaS app, a landing page with a pricing section), design each region to its own type.
 
 ## Three shapes for each domain
 

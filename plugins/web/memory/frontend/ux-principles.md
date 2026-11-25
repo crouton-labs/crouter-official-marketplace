@@ -1,7 +1,9 @@
 ---
 kind: knowledge
 when-and-why-to-read: When you are reviewing interface usability, planning user flows, evaluating a design against heuristics, or applying UX methodology to a web, mobile, CLI, or AI product, this knowledge should be read because interface friction gets caught before implementation and UX judgment stays consistent across surfaces.
-short-form: UX principles, heuristics, and evaluation frameworks for any product — web, mobile, CLI, or AI — plus the oversight patterns for autonomous systems.
+short-form: UX principles, heuristics, and evaluation frameworks for any product — web, mobile, CLI, or AI — visual hierarchy, Gestalt, CRAP, Tufte's data-ink, Fitts, Hick, Jakob, Tesler and Miller, plus the oversight patterns for autonomous systems.
+rationale: >-
+  The visual hierarchy, CRAP, data-ink, Jakob/Tesler/Miller and "how these map to slop" sections, and the Gestalt and Norman additions, are adapted from samber's frontend-design-deslop design-theory reference (github.com/samber/cc-skills, MIT). This document owns usability heuristics and the perception and interaction laws; the checklist of generated-looking tells is [[web/frontend/ai-tells]]; chart drawing is [[web/frontend/data-viz]].
 ---
 # UX principles
 
@@ -20,6 +22,16 @@ Three gates before reaching for any established pattern:
 **Failure mode: Pattern-first design.** You reach for a dashboard layout because the prompt said "dashboard." You add a sidebar because apps have sidebars. You use tabs because there are categories. Every choice was a pattern match, none was a design decision. The interface works but solves no specific problem well.
 
 **Self-check:** For each major structural choice, can you explain why it's right for *this* problem without referencing convention? "Users need X, this structure enables X" — not "dashboards typically have this."
+
+---
+
+## Visual hierarchy (the master tool)
+
+Hierarchy is the single most effective lever for making something feel designed (Wathan and Schoger, Refactoring UI). The reader's eye should land on things in the order of their importance. Build hierarchy from five controls, in rough order of strength: size, weight, color/contrast, spacing, and position.
+
+The common beginner mistake is making everything loud: bold the heading, color the label, box the section, shadow the card. Loud-everywhere is flat. To emphasize one thing, de-emphasize its neighbors.
+
+To make secondary text recede, lower its contrast rather than shrinking it to illegibility. Establish three tiers (primary, secondary, tertiary) and assign every element to one. Design in grayscale first so hierarchy comes from size/weight/space, then add color last and sparingly — if it reads in grayscale, color is decoration you can afford, not a crutch you depend on.
 
 ---
 
@@ -55,6 +67,10 @@ Six concepts from *The Design of Everyday Things*. These apply to physical and d
 - **Feedback** — Immediate, clear communication of action results. Every action should produce a visible, audible, or tactile response. The gap between action and feedback is where uncertainty lives.
 - **Conceptual models** — The user's internal understanding of how the system works. Design must align with (or carefully reshape) mental models. When the system model and user model diverge, confusion follows.
 
+Norman's later clarification: most of what UI designers casually call "affordances" are really signifiers. The practical rule: interactive elements must signify their interactivity (cursor, contrast, affordance of depth or underline), and the system must give immediate feedback that the action registered.
+
+Flat design that strips all signifiers (no hover, no edge, link-colored-as-body-text) creates discoverability failures: users cannot tell what is clickable. Discoverability and feedback are the two qualities to protect.
+
 ---
 
 ## Shneiderman's 8 Golden Rules
@@ -81,7 +97,37 @@ How humans group and interpret visual elements. Essential for layout decisions.
 - **Continuity** — The eye follows smooth paths. Aligned elements feel connected even with gaps.
 - **Closure** — The mind completes incomplete shapes. You don't need borders on all sides to define a region.
 - **Figure-ground** — Users distinguish foreground (focus) from background (context). Elevation, contrast, and blur control this.
-- **Common region** — Elements within a shared boundary are grouped. Cards, panels, and containers leverage this.
+- **Common region** — Elements within a shared boundary are grouped. Cards, panels, and containers leverage this. A subtle surface color groups a section more quietly than a 1px border.
+- **Enclosure** — A border or background encloses and separates. Use the lightest enclosure that works; a faint surface beats a hard border beats a heavy shadow.
+- **Pragnanz (simplicity)** — The brain prefers the simplest interpretation. Reduce the number of distinct visual ideas per screen.
+
+Use these to imply structure without drawing boxes, borders, and arrows (which add noise). This is why a well-spaced bento grid reads as organized with no dividers at all. Proximity is stronger than a shared border; breaking similarity deliberately (one differently-styled button) is how you signal "this is the primary action."
+
+---
+
+## CRAP: contrast, repetition, alignment, proximity
+
+Robin Williams' four principles, the most portable checklist in design.
+
+- **Contrast**: if two elements are not the same, make them very different. Timid contrast (16px vs 18px, gray vs slightly-grayer) reads as a mistake. Push differences hard.
+- **Repetition**: repeat visual motifs (a radius, a spacing unit, an accent, a type treatment) to unify and to teach the user the system.
+- **Alignment**: nothing should be placed arbitrarily. Every element aligns to something. Strong left or grid alignment beats centered-everything.
+- **Proximity**: group related items, separate unrelated ones, using space. A layout that passes CRAP rarely looks like slop, because slop is usually weak contrast plus arbitrary placement plus uniform spacing.
+
+---
+
+## Signal vs noise and data-ink (Tufte)
+
+For dashboards, data tools, and any dense interface: maximize the data-ink ratio. Every pixel that is not conveying information is a candidate for removal.
+
+Tufte's targets: erase non-data ink (heavy gridlines, chart borders, backgrounds, 3D effects, redundant labels), erase redundant data-ink, and revise. Concretely:
+
+- Prefer light row separators to heavy table borders
+- Drop chart junk
+- Label directly instead of with a legend when possible
+- Ask "what one decision does this view support?" before adding anything — one question per visualization
+
+Density is fine; noise is not. A dense dashboard with a high data-ink ratio reads as expert; a sparse one full of decoration reads as a toy. How to draw the chart itself is in [[web/frontend/data-viz]].
 
 ---
 
@@ -109,6 +155,22 @@ Decision time increases logarithmically with the number of choices.
 - Defaults and recommendations reduce decision burden
 - Search/filter for large option sets
 - Fewer primary actions per screen
+
+---
+
+## Jakob's, Tesler's and Miller's laws
+
+- **Jakob's Law**: users spend most of their time on other products, so they expect yours to work like those. Favor convention (logo top-left returns home, cart icon top-right, underlined links, search where search lives) unless novelty buys a real advantage. Avoiding the generated look is not the same as breaking conventions; break the visual median, keep the interaction conventions.
+- **Tesler's Law (conservation of complexity)**: every system has an irreducible amount of complexity. The question is who absorbs it. Push it onto the product (smart defaults, inference) rather than the user (more fields, more decisions).
+- **Miller's Law (7 plus or minus 2)**: working memory is small. Chunk information; do not present long undifferentiated lists or forms. This underwrites grouping, stepped flows, and summary rows.
+
+---
+
+## How these map to slop
+
+Slop is usually a theory failure, not a taste failure. The AI-default look is flat (no signifiers), uniformly spaced (no proximity grouping), centered (no alignment intent), low-contrast (timid hierarchy), and decoration-heavy (low data-ink).
+
+Naming the violated principle is faster than naming the visual tell: "this section has no hierarchy" or "these cards have no proximity grouping" is more actionable than "make it less generic." When auditing, ask which principle each weak area violates, then fix the principle. The tells themselves are listed in [[web/frontend/ai-tells]].
 
 ---
 

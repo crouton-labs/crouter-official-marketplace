@@ -1,9 +1,9 @@
 ---
 kind: knowledge
 when-and-why-to-read: When you are deciding what pictures a page shows — the hero visual, product screenshots, photographs, icons, logos, video — or building for a real company or brand whose colours and fonts must be matched, this knowledge should be read because a page that shows a gradient box, a drawn product or an image URL recalled from memory reads as generated and may break a licence, and brand colours recalled from training are confidently wrong.
-short-form: "Imagery: the user's own pictures first, then screenshots of the real product, then the product built in HTML, then openly licensed photographs credited on the page, then type; photographs big and few; never a drawn illustration or an empty frame; take a real brand's colours and fonts from its own site, never from memory."
+short-form: "Imagery: art direction as a system (photography direction, AI/stock fingerprint, illustration systems, method marks for posters and covers); the user's own pictures first, then screenshots of the real product, then the product built in HTML, then openly licensed photographs credited on the page, then type; photographs big and few; never a drawn illustration or an empty frame; take a real brand's colours and fonts from its own site, never from memory."
 rationale: >-
-  Adapted from Hallmark's imagery and brand-truth references (github.com/Nutlope/hallmark, MIT), without its photo library, capture script, generated stills or slot scripts. The rule against invented facts and visible slots for missing facts live in [[web/frontend/visual-design]]; hero layouts and section compositions in [[web/frontend/marketing-pages]]; colour, radii, shadows and motion in [[web/frontend/visual-craft]]; image sizing on small screens in [[web/frontend/responsive]]; the pause control for a looping video in [[web/frontend/states-and-interactions]]; grain and other textures in [[web/frontend/texture]].
+  Adapted from Hallmark's imagery and brand-truth references (github.com/Nutlope/hallmark, MIT), without its photo library, capture script, generated stills or slot scripts. The rule against invented facts and visible slots for missing facts live in [[web/frontend/visual-design]]; hero layouts and section compositions in [[web/frontend/marketing-pages]]; colour, radii, shadows and motion in [[web/frontend/visual-craft]]; image sizing on small screens in [[web/frontend/responsive]]; the pause control for a looping video in [[web/frontend/states-and-interactions]]; grain and other textures in [[web/frontend/texture]]. The sections on art direction, photography direction, the AI and stock fingerprint, illustration systems and specifying imagery are adapted from frontend-design-deslop by samber (github.com/samber/cc-skills, MIT) references/imagery.md; the section on method marks for pieces made to be looked at is adapted from antialgorithm (github.com/mankidev/antialgorithm, MIT) visuals.md, without its rough.py and check.py scripts.
 ---
 
 # Imagery
@@ -85,6 +85,82 @@ When there is nothing to capture (an idea, a product not built yet, nothing reac
 - **A row or grid of identical marks standing for a quantity,** one per bottle or per day. Set the number.
 - **Illustration packs and characters:** unDraw, Humaaans, Storyset, animated mascots, 3D blobs, isometric scenes.
 - Stock faces as proof; a logo wall without the user's logos; mesh blobs, orbs or aurora glows behind text; an image that zooms or rotates on hover; text baked into a picture; a photograph of a screen showing someone else's interface.
+
+## Art direction as a layer
+
+Imagery is where a committed direction differentiates fastest, because almost no one art-directs it. Treat imagery as a system with rules, the same as type and color. Art direction is the strategic layer above graphic design: it decides the single visual point of view (lighting, composition, color grading, subject treatment, environment, pacing) so that different people produce work that feels like one mind made it. Graphic design executes; art direction decides.
+
+Build an imagery direction during the system phase, with reference images and do/don't pairs, not as a last-minute search for a hero picture. For motion imagery, art direction also governs rhythm, transition, and pacing.
+
+### Photography direction
+
+A photography direction specifies, in words and references:
+
+- **Lighting** — hard vs soft, direction, warmth
+- **Composition** — tight vs environmental, rule-of-thirds vs centered, negative space
+- **Color treatment** — graded to the brand palette, duotone, desaturated, high-contrast
+- **Subject treatment** — candid vs posed, people vs product vs abstract, how people are framed
+- **Post-processing** — grain, overlay, crop ratios
+
+The test: two photos from different shoots should look like the same brand. Always regrade stock or third-party photography toward the brand palette so it does not read as bought.
+
+### The AI and stock image fingerprint
+
+AI-generated images carry recognizable tells:
+
+- Too-perfect lighting, plastic or over-manicured skin
+- Slightly wrong hand and finger proportions
+- Indecipherable background text, implausible reflections and details
+- An overall averageness, because the model outputs the statistical mean of visual culture
+
+Stock-photo clichés are their own slop: people pointing at laptops, the generic diverse team in an open-plan office, handshakes, glossy isometric server-and-cloud illustrations, abstract 3D gradient blobs and floating orbs. All of these read as filler that any competitor could have used. If imagery could belong to any brand in the category, it is slop.
+
+Custom imagery that explains — how data flows, how pieces connect, what the product actually does — beats decorative imagery that fills space.
+
+### Illustration systems
+
+When the user commissions or supplies illustration (never one you draw yourself; see "Never" below), it needs a system. An illustration system defines a repeatable style so commissioned or generated art carries identity: pick a lane (flat, line, isometric, editorial, textured/grain, spot vs full-scene) and specify stroke weight, fill behavior, outline treatment, palette, level of detail, degree of naivety, and whether human figures appear and how. Distinctiveness comes from the specifics: a particular line weight, a grain overlay, a constrained palette, an unusual perspective. Editorial and spot illustration (single conceptual images, like a magazine) differentiate strongly because they are clearly authored.
+
+- **Corporate Memphis / "Alegria"**: flat figures with bendy limbs, tiny heads, oversized hands, non-representational skin colors. Created for a big-tech brand and then mass-replicated through component packs until it became shorthand for soulless startup. The defensible critique is not flat-art-itself but undifferentiated, replication-optimized flat art that represents everyone and speaks to no one.
+- **Default Midjourney aesthetic**: the recognizable hyper-rendered, slightly-uncanny generative look used raw.
+- **Amateurish hand-coded SVG mascots and scenes**: hero art assembled by hand from generic SVG shapes (circles, rounded rects, simple paths) reads as an amateur doodle, not whimsy, however earnest the intent. If a real illustrator, a generated asset, or a licensed piece is not available, ship no illustration at all rather than a sketchy geometric fallback — a plain surface beats a bad mascot.
+
+### Specifying imagery in the design document
+
+Write the imagery section with: the chosen mode (product screenshots, photography, illustration, abstract device, or a defined mix), the rules for each (lighting and grading for photos, style spec for illustration, technique for devices), at least one do and one don't, and the contrast guarantee for text-over-image. State explicitly what to avoid (the category's stock clichés, the AI fingerprint, corporate-Memphis) so the negative space is as clear as the positive direction.
+
+## Method marks: posters, covers and promo images
+
+For a piece made to be looked at (a poster, a cover, a promo image, an SVG piece), not a page or an interface. Do not use the look that a tool or a model would produce with no instructions. If the palette, layout, lighting, pose or framing is what you would get from a plain prompt, it is the default. Pick the look from the subject itself: its material, its place, its time, its mood. Let one strong decision lead and keep the rest in its service, instead of many safe decisions that cancel each other. Do not center, balance and smooth it all by habit. Balance is a choice, not a starting point.
+
+A new subject is not enough. AI images are known by their finish, not by their topic. The finish is: smooth gradients, soft glow, perfect geometry, tiles that repeat with no change, clean edges on all shapes, even spacing, one default font, and the same polish on all parts. If the image has this finish, it looks made by AI whatever it shows.
+
+Take the method from the subject, then make the image look made by that method, not by a vector tool. Each method leaves its own marks, and those marks replace the AI finish:
+
+- Print and paint: few inks, colors that miss their place, uneven ink, broken edges, the grain of the paper.
+- Screens and machines: the pixel or dot grid, scan lines, bleed and bloom, faded bands, steps where a gradient runs out of colors, the font the machine has.
+- Camera and science: sensor grain or noise, light that falls off, blur where focus or motion puts it, the false colors of the instrument, a crop the camera chose.
+- Material and light: the seams, joints and thickness of the material, and light that bends, reflects or glows the way that material does.
+
+Keep these marks real and sparse, not a noise filter laid over a clean image. Some methods are clean by nature, such as a glossy render, a CAD drawing or a spreadsheet chart. Keep those clean and let their light, grid and tools say what they are.
+
+Do not reach for a hand-drawn wobble when the method is not made by hand. A wobbly line on an LED board, an x-ray or a 3D render is a second default laid over the first. Look at the result at icon size: if it reads as a flat vector drawing whatever the method said, the method is missing.
+
+When the method is made by hand, code must carry the hand in the geometry, not only in the surface on top of it:
+
+- No line is exactly straight and no curve is a clean math function. Points drift a little, strokes swell and thin, ends are blunt or overshoot.
+- Repeated marks, such as hatching, dots, stripes or tiles, change in spacing, length and angle from one to the next.
+- Shapes sit slightly off the grid and slightly off each other. Fills do not meet their outlines exactly.
+- Letters are not a system font in a perfect row. Draw them, cut them, stamp them or at least break their edges, and let their baseline and spacing move a little.
+- The layout is placed by eye, not snapped to equal columns and equal gaps.
+
+Look at the result at full size. If a hand-made piece has lines that look plotted, curves that look computed or text that looks typed, it still reads as machine made, however much grain is on it. Typing coordinates by hand gives clean marks. Generate the method's marks with a short script instead of writing them one by one. Stop at the number of marks the eye needs: keep an SVG under about 200 KB.
+
+Render the piece at full size and at icon size, and check for text that runs off an edge, is covered by a shape, has low contrast or is too small. Fix all of it, then look at both renders yourself.
+
+A flaw may change how the work looks, never stop it from doing its job. Find the parts the work needs in order to work: the information someone must read, the thing someone must press, the shape someone must recognize, the detail someone must find. Those parts stay whole, clear and in place. They are never cut by an edge, covered, broken by texture or lost in the style. Roughness belongs to the rest.
+
+Let text be part of the image, not labels placed on top of it. Choose the type for the method and the subject, let it be cut off, pressed, crowded or turned when that serves the piece. Leave out what has no job. A decorative shape, glow, frame or icon that only fills space is a sign of the default.
 
 ## Icons, logos, video and 3D
 

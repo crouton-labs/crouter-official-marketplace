@@ -63,3 +63,5 @@ Generated UI reliably covers only the default state. Explicitly implement and ve
 ## Verify rendered, assert state
 
 Never claim a UI change works from source code — verify against the rendered result. When you do, assert element *state/value/visibility* (or the store's value), not mere existence: an error page also "has a DOM", and markup can say `$99` while `display:none` hides it.
+
+For a browser extension, see [[web/chrome-extension/debugging-mistakes]].

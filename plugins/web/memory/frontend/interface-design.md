@@ -1,7 +1,9 @@
 ---
 kind: knowledge
 when-and-why-to-read: When you are designing dashboards, admin panels, apps, tools, or other interactive products rather than marketing pages, this knowledge should be read because establishing a coherent interface direction before implementation produces intentional, usable systems instead of a generic collection of components.
-short-form: Interface design — dashboards, admin panels, apps, tools, and interactive products. NOT for marketing design (landing pages, marketing sites, campaigns).
+short-form: Interface design — dashboards, admin panels, apps, tools, and interactive products, including what a SaaS app and a settings/admin surface each optimize for. NOT for marketing design (landing pages, marketing sites, campaigns).
+rationale: >-
+  The SaaS application and settings/admin sections are adapted from samber's frontend-design-deslop artifact-types reference (github.com/samber/cc-skills, MIT). Dashboards and charts: [[web/frontend/data-viz]]; usability heuristics: [[web/frontend/ux-principles]].
 ---
 # Interface Design
 
@@ -198,6 +200,34 @@ Your palette should feel like it came FROM somewhere — not like it was applied
 **Color Carries Meaning:** Gray builds structure. Color communicates — status, action, emphasis, identity. Unmotivated color is noise. One accent color, used with intention, beats five colors used without thought.
 
 **Defined But Unused Is Worse Than Undefined.** The most common failure isn't picking bad colors — it's defining good ones and never using them. You'll set up brand tokens, accent palettes, semantic colors in your theme, and then build every surface with `border-gray-200` and `bg-gray-50`. The tokens sit in your CSS like furniture in a showroom nobody visits. This happens because gray feels safe — it's "clean," it "doesn't distract." But an interface built entirely in zero-saturation neutrals isn't clean. It's empty. If the theme defines a brand teal, that teal should appear somewhere users can see it — a status accent, a hover tint, a section border. Not everywhere. But somewhere. The test: delete your brand tokens. Does anything on the page change? If not, you never used them.
+
+---
+
+# App types: what each optimizes for
+
+Each type optimizes for a different thing and has its own layout grammar, density, and aesthetic range. The named products under each type are inspiration to study and transpose one move from (an interaction, a layout device, a density choice), never templates to clone. Their specific look may have changed since writing — borrow the durable design quality, not a snapshot.
+
+## SaaS application
+
+- **Optimizes for:** repeated task completion — productivity over impression.
+- **Layout grammar:** persistent navigation (sidebar or top), content area, consistent component system, predictable patterns, empty states and loading states that teach.
+- **Density:** medium to high, depending on user expertise and task — power users tolerate density, consumer apps want clarity.
+- **Aesthetic range:** usually restrained (swiss, industrial, clean neutral); a committed but quiet palette where the accent carries primary actions and focus.
+- **Anti-patterns:** marketing-page flourishes inside the app; inconsistent components; decoration that slows the task; reinventing controls.
+
+**Inspiration:** Linear (keyboard-first, low-latency, consistent), Notion (flexible blocks, calm surfaces), Figma (dense pro tooling that stays legible), Height and Superhuman (command-driven speed), Vercel and Sentry dashboards (developer-grade density).
+
+## Settings, account, and admin / CMS
+
+- **Optimizes for:** finding and changing the right setting safely — configuration density, not data display.
+- **Layout grammar:** a clear category navigation (grouped sections), forms organized by task, sensible grouping and search for large surfaces, instant-apply toggles vs explicit save for batched changes, destructive actions guarded and clearly separated, audit and confirmation feedback. Admin and CMS add tables, bulk actions, roles and permissions, and content editing.
+- **Density:** medium to high — dense but zoned with surfaces and dividers, not borders.
+- **Aesthetic range:** restrained and functional; the system recedes so the task is clear.
+- **Anti-patterns:** a wall of ungrouped toggles; unclear save model (does this apply now?); destructive actions next to benign ones; no search on large settings; reinventing form controls.
+
+**Inspiration:** Linear, GitHub, and Vercel settings (grouped, searchable, calm), Stripe Dashboard settings, Shopify admin and WordPress/Sanity/Contentful for CMS patterns. Form and table craft is in [[web/frontend/states-and-interactions]].
+
+Dashboards and data tools are in [[web/frontend/data-viz]].
 
 ---
 

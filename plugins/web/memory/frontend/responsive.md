@@ -1,9 +1,9 @@
 ---
 kind: knowledge
 when-and-why-to-read: When you are building or checking a page or app layout that must work from a phone to a wide desktop, this knowledge should be read because a layout checked only at one width ships with sideways scrolling, wrapped buttons, cramped spacing and content a phone never gets.
-short-form: "Responsive: render cleanly from 320 to 1920px; two rem breakpoints (60rem, 40rem) with fixed spacing step-downs; clamp() for sizes, media queries for layouts, capability queries for hover and touch; overflow-x clip; clickable text never wraps; dvh not vh; tables, images and languages on small screens."
+short-form: "Responsive: render cleanly from 320 to 1920px; two rem breakpoints (60rem, 40rem) with fixed spacing step-downs; clamp() for sizes, media queries for layouts, capability queries for hover and touch; overflow-x clip; clickable text never wraps; dvh not vh; tables, images and languages on small screens; mobile-first or desktop-first by audience; wrap, stack, scroll or collapse per component; reflow, resize and text-spacing checks."
 rationale: >-
-  Adapted from Hallmark's responsive reference and the responsive line of its craft reference (github.com/Nutlope/hallmark, MIT). Desktop container, columns and section spacing live in [[web/frontend/marketing-pages]]; type sizes, the spacing scale and motion in [[web/frontend/visual-craft]]; hit targets and control sizes in [[web/frontend/states-and-interactions]]. This document owns only how a layout changes with the width of the screen.
+  Adapted from Hallmark's responsive reference and the responsive line of its craft reference (github.com/Nutlope/hallmark, MIT), with the responsive section of better-design's web-quality reference (github.com/Moddingflow/better-design, MIT), and mobile-first versus desktop-first and shrinking large elements faster from samber's frontend-design-deslop layout reference (github.com/samber/cc-skills, MIT). better-design's viewport matrix was dropped for Hallmark's eight widths. Desktop container, columns and section spacing live in [[web/frontend/marketing-pages]]; type sizes, the spacing scale and motion in [[web/frontend/visual-craft]]; hit targets and control sizes in [[web/frontend/states-and-interactions]]. This document owns only how a layout changes with the width of the screen.
 ---
 
 # Responsive
@@ -76,6 +76,28 @@ Do not hide content on a phone that a desktop shows. If about 40 words or more a
 - **Tables:** on a phone, the column that names each row and the column that acts on it stay in view. Either restack each row as a labelled block or pin the first column and let the rest scroll. A table must never open with two or more of its columns off the screen. A ten-column table on a phone needs a different design, not a squeeze.
 - **Images:** `srcset` with width descriptors; `<picture>` when the phone needs a different crop; `width` and `height` attributes on every image so the page does not jump; `loading="lazy"` below the fold, and never on the largest image in the first screen.
 - **Languages:** logical properties (`margin-inline-start`, `padding-block`) so the layout flips for right-to-left text; leave room for strings 30 to 40% longer than English; never hard-code date or number formats (use `Intl`).
+
+## Strategy
+
+Decide mobile-first or desktop-first by audience and primary device. Consumer and content products: mobile-first, design the small screen as the real product. Dense professional tools and dashboards: desktop-first, then decide what to drop or restack for mobile (touch targets at least 24px, ideally 44px; fewer metrics on the go).
+
+Relative sizing does not scale linearly: large elements must shrink faster than small ones on small screens, so a 72px desktop hero might floor at 36px on mobile while 16px body stays 16px.
+
+## Per-component adaptation
+
+Choose wrap, stack, contained scrolling, collapse, or structural preservation for each affected block. Recheck context and the primary action after adaptation. Do not conceal bugs with `overflow-x: hidden`; a correct page scrollWidth can hide clipped descendants.
+
+Inspect descendants, intended scroll regions, overlays, sticky content, clipped characters, wrapped labels, covered targets, and broken assets. One bounding-box scan cannot prove there are no overlaps. Review a new golden image semantically before accepting it.
+
+The reserve to leave for longer strings, 200% text and hover scale is in [[web/frontend/visual-craft]] (Breathing room).
+
+## Checking it against WCAG
+
+- Reflow 1.4.10: a 320 CSS px equivalent width for vertical flow (1280 at 400% zoom); a 256 CSS px equivalent height for horizontal flow. Necessary two-dimensional content, such as some tables/maps, has exceptions; inspect the surrounding interface separately.
+- Resize 1.4.4: up to 200% text size without lost content/function. This is separate from reflow. Device scale factor is not text resizing. Use actual browser text/zoom controls; a CSS override is diagnostic only when rendered text is confirmed to double.
+- Text spacing 1.4.12: tolerate line height 1.5, paragraph spacing 2em, letter spacing .12em, and word spacing .16em together without loss. These are override tests, not required default styles; account for applicability to the writing system.
+- Check focus and contrast in supported themes. Text changes require expansion, long-string, and glyph-coverage checks. Test RTL where already supported or requested.
+- Under reduced motion, remove unnecessary movement while preserving state, feedback, and control. Test both DevTools/automation emulation and the operating-system setting.
 
 ## Never
 

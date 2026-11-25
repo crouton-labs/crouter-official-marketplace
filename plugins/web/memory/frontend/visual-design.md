@@ -1,9 +1,9 @@
 ---
 kind: knowledge
 when-and-why-to-read: When you are about to create a distinctive new customer-facing web component, page, or application rather than an internal tool or an extension of an existing design system, this knowledge should be read because a deliberate visual direction avoids generic AI styling and the redesign that follows it.
-short-form: "Distinctive frontend design: ground in the subject, plan a token system (color/type/layout/signature), self-critique against the AI-default looks in ai-tells, never invent facts, pass the quality checks (which point at visual-craft, responsive, states-and-interactions and design-review), spend boldness in one place, treat copy as design material."
+short-form: "Distinctive frontend design: where the direction comes from (art-direction, anti-default-direction, style-presets), ground in the subject, plan a token system (color/type/layout/signature), self-critique against the AI-default looks in ai-tells, never invent facts, pass the quality checks (which point at visual-craft, responsive, states-and-interactions and design-review), spend boldness in one place, treat copy as design material."
 rationale: >-
-  The no-invented-facts rule is adapted from Hallmark (github.com/Nutlope/hallmark, MIT). The list of AI-default looks, the numeric craft rules, and the screenshot review now live in their own documents ([[web/frontend/ai-tells]], [[web/frontend/visual-craft]], [[web/frontend/design-review]]), and the quality checks here point at them so each rule is stated once. Marketing pages have their own document, [[web/frontend/marketing-pages]], because a page that must make a visitor act needs structure and copy rules a component or app does not.
+  The no-invented-facts rule is adapted from Hallmark (github.com/Nutlope/hallmark, MIT). The list of AI-default looks, the numeric craft rules, and the screenshot review now live in their own documents ([[web/frontend/ai-tells]], [[web/frontend/visual-craft]], [[web/frontend/design-review]]), and the quality checks here point at them so each rule is stated once. Marketing pages have their own document, [[web/frontend/marketing-pages]], because a page that must make a visitor act needs structure and copy rules a component or app does not. The full art-direction process is in [[web/frontend/art-direction]], the procedure for when no look was chosen in [[web/frontend/anti-default-direction]], and named looks in [[web/frontend/style-presets]]; the matching paragraphs below are adapted from frontend-design-deslop by samber (github.com/samber/cc-skills, MIT) SKILL.md.
 ---
 
 # Visual design
@@ -17,6 +17,22 @@ Approach this as the design lead at a small studio known for giving every client
 - **Performance-critical pages** — the animations, custom fonts, and layered effects this produces add weight. For pages where load time is the feature, skip the creative flourishes.
 
 For a landing page or marketing site, read this document for the visual direction and [[web/frontend/marketing-pages]] for what the page contains, in what order, and what it says.
+
+## Where the direction comes from
+
+AI-generated UI looks generic for two reasons:
+
+1. **No constraints.** The model samples the statistical median of 2019-2024 web code — Tailwind UI's `bg-indigo-500`, Inter, rounded cards, soft shadows. You cannot out-prompt a vacuum.
+2. **Designing before knowing what you're designing.** A corporate landing page, a creative portfolio, a developer-tool landing page, an analytics dashboard, and an ecommerce product page share almost no design DNA — a beautiful aesthetic that fights the artifact's job is its own slop.
+
+The fix is a discipline borrowed from brand design: strategy drives design, never aesthetics first. Commit to words first (what this is, who it serves, the adjectives it must feel like; see [[web/frontend/design-website]]), translate those words into a typography and color system, build from tokens, apply the craft layer, then audit. Target the convergence mechanism, not a frozen blocklist; the slop fingerprint shifts over time (purple gradients in 2022, cream backgrounds and italic-serif heroes in 2026).
+
+- A system exists (a design document, brand, code tokens, a live UI): inherit it; see "Inherited direction" in [[web/frontend/art-direction]].
+- The user gave a visual cue: run the process in [[web/frontend/art-direction]].
+- The user named a look, or you want a named starting point to diverge from: [[web/frontend/style-presets]].
+- No cue and nothing to inherit: [[web/frontend/anti-default-direction]]. No visual direction is not a style.
+
+Density fits the artifact: dashboards and pro tools tolerate high density; marketing and portfolio pages want air.
 
 ## Ground it in the subject
 
@@ -67,7 +83,7 @@ Before handing back, have someone with fresh context review the rendered page: a
 Build to these without announcing them. Each one is checkable in the CSS or in a screenshot.
 
 - Every colour and every font goes through a token declared at `:root` or in a theme block. No literal colour or `font-family` after the token block.
-- Type sizes, colour values, contrast, spacing, shadows and motion timing stay within the numbers in [[web/frontend/visual-craft]].
+- Type sizes, colour values, contrast, spacing, shadows and motion timing stay within the numbers in [[web/frontend/typography]], [[web/frontend/color]], [[web/frontend/visual-craft]] and [[web/frontend/motion]].
 - The page holds at every width with no sideways scroll: [[web/frontend/responsive]].
 - Every control has all its states and a visible keyboard focus: [[web/frontend/states-and-interactions]].
 - Nothing on the list in [[web/frontend/ai-tells]] appears unless the brief asked for it.

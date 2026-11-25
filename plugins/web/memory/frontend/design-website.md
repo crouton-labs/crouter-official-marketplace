@@ -1,7 +1,9 @@
 ---
 kind: knowledge
 when-and-why-to-read: When the user asks to design a website or product UI, or wants a design system / design-document.html generated, this knowledge should be read because it runs an interactive workflow that gathers requirements, explores preferences, and produces a comprehensive design document with component examples.
-short-form: Interactive product-design workflow — gather requirements, explore preferences, generate a design document with components.
+short-form: Interactive product-design workflow — gather requirements, commit to words (adjectives, essence, sliders, personality-to-token table), explore preferences, decide constants vs variables, generate a design document with components.
+rationale: >-
+  The discovery sections (protocol, commit to words, question bank, sliders, personality-to-token translation, questions by artifact type, system governance, reference transposition) are adapted from frontend-design-deslop by samber (github.com/samber/cc-skills, MIT) references/discovery.md and SKILL.md Phase 0, wording kept, with its question-tool wording replaced by `crtr human ask`. The product-experience interview (how a product should feel) lives in [[design-discovery/product-design-interview]]; the visual-direction process in [[web/frontend/art-direction]] and [[web/frontend/anti-default-direction]]; named looks in [[web/frontend/style-presets]].
 ---
 
 # Product Design Workflow
@@ -11,6 +13,75 @@ You are a product designer creating a comprehensive design system. Follow these 
 ## Step 1: Gather initial requirements
 
 Ask the user to describe their product at a high level. Accept any degree of specificity.
+
+If the project already has a design document, read it, honor its tokens, skip the questions it already answers, and extend it rather than starting over.
+
+The question bank below is generous on purpose; the asking is selective. Batch related questions, give 2 to 4 concrete options each, infer from context first and confirm inferences, ask only the high-signal subset. Do not interrogate.
+
+### Protocol
+
+1. Classify the artifact type: marketing/landing page, pricing page, SaaS application, dashboard/data tool, ecommerce, marketplace, mobile app, AI/conversational interface, email/newsletter, blog/editorial publication, onboarding/auth flow, settings/admin/CMS, presentation/deck, docs/API reference, portfolio/brand site. Type decides which questions matter. A composite artifact (a marketing site with an embedded app, an AI chat inside a SaaS app) is designed region by region.
+2. Infer from context (prompt, domain, repo, existing brand) and state inferences so they are cheap to correct.
+3. Ask the high-signal subset. Offer to go deeper rather than front-loading.
+4. Commit to words before designing.
+5. Gather references: 1 to 3 sites admired (and what specifically), 1 to 2 to avoid, key competitors. If none and direction is unclear, web-search current strong examples of the type plus positioning and transpose. On a generic brief (another dashboard, another SaaS landing page) where the category itself has little to say, widen the reference search past the product's own category rather than asking for more creativity within it (see [[web/frontend/anti-default-direction]]).
+
+### Commit to words (do before any visual)
+
+The highest-leverage step.
+
+- Lock 3 to 5 brand adjectives. These translate directly into type, color, density, and motion.
+- Write a one-line visual word translation per adjective: adjective -> concrete visual move. Example: "precise" -> tight grid, monospace numerals, hairline rules; "warm" -> humanist sans, soft saturated accent, generous spacing; "bold" -> oversized display, high contrast, one loud accent.
+- Distil a 3-word aesthetic essence capturing the overall feel (for example "quiet, technical, exact" or "bold, editorial, loud").
+- State a single-minded proposition: the one impression the UI must leave.
+
+### Core question bank (ask the relevant subset)
+
+- Artifact and primary action: what is this, and what single outcome matters most (sign up, buy, explore data, read, book a demo, present)?
+- Audience: who uses it; B2B/B2C/developer/internal; technical sophistication; decision-maker or end-user; demographics if relevant?
+- Positioning: corporate/enterprise, creative/design-forward, technical/developer, luxury/premium, playful/consumer, or utilitarian/internal?
+- Personality: 3 to 5 adjectives, or place on the sliders below.
+- Archetype (optional): Hero, Sage, Outlaw, Innocent, Explorer, Caregiver, Creator, Ruler, Magician, Lover, Jester, Everyman. Drives both color and type mood.
+- References: sites admired and why; aspirational brands; sites to avoid; direct competitors.
+- Brand assets: existing logo, colors, fonts, or greenfield? Must-keep and must-avoid constraints?
+- Mode and constraints: dark, light, or both? Accessibility bar? Content volume (sparse vs dense)? Stack? Fidelity (prototype vs production)? Timeline/budget?
+
+Which questions matter, by artifact type:
+
+- Landing page: primary conversion action; positioning (corporate/creative/technical); the single most important proof or differentiator; references.
+- SaaS app: core daily task and frequency; user expertise; data/control density; light/dark; existing design system.
+- Dashboard: the specific decision it supports; type (operational/analytical/strategic); top 5 to 9 metrics; cadence and device.
+- Ecommerce: product type and price point; trust posture; primary objection to overcome; brand maturity.
+- Presentation: audience and setting (pitch, sales, internal, conference); narrative arc; live or read.
+- Docs/content site: reading length; navigation depth; code-heavy or prose; brand tie-in.
+- Portfolio/brand site: the one impression to leave; how design-forward; work to foreground.
+
+### Personality sliders and translation to tokens
+
+Each end pulls concrete token moves. warm <-> cool; playful <-> serious; traditional <-> innovative; minimalist <-> expressive; formal <-> conversational; bold <-> restrained; dense <-> airy.
+
+Built on Aaker's five brand-personality dimensions plus the sliders. Turn adjectives into a token set.
+
+| Personality read | Type | Color | Space / density | Radius / shape | Motion | Imagery |
+| --- | --- | --- | --- | --- | --- | --- |
+| Sincere / warm / friendly | humanist or rounded sans, generous body | warm neutrals, soft saturated accent | airy, generous | soft to medium radius | gentle, slow | candid, human |
+| Exciting / bold / playful | high-contrast display, big weights | bold saturated, maybe two accents | dynamic, asymmetric | varied, sharp or round | energetic, motion as feature | vivid, dynamic |
+| Competent / trustworthy | clean neutral sans, clear hierarchy | restrained, one accent, data-forward | structured, balanced | small to medium radius | minimal, functional | charts, proof, clean product |
+| Sophisticated / premium | elegant serif display or refined sans | muted or jewel, near-black + off-white, metallic accent | vast whitespace, large type | minimal radius, sharp | slow, deliberate | high-quality, sparse |
+| Rugged / industrial | condensed or monospace, heavy weights | high contrast, muted base + one hazard accent | dense, functional grid | zero to small radius, hard edges | abrupt or none | utilitarian, textured |
+
+Slider deltas (stack on top):
+
+- More expressive -> add a second typeface, more color, more motion
+- More minimal -> fewer colors, more whitespace, one family across weights
+- More playful -> rounder shapes, brighter accent, micro-interactions
+- More serious -> tighter grid, restrained palette, sharper shapes
+- Denser -> smaller spacing and type steps
+- Airier -> larger spacing, fewer elements per view
+
+### Reference transposition
+
+When the user names a site to emulate, or you find one by search: extract its color relationships, type contrast and pairing, density, and one signature move. Borrow those into the token set; do not copy its layout. State what you are borrowing before coding.
 
 ## Step 2: Design exploration (single multi-question round)
 
@@ -57,6 +128,15 @@ Propose 5–7 typography systems. Start each system with a heading/display font 
 
 - **Modern Sans Authority** — Headings: Inter/SF Pro, Body: System-ui, clean, professional, highly readable, tech-forward.
 - *(etc.)*
+
+## Step 2b: System governance (constant vs variable)
+
+Before building, decide what is fixed and what can flex, so the system scales without drifting:
+
+- Constant: the type families, the core palette and accent, the spacing base unit, the radius and shadow approach, the signature move.
+- Variable: layout per page/section, imagery, accent intensity within range, density per context.
+- Hierarchy of elements: which tokens dominate (usually type and the accent), which support.
+- Application priorities: where the system must be strongest first (hero, primary CTA, key screen).
 
 ## Step 3: Clarifying questions
 

@@ -1,14 +1,24 @@
 ---
 kind: knowledge
 when-and-why-to-read: When you are planning, building or checking a customer-facing page, component or app and want to know whether it will look AI-generated, this knowledge should be read because each tell listed here is a default a language model falls into regardless of subject, and a visitor spots it at a glance.
-short-form: "Checklist of tells that make a page look AI-generated, each with its fix, grouped by colour and surface, type, structure and layout, chrome and copy, motion and interaction, assets and access, plus finishing checks."
+short-form: "Checklist of tells that make a page look AI-generated, each with its fix, grouped by colour and surface, type, structure and layout, chrome and copy, motion and interaction, assets and access; severity rules, the information test for interface copy, build-correctness and finishing checks, and the slop scan."
 rationale: >-
-  Adapted from Hallmark's gates (github.com/Nutlope/hallmark, MIT), with its tiers, waivers, scoring and tooling removed. This document owns only the list of tells and the one-clause fix for each. The detail behind a fix lives with its owner: visual direction and the rule against invented facts in [[web/frontend/visual-design]]; type, fonts, colour, spacing, separators and motion numbers in [[web/frontend/visual-craft]]; page structure, hero layouts, section compositions, copy, nav and footer in [[web/frontend/marketing-pages]]; control states and forms in [[web/frontend/states-and-interactions]]; pictures in [[web/frontend/imagery]]; overflow and small screens in [[web/frontend/responsive]]; reviewing a rendered page in [[web/frontend/design-review]].
+  Adapted from Hallmark's gates (github.com/Nutlope/hallmark, MIT), with its tiers, waivers, scoring and tooling removed. Further rows, the severity rules, the information test for interface copy and the slop scan are adapted from better-design's ai-slop catalog (github.com/Moddingflow/better-design, MIT); further rows, the build-correctness checks and the self-audit are adapted from samber's frontend-design-deslop slop-checklist and SKILL.md (github.com/samber/cc-skills, MIT). This document owns only the list of tells and the one-clause fix for each. The detail behind a fix lives with its owner: visual direction and the rule against invented facts in [[web/frontend/visual-design]]; type, fonts, colour, spacing, separators and motion numbers in [[web/frontend/visual-craft]]; page structure, hero layouts, section compositions, copy, nav and footer in [[web/frontend/marketing-pages]]; control states and forms in [[web/frontend/states-and-interactions]]; pictures in [[web/frontend/imagery]]; overflow and small screens in [[web/frontend/responsive]]; reviewing a rendered page in [[web/frontend/design-review]].
 ---
 
 # AI tells
 
 Each row is something a model produces whatever the subject is, so a reader takes it as a sign the page was generated. Check the plan against this list before building and the rendered page against it before handing back. When the brief explicitly asks for one of these, follow the brief; the list is for the choices the brief left open.
+
+Slop is a decision made from model habit rather than the product: it could move to any other site unchanged. Replace the underlying decision; simply removing decoration can produce another generic template. For redundant copy, removing the sentence is the correct replacement when the existing label already does its job. The fingerprint shifts over time, so the underlying test is always: "Is this the most probable output, or a committed choice?"
+
+## How to use this list
+
+- For a focused change, avoid introducing these patterns. Report existing patterns outside the requested scope without redesigning unrelated code.
+- An exception must follow from the product, content, or the project's recorded design decisions, not "it looks nice." An intentional visual brand pattern the project records is not slop.
+- Visual severity: on an expressive surface, three or more unjustified matches, or any match in the first viewport, are an error (failed swap test); an isolated match elsewhere is a warning. In dense working tools, visual genericness is a warning.
+- Copy severity is separate: newly authored page narration, label paraphrases, or repeated helper text with no new information are errors in any UI, including dense tools. Fix them within the affected scope. Do not count necessary explanations as failures.
+- Naming the violated principle is often faster than naming the tell; see [[web/frontend/ux-principles]].
 
 ## The three most common generated looks
 
@@ -17,12 +27,17 @@ Each row is something a model produces whatever the subject is, so a reader take
 | A warm cream background (near `#F4F1EA`), a high-contrast serif display face and a terracotta or clay accent. Warm, bookish and family briefs pull hardest toward it. | Change one of the three: the accent first, then the background, then the display face. |
 | A near-black background with a single bright acid-green or vermilion accent. | Pick the background and accent from the subject's own world, per [[web/frontend/visual-design]]. |
 | A broadsheet layout: hairline rules everywhere, zero corner radius, dense newspaper-like columns. | Use it only when the content really is a dense publication; otherwise choose a structure from [[web/frontend/page-shapes]]. |
+| The other calibrated looks: hard-offset-shadow neo-brutalism; black + one blue without a request. | Move one axis first (accent, then ground, then display). |
 
 ## Colour and surface
 
 | Tell | Fix |
 |---|---|
 | A purple-to-blue, purple-to-pink or cyan-on-dark gradient anywhere, including gradient text through `background-clip: text`. | One anchor hue; solid text colour. |
+| Accent in the indigo/violet hue band (OKLCH H ~250-320) unless the brief explicitly demands it. | A palette with a named origin in the product, material, era, or content. |
+| A timid even spread across many hues. | One dominant color plus a sharp accent. |
+| Decorative glassmorphism (blur/glass/glow used for looks rather than to solve layering); glass panels, neon edges, and glowing borders accumulate without a function. | Dark surfaces distinguished by lightness, with a purposeful accent. |
+| Repeating-gradient-stripe surface decoration. | A deliberate texture (see [[web/frontend/texture]]) or leave the surface plain. |
 | Gradient text in any other hue. | Solid text colour; get emphasis from weight or the display face. A single-hue ramp (stops within 40° of hue) that keeps contrast is acceptable. |
 | `#000`, `#fff`, `oklch(0% …)` or `oklch(100% …)` used as a colour, or a page background that is pure white or pure black by reflex. | Tint toward the anchor hue with chroma 0.005 or more. A pure white background is fine only when it is a deliberate choice for a minimal page. |
 | Zero-chroma grey neutrals on a page that has an anchor hue. | Give the neutrals chroma 0.005 or more toward the anchor. |
@@ -40,6 +55,10 @@ Each row is something a model produces whatever the subject is, so a reader take
 | Running prose wider than 75 or narrower than 45 characters. | `max-width: 65ch`; measure rules are in [[web/frontend/visual-craft]]. |
 | More than three font families. | Display, body and at most one outlier face. |
 | One word or phrase in a heading set apart by colour, weight, italic, a highlight band or an underline. After the small label above a heading, the most common machine-made heading. | Set the whole heading one way; use a line break, or a second line at a second size. The one exception is the offset-colour print effect in [[web/frontend/texture]] on a page whose look earns it. |
+| Headings and body nearly the same size and weight; the page cannot be scanned. | A stepped scale with distinct size, weight, and spacing. Use these before adding another family. A ratio of 1.25 or more for general UI, marketing, and editorial; a tighter 1.067-1.2 is a legitimate deliberate choice for dense, data-heavy dashboards. |
+| Space Grotesk, Geist, or Instrument Serif chosen by reflex (these are now themselves convergence tells). | A face from the class the idea calls for, chosen by setting the real headline. |
+| A full-sentence headline blown up to display size dominating the viewport. | Set long headlines smaller, or tighten the copy. A punchy one- or two-word headline at that size is fine. |
+| Display type tracked destructively. | Tighten optically; characters keep their own shape (roughly no tighter than -0.02em on large headlines). |
 | An italic display face used everywhere by default, or synthesised italic. | Roman display; if italic is the display voice, set it on every heading at that level with a true italic and `font-synthesis: none`. |
 | An uppercase display heading that can wrap, with `line-height` under 1.0. | `line-height` of 1.0 at least, 1.02 to 1.08 recommended. |
 | Monospace on labels, captions, meta rows, table heads or small type when the content is not code, a figure or a measurement and neither the display nor the body face is mono. | Labels in the body face, a step smaller, normal case. |
@@ -53,6 +72,9 @@ Each row is something a model produces whatever the subject is, so a reader take
 | The template page: hero, three features, a call-to-action band, footer. Test: could this exact sequence of sections sit under a different business's name? | Build the sections the visitor's job and the category call for, per [[web/frontend/marketing-pages]] and [[web/frontend/page-shapes]]. |
 | A centred heading over three equal columns of icon-above-heading tiles; an icon in a rounded tile above a heading; a thick coloured stripe down one side of a card. | Vary widths and heights, put icons inline, use a hairline border or none. |
 | A card inside a card. | One layer of containment. |
+| A hero and promotional sections inside a working tool. | Open directly on the work: data, next action, and current context. |
+| Everything centered at similar sizes. | One dominant element, a stepped scale, and deliberate axes/asymmetry. A short, single-purpose screen such as sign-in or an empty state is the exception. |
+| Radius past 16px on small cards (blob-rounding; 24px+ is the unmistakable case), a uniform 16px radius on everything, or full-pill radii on cards. | Reserve full-pill radii for tags and buttons; one radius per nesting level per [[web/frontend/visual-craft]]. |
 | Every section separated the same way with the same gap. | Use different separators in different places (space, a hairline, a tinted area, a card); the order of separators is in [[web/frontend/visual-craft]]. |
 | A hero that is a big number with a small label, a row of supporting stats and a gradient accent. | Open with the most characteristic thing in the subject's world, per [[web/frontend/visual-design]]. A figure leads only when the page is built around it and it carries its unit and its source. |
 | A bare figure as the hero's only headline. | Pair it with the line that says what it means. |
@@ -66,6 +88,9 @@ Each row is something a model produces whatever the subject is, so a reader take
 | An image-bearing grid track on bare `1fr`; a display heading without `overflow-wrap: break-word; min-width: 0`. | `minmax(0, 1fr)`; `overflow-wrap: break-word`, never `anywhere`. |
 | Two `position: sticky; top: 0` elements, so a section head slides under the nav. | Offset the second by the nav's height and stack the nav above it. |
 | CSS-only radio tabs with the radios at `position: absolute; top: 0`, so the page jumps on every click. | Radios in the flow at zero size, or a script handler that focuses with `preventScroll`. |
+| Scroller or carousel cards flush against the scroll container's edge. | Matching gutters on both edges. |
+| A clipping container (`overflow: hidden`/`clip`) wrapping an absolutely-positioned popover, menu, or tooltip that needs to escape it. | Move the popover out of the clipping ancestor. |
+| A multi-column row with one opening column running far past its neighbor and leaving dead space. | Rebalance the columns. |
 | More than about 80 words in any 900px-tall window at 1440 wide, or a hero with more than two text blocks before its actions. | Headline, one sentence, actions; page size rules are in [[web/frontend/marketing-pages]]. |
 | Gaps between sections under 120px at 1440 (64px where the background colour changes), or every gap the same. | 120px at least, varied; see [[web/frontend/marketing-pages]]. |
 | A heading closer to what precedes it than to what it heads. | At least twice as much space above a heading as below it. |
@@ -76,8 +101,17 @@ Each row is something a model produces whatever the subject is, so a reader take
 
 ## Chrome and copy
 
+Tells in prose itself (padding, stock openers, punctuation habits) are in [[web/copy/ai-writing-tells]].
+
 | Tell | Fix |
 |---|---|
+| A page explains its own title or lists the controls it contains: "Manage your notification preferences here" above Notification settings. | Start with the relevant controls, data, or next action. Remove the introduction if the heading already establishes the task. A genuinely unfamiliar workflow may get brief orientation, eligibility, prerequisites, or scope that the title cannot convey. |
+| A toggle named "Email notifications" has a description saying "Enable or disable email notifications"; buttons are explained by repeating their verbs. | A precise label, with no default description. Add only verified consequences or constraints the label omits ("Security alerts are always sent", when true). |
+| Label, placeholder, hint, tooltip, repeated heading, or adjacent card all express the same fact. | State the fact once at the point of need. Remove duplicates across the whole task region, including differently worded paraphrases. Do not remove required semantics or recovery guidance. |
+| Every settings row or card gets a subtitle because the component/template has a description slot. | Make the description optional and omit its empty wrapper/spacing. Retain explanations only where the row has a non-obvious effect, prerequisite, format, limit, cost, privacy implication, or recovery step. |
+| Sparkles/a magic wand are the only indication of an AI feature. | Name the operation and show its input and result. |
+| A full-width "sample page" notice, dashed "sample" chips, or "example data" captions on the first screen of a prototype. | Mark samples in the handoff; one quiet footer line on the page; unknown facts in a neutral form or left out. A working tool's persistent "demo data" indicator in its status area is fine. |
+| Three or more sections closing on clipped aphorisms ("X. No Y.", "Just Z."), or dismissing something as "theater" (growth theater, feature theater) as a stand-in for saying plainly what it does. | Close a section on its fact or its action. |
 | Placeholder names (Jane Doe), startup-cliché names (Acme, Nexus), buzzwords (seamless, robust, empower, supercharge, elevate, effortless, unlock, unleash, next-generation, world-class, best-in-class, industry-leading, mission-critical, future-proof), filler openers ("Built for the modern team", "In today's landscape"), em or en dashes, the rebuttal cadence used three or more times ("Not a feature. A platform."), "quietly trusted by", a stock footer line (*All rights reserved*). | Say what the product does in its own nouns; the copy rules are in [[web/frontend/marketing-pages]]. |
 | A stock second action beside the primary: *Learn more*, *Get started*, *Book a demo*. | Name the second action by what it does, or drop it. |
 | An invented metric, testimonial, logo wall, quote or case-study count. | The user's real figure, a visible slot to fill, or nothing; see [[web/frontend/visual-design]]. |
@@ -101,6 +135,13 @@ Each row is something a model produces whatever the subject is, so a reader take
 | `transition: all`; animating `width`, `height`, `top`, `left`, `margin` or `padding`. | List the properties; animate `transform` and `opacity`. Motion rules are in [[web/frontend/visual-craft]]. |
 | The same lift or scale on every card, more than one hover effect on one element, an image scaling or rotating on hover, a hover state on something not interactive. | One hover signal per element, on the container, never the image. |
 | Bounce or overshoot easing on interface state. | An exponential ease-out. |
+| Bouncing buttons, wiggling icons, floating badges all compete for attention. | Motion with a named function; one cue at the relevant moment. |
+| A status dot pulses while nothing changes; a fake blinking caret on non-editable copy; an auto-scrolling marquee or ticker on content that is not live. | Static status stays still; a single response to a status change; motion for real activity. |
+| An identical fade-in-up on four or more sections; enter animations with no exit. | One reveal per page; see [[web/frontend/scroll-animation]]. |
+| A popover or menu that scales from center or from `scale(0)`. | Scale from its trigger (`transform-origin`); durations in [[web/frontend/visual-craft]]. |
+| High-frequency and keyboard-initiated actions animated. | Leave them instant. |
+| A component shipped with only a resting state; buttons colored by meaning instead of ranked by importance; placeholder text as the label. | All states, one primary with secondaries ranked by importance, visible labels; see [[web/frontend/states-and-interactions]]. |
+| Numeric table columns centred, or figures in proportional numerals; heavy table borders. | Text left, numbers right, `tabular-nums`, light separators. |
 | More than one scroll-linked animation pattern on a page. | At most one; see [[web/frontend/scroll-animation]]. |
 | A keyframe or transform transition with no `prefers-reduced-motion: reduce` fallback. | Add the fallback. |
 | Content hidden at rest (`opacity: 0` or `visibility: hidden`) that only a script reveals, so the page is blank if the script fails. | Visible by default; hide only under a class the script adds, or animate from visible with `@starting-style`; see [[web/frontend/states-and-interactions]]. |
@@ -119,6 +160,8 @@ Each row is something a model produces whatever the subject is, so a reader take
 |---|---|
 | An emoji standing in for an icon. | One icon library, a custom SVG, or type. |
 | Two icon libraries on one page. | One library; a brand or platform mark in a slot or two is fine. |
+| The unmodified shadcn/Tailwind default icon set defines the look; icons scaled far beyond their design size; sharp icons in a soft UI. | Customize stroke and radius to the token radius, or a distinctive set. |
+| Stock people-pointing-at-laptops, glossy isometric tech illustration, corporate-Memphis figures, or raw default-Midjourney renders. | Specific product imagery; see [[web/frontend/imagery]]. |
 | An inline SVG or CSS drawing of an object, plant, animal, person, product, building or scene larger than an icon. | A real photograph, the product, or type at scale; see [[web/frontend/imagery]]. A chart, map or diagram of real data is fine. |
 | A coloured or gradient block 300×200px or larger showing nothing. | A real image or the product; see [[web/frontend/imagery]]. |
 | 24 or more identical marks (ticks, dots, bars) standing for a quantity, one per item or day. | Set the number in type. |
@@ -126,10 +169,41 @@ Each row is something a model produces whatever the subject is, so a reader take
 | A broken image, an openly licensed photo with no credit on the page, a paid stock photo, or a hotlinked stock photo. | The real file, credited where its licence asks; licensing is in [[web/frontend/imagery]]. |
 | A decorative `<svg>`, `<canvas>` or CSS-art element with neither `aria-hidden="true"` nor a label. | Hide it or name it. |
 | Text covered by an opaque box, an image or other text (sticky and fixed chrome aside). | Give the text its own space, or its own background above the cover. |
-| Text, icons, focus rings or field edges below contrast thresholds against their computed background. | Fix the pair; the thresholds are in [[web/frontend/visual-craft]]. |
+| Text, icons, focus rings or field edges below contrast thresholds against their computed background. | Fix the pair; the thresholds are in [[web/frontend/color]]. |
 | Button text too close in lightness to its fill, a dark panel that keeps the light-panel text colour, grey text on a coloured background. | Pair every fill with its own text colour. |
 | A button label or primary nav link that wraps at any width from 320 to 1920; a footer link, tab or breadcrumb that wraps. | Shorten it; `white-space: nowrap` on buttons and primary links; see [[web/frontend/responsive]]. |
 | Spacing values off the page's spacing scale (more than two or three optical nudges). | Use the scale in [[web/frontend/visual-craft]]. |
+
+## Every explanation adds information
+
+For each page introduction, subtitle, field description, tooltip, and help block, ask: **What specific fact would the user lose if this sentence disappeared?**
+
+Keep text that helps users choose correctly, predict a consequence, enter valid data, or recover. If the answer is only the page's purpose, the label's meaning, or an already visible state, remove it. Evaluate meaning, not exact string equality or sentence length.
+
+- Do not write an instruction manual inside an ordinary working screen. A settings page should expose its settings; a dashboard should expose its data and next actions.
+- Prefer a self-explanatory label. Do not use a vague label to justify a paragraph beneath it.
+- Never invent limits, savings, security guarantees, or behavior to give helper text a purpose. Missing product facts belong in the implementation investigation, not fabricated UI copy.
+- Keep decision-critical information next to the action. Optional detail can use progressive disclosure; an important warning must not be available only on hover or behind a help icon.
+- Preserve accessible labels/descriptions, units, formats, requirements, unfamiliar concepts, safety/privacy/billing consequences, and actionable errors. Concision must not hide the task.
+- An empty state may explain why there is no content and how to start; it must not narrate controls that are already obvious. Onboarding can teach an unfamiliar operation, without repeating that lesson throughout the everyday interface.
+- Do not replace deleted prose with badges, callouts, decorative filler, or more tooltips. Let the space close naturally. This rule applies to interface copy, not to documentation whose actual purpose is explaining a feature.
+
+| Before | After | Why |
+| --- | --- | --- |
+| Heading "Settings"; subtitle "Customize settings to make the application work your way" | Heading and relevant settings, no subtitle | The sentence adds no actionable fact |
+| "Dark mode" / "Turn dark mode on or off" | "Dark mode" | The control and label already convey the operation |
+| "Auto-save" / "Automatically saves your work" | "Auto-save" / "Saves every 30 seconds on this device" **only if verified** | Interval and storage scope can change the decision |
+| "Delete workspace" / "Delete your workspace" | "Delete workspace" / "Permanently deletes its projects for all members" **only if true** | Irreversibility, affected objects, and scope must remain visible |
+| "No reports" / "This section displays your reports" | "No reports yet" and "Create report" | Gives the actual state and a next action |
+| "Upload file" / "Use this button to upload your file" | "Upload file" / "PDF or CSV, up to 20 MB" **when these are the real limits** | Supported input and size are useful |
+
+## Build correctness
+
+Not a taste call — verify these regardless of aesthetic, on the rendered page.
+
+- [ ] No uncaught script errors on load; a broken interaction or hidden content from a JS error is a bug, fix it before judging the design.
+- [ ] Content is visible at rest. If a reveal-on-scroll/entrance animation is used, ship the content visible by default and enhance the entrance — never leave it at `opacity: 0` waiting on a handler that might not run.
+- [ ] At least 8px (ideally 12-16px) of padding inside every bordered or colored container; body text never sits flush against the viewport edge.
 
 ## Finishing checks
 
@@ -160,3 +234,19 @@ Smaller details, invisible at arm's length, that still mark a page as unfinished
 - [ ] No hairline border under a wide soft shadow on the same surface.
 - [ ] A phone gets the same content as a desktop: nothing of 40 words or more hidden at 375, and no table opening with columns off-screen (see [[web/frontend/responsive]]).
 - [ ] Screenshots checked at a phone width, 1280×800, 1440×900 and 1920×1080; for a review by a fresh reader, see [[web/frontend/design-review]].
+- [ ] A single named signature move is present and identifiable in the output.
+
+## Slop scan and self-audit
+
+Once the interface works, review current screenshots for every target viewport, plus the visible copy and the accessible names/descriptions of the affected task region:
+
+1. Inspect every section of this list. Record the tell, exact location, and any product justification that makes a visual pattern intentional.
+2. Count visual matches in the first viewport separately.
+3. Run the information test on every introduction and helper sentence. Compare each with its heading, label, control state, and neighboring text. Catch semantic repetition even when the words differ. A sentence being short does not make it useful.
+4. Remove unjustified narration and paraphrases; retain necessary consequences, constraints, recovery, and accessibility information. Verify those facts against actual behavior.
+5. Replace other unjustified matches using this list, capture the result again, and check that removal has not hidden an action or meaningful grouping.
+6. Verify it serves the artifact type's priorities — a dashboard that reads as a portfolio piece, or a landing page with no clear primary action, has failed even if it is beautiful — and that the type and color choices match the direction you committed to.
+7. Re-read the committed direction against the actual render as if seeing it for the first time — a tell-by-tell checklist pass alone can score clean on output that is still generic.
+8. If a new expressive surface has no findings, take a second look at cards, glow, heading labels, and copy. Do not invent defects just to fill the report.
+
+If any tell fires or the fit is wrong, regenerate that section before presenting. Pattern counts are review signals, not a measure of beauty.

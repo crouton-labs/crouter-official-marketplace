@@ -12,3 +12,4 @@ short-form: Authoring guides for Claude Code artifacts — CLAUDE.md, commands, 
 - [[claude-authoring/rules]] — file-scoped `.claude/rules/*.md` files.
 - [[claude-authoring/scripts-and-tooling]] — bin/ tools and automation.
 - [[claude-authoring/skills]] — Claude Code `SKILL.md` files.
+- [[claude-authoring/progressive-disclosure]] — when to split a skill into references, and how to evaluate the split.

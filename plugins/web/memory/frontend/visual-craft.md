@@ -1,106 +1,29 @@
 ---
 kind: knowledge
 when-and-why-to-read: When you are writing the CSS for a page or component a person will see — choosing fonts, a type scale, colours, spacing, separators, shadows, or animation timing — this knowledge should be read because each of these has a known good range in numbers, and a value guessed outside it (inherited 1.2 leading, a pure white card, a 300ms ease on everything, Inter as the display face) is what makes a page look unfinished or generated.
-short-form: "Visual craft in numbers: two font families and three weights, display tracking and leading by size, body 16px at 45–75ch; fonts models over-use and better ones; OKLCH colour in four layers with the accent under 5% of the screen; a fixed spacing scale and separators in order (space, hairline, tinted area, card); one shadow, eight z levels; motion only on transform and opacity at 120/220/420ms with one reveal per page."
+short-form: "Visual craft in numbers (type and colour now in typography and color): a fixed spacing scale and separators in order (space, hairline, tinted area, card); one shadow (or a shadow-as-border), image outlines, concentric radii, eight z levels; layout geometry (one gap per sibling group, proximity ladder, alignment keylines, centering by ink in small controls, optical alignment, breathing room, failure catalogue); composition (grids, bento, asymmetry, whitespace, scanning, density, tells); motion only on transform and opacity at 120/220/420ms with one reveal per page."
 rationale: >-
-  Adapted from Hallmark's craft and fonts references (github.com/Nutlope/hallmark, MIT), with its tooling, tokens and theme system removed. Neighbouring documents own the adjacent topics: [[web/frontend/visual-design]] the visual direction and the rule against invented facts; [[web/frontend/marketing-pages]] the size roles, section spacing, hero layouts, copy and section openings; [[web/frontend/states-and-interactions]] controls, inputs, focus rings, tooltips and menus; [[web/frontend/responsive]] breakpoints and overflow; [[web/frontend/dark-mode]], [[web/frontend/data-viz]], [[web/frontend/scroll-animation]] and [[web/frontend/imagery]] their own topics.
+  Adapted from Hallmark's craft reference (github.com/Nutlope/hallmark, MIT), with its tooling, tokens and theme system removed; its type, font and colour sections moved to [[web/frontend/typography]] and [[web/frontend/color]]. Concentric radius, optical alignment, shadows instead of borders and image outlines come from make-interfaces-feel-better's surfaces reference (github.com/jakubkrehel/make-interfaces-feel-better, MIT); layout geometry from better-design's layout-geometry reference (github.com/Moddingflow/better-design, MIT), with its game-engine notes and layout-check script removed; spacing by relationship and composition from samber's frontend-design-deslop layout reference (github.com/samber/cc-skills, MIT). Neighbouring documents own the adjacent topics: [[web/frontend/visual-design]] the visual direction and the rule against invented facts; [[web/frontend/marketing-pages]] the size roles, section spacing, hero layouts, copy and section openings; [[web/frontend/states-and-interactions]] controls, inputs, focus rings, tooltips and menus; [[web/frontend/responsive]] breakpoints and overflow; [[web/frontend/dark-mode]], [[web/frontend/data-viz]], [[web/frontend/scroll-animation]] and [[web/frontend/imagery]] their own topics.
+surfaces:
+  - on: read
+    match:
+      - "**/*.css"
+      - "**/*.scss"
+      - "**/*.sass"
+      - "**/*.less"
+      - "**/tailwind.config.*"
+      - "**/theme.ts"
+      - "**/tokens.*"
+    at: preview
 ---
 
 # Visual craft
 
-The numbers behind type, fonts, colour, surfaces and motion. Decide the direction first with [[web/frontend/visual-design]]; this document turns it into values. The size of each text role (hero heading, section heading, item title, lead, body, label), the spacing between sections and the hero layouts are in [[web/frontend/marketing-pages]]. Control and input styling, focus rings, tooltips, menus and modals are in [[web/frontend/states-and-interactions]]. Breakpoints and horizontal overflow are in [[web/frontend/responsive]].
+The numbers behind surfaces, layout geometry, composition and motion. Decide the direction first with [[web/frontend/visual-design]]; this document turns it into values. The size of each text role (hero heading, section heading, item title, lead, body, label), the spacing between sections and the hero layouts are in [[web/frontend/marketing-pages]]. Control and input styling, focus rings, tooltips, menus and modals are in [[web/frontend/states-and-interactions]]. Breakpoints and horizontal overflow are in [[web/frontend/responsive]].
 
-## Type
+## Type, fonts and colour
 
-- **Families:** two at most, a display face and a body face, or one family for both. One family at different weights counts as one. A third face is allowed only for exactly one job (the wordmark, one large headline figure, or code; a mono used for both code and measured figures still counts as one job). A third face doing two jobs is a third family in running use, which is one too many.
-- **Weights:** three at most across the whole page, display and body together, chosen far apart: 300 beside 800, or 400 beside 700.
-- **Scale:** a 1.25 ratio up from a 16px body. Past the size roles, build hierarchy from weight and colour, not from more sizes.
-- **Display tracking:** -0.02 to -0.04em on a regular-width face; 0 to -0.015em on a condensed or very heavy face. Two letters touching is a fault.
-- **Display leading:** 1.0 to 1.15, tighter as the size grows. 1.2 looks inherited. A mixed-case poster-sized heading may close to 0.92. An uppercase heading that can wrap never goes under 1.0.
-- **One heading, one treatment:** a heading is one weight, one style and one colour. Do not set one word in a different colour, italic, weight or highlight. Get stress from a line break, or from a second line at a second size.
-- **Very large headings:** a single word may go to 7rem. A poster-scale page sizes the heading with the screen, `clamp(4rem, 10vw, 9rem)`, reaching full size at 1440px and holding there at 1920, while the first screen still shows the headline, one sentence and the action. A wide face takes the poster scale one step down.
-- **Hero heading size by length:** count the characters of the rendered `h1`. 20 or fewer: the hero heading size, and a single word may go up to 7rem. 21 to 50: the hero heading size. 51 to 90: the smaller long-heading size, or split it at the sense break with `<br>`. Over 90: rewrite it. A `<br>` goes only between phrases, and check it at 375px wide, where it often lands badly.
-- **Wrapping:** `text-wrap: balance` on headings and `text-wrap: pretty` on body text, so no heading ends on a stub and no paragraph ends on one word.
-- **Heading measure:** set on the heading element in `ch`, never on the wrapper around the heading group: `h1` 20ch, `h2` 30ch, `h3` 40ch, a long hero heading about 24ch, the lead line under a heading about 52ch, a body paragraph about 65ch.
-- **Body:** 16px minimum, line-height 1.5 to 1.65, measure 45 to 75ch. Never all caps, never justified without hyphenation, never tracked past 0.05em.
-- **Labels, captions, table heads, meta, tags, chips and nav links:** the body face one step smaller, sentence case (lowercase only on a page whose whole voice is lowercase), no added tracking. Use mono only for code, a figure or a measurement, or when the whole page is set in mono. Capitals belong to the wordmark and to a page whose display headings are uppercase; there, a control may follow in capitals at 0.04em tracking or less.
-- **Always:** `font-display: swap`; a fallback of the same build (a grotesk falls back to `system-ui`, a serif to Georgia); `font-synthesis: none`; `font-variant-numeric: tabular-nums` on figures that are compared (tables, prices, stats); curly quotes, a true ellipsis (…), and a non-breaking space inside unit pairs (`10 MB`, `⌘ K`) in a proportional face.
-
-## Fonts
-
-Choose the class of face the page's idea calls for (a roman serif, a condensed sans, a mono), then try two or three faces from that class with the real headline set in each, and decide by how it looks on the page. A face's name, its reputation, or an association with the subject is not a reason. Use free faces unless the user has confirmed a licence. Prefer variable fonts.
-
-### Faces models over-use
-
-Every model reaches for these first, so on a page they read as unchosen. Do not use them as the display or body face: Inter, Roboto, Open Sans, Lato, Poppins, Source Sans, Nunito, Montserrat, Raleway, Work Sans, DM Sans, Plus Jakarta Sans, system-ui, Arial and Helvetica; Merriweather, Lora and Georgia as the body serif; Courier New or the system mono. Use one only when the user asks for it or the project already uses it.
-
-These are good faces but the usual second answer, so use one only with a reason specific to the page: Playfair Display, Cormorant Garamond, DM Serif Display, Fraunces, Instrument Serif, Recoleta, Space Grotesk, Hubot Sans, Bebas Neue and Unbounded as display; Geist, Instrument Sans and Mona Sans as the body or the whole page.
-
-### Display faces to consider
-
-| Class | Faces (source) |
-| --- | --- |
-| Roman serif | EB Garamond, Cardo, Castoro, Piazzolla, Alegreya, Marcellus (Google); Gambetta, Recia (Fontshare) |
-| High-contrast serif | Gloock, Libre Bodoni, Abril Fatface, Rozha One, Besley (Google); Erode, Melodrama (Fontshare) |
-| Slab serif | Arvo, Hepta Slab, Domine, Alfa Slab One, Solway (Google); Bespoke Slab (Fontshare; its old-style figures ignore `lining-nums`, so set figures in the body face) |
-| Grotesk sans | Rethink Sans, Reddit Sans, Albert Sans (Google); Clash Grotesk, Supreme (Fontshare) |
-| Geometric sans | Lexend, League Spartan, Afacad (Google); Satoshi, Technor, Excon (Fontshare) |
-| Rounded sans | Inclusive Sans, Varela Round, Nunito Sans at 700 only with a reason (Google); Chubbo, Comico (Fontshare) |
-| Condensed and heavy | Teko, Tektur, Michroma, Antonio (Google); Clash Display, Panchang, Khand, Telma, Stardom, Array (Fontshare) |
-| Mono as display | Space Mono, Fragment Mono, Red Hat Mono, Spline Sans Mono, Sometype Mono (Google) |
-| Pixel | Press Start 2P, VT323, Pixelify Sans, Tiny5, DotGothic16, Workbench (Google) |
-| Handwritten | Shantell Sans, Caveat, Gochi Hand, Reenie Beanie (Google); Sharpie (Fontshare) |
-
-### Body faces to consider
-
-- **Sans:** Hanken Grotesk, IBM Plex Sans, Figtree, Onest, Sofia Sans, Golos Text, Karla, Chivo, Albert Sans, Public Sans, Archivo, Manrope (Google); Switzer, General Sans, Satoshi (Fontshare).
-- **Serif:** Newsreader, Source Serif 4, Literata, Spectral, Crimson Pro, EB Garamond, Piazzolla (Google); Sentient (Fontshare).
-- **Mono for code, figures and measurements:** Geist Mono, JetBrains Mono, IBM Plex Mono, DM Mono, Fira Code, Azeret Mono, Chivo Mono, Overpass Mono (Google).
-
-### Sources
-
-- **Google Fonts:** free, served from a CDN, works everywhere. The default.
-- **Fontshare** (Indian Type Foundry): free for commercial use, foundry quality. One line: `<link href="https://api.fontshare.com/v2/css?f[]=<family>@<weights>&display=swap" rel="stylesheet">`.
-- **A paid foundry** (Klim, Pangram Pangram, Production Type, Lineto, Colophon) only when the user has confirmed the licence; then ask which faces they hold and pick from those.
-
-### The wordmark
-
-The wordmark in the nav and footer may use a different face from the body, and on a page with a strong tone it should: setting it in the body family flattens the hierarchy and the page looks unbranded. When the page has no other use for a third face, the wordmark is its one job.
-
-```css
-:root { --font-body: "Switzer", ui-sans-serif, system-ui, sans-serif; --font-wordmark: "Gambetta", ui-serif, serif; }
-.wordmark { font-family: var(--font-wordmark); font-weight: 600; letter-spacing: -0.015em; }
-```
-
-Use one family for everything only when the body voice is the brand (a letter, a manifesto, a long document); then the wordmark takes the family's display cut or its heaviest weight. A product page whose wordmark is the body face at 600 is the undesigned default.
-
-### Loading
-
-- Load only the weights the page uses, one `<link>` per source, with `display=swap`, and a `<link rel="preconnect">` to the font host before it.
-- A self-hosted `@font-face` carries `font-display: swap` and a fallback matched to the face's metrics (`size-adjust`, `ascent-override`, `descent-override`, `line-gap-override`, using published values only) so the swap does not shift the first screen.
-- Never let the browser fake bold or italic: `font-synthesis: none`, and load the real italic if a heading uses it.
-- A variable font loads once and gives every weight; use it where the family ships one.
-
-## Colour
-
-- **Write every colour in OKLCH.**
-- **Four layers:**
-  - Background colour: on a light page lightness 92 to 98% with chroma 0.005 to 0.015 toward the page's main hue; on a dark page lightness 12 to 18%, chroma 0.008 to 0.015.
-  - Text colour: lightness 16 to 24% on a light background, 88 to 96% on a dark one, tinted at chroma 0.005 to 0.014.
-  - Five to nine neutrals between them (muted text, rules, a second and third background shade), each tinted at chroma 0.005 to 0.018.
-  - One accent at chroma 0.12 to 0.22, with its own paired text colour for anything set on an accent fill.
-- **Focus colour:** on the accent's hue, chroma 0.18 to 0.22, lightness within 5% of the accent. How the focus ring is drawn is in [[web/frontend/states-and-interactions]].
-- **No pure black or white** as a surface or as a one-off value. Tint every grey toward the page's main hue.
-- **The accent is a signal, not a fill.** Use it for an active nav item, the focus ring, a link underline on hover, the primary control, and the one data series a chart argues from. Chart colour in full is in [[web/frontend/data-viz]].
-- **How much of the page the colour covers.** Decide which of these the page is before writing CSS:
-  - **Accent only:** the default. The accent covers under 5% of any screen.
-  - **One colour covers 30 to 60% of the page,** as background bands or as the background itself; the accent stays a signal.
-  - **Three or four colours,** each with one named job (for example a background band colour, a signal colour, a colour for one recurring mark such as a badge, and the text colour) and a set share of the page.
-  - **The whole background is the colour,** and the text colour and rules are derived from it.
-  A background colour chosen at the second, third or fourth level does not count toward the accent's 5%.
-- **Contrast:** body text at least 4.5:1 (aim for 7:1), or APCA Lc 60. Large text, icons, focus rings and input edges at least 3:1, or Lc 45. Any rule that paints a dark background swaps the text colour in the same rule. Grey text never sits on a coloured background.
-- **Never:** a gradient with more than three stops; purple to blue, purple to pink, or cyan on dark anywhere; a glow shadow on a dark page, a coloured halo, or a spotlight; a colour defined with alpha (alpha is for overlays and shadows only); red and green as the only way a state is told apart.
-- **Dark mode** is optional, and when built it is derived from the light theme, never inverted: [[web/frontend/dark-mode]].
+Type (families, weights, scale, tracking, leading, measure), the font lists, the wordmark and font loading are in [[web/frontend/typography]]. Colour (OKLCH, the four layers, accent coverage, contrast and the never list) is in [[web/frontend/color]]. How these values are held as tokens is in [[web/frontend/design-tokens]].
 
 ## Surfaces and spacing
 
@@ -111,47 +34,271 @@ Use one family for everything only when the body voice is the brand (a letter, a
 - **Stats side by side** are separated by a top or vertical hairline, with no leading padding on the first and no trailing padding on the last; reset the pattern wherever the column count changes.
 - **Depth comes from weight and scale.** One shadow style at most, either `0 1px 2px oklch(20% 0.01 <hue> / 0.05)` or `0 0 0 1px oklch(30% 0.01 <hue> / 0.06)`. A raised surface is never darker than the page behind it.
 - **Z levels, eight in all:** base 1, raised 10, dropdown 100, sticky 200, sticky nav 300, modal 400, toast 500, tooltip 600.
-- **Radii:** one radius per nesting level, concentric (inner radius = outer radius − padding, at least 2px). Images take `min(1vw, <card radius>)`.
+- **Radii:** one radius per nesting level, concentric (inner radius = outer radius − padding, at least 2px). Images take `min(1vw, <card radius>)`. When nesting rounded elements, the outer radius must equal the inner radius plus the padding between them: `outerRadius = innerRadius + padding` This rule is most useful when nested surfaces are close together. If padding is larger than `24px`, treat the layers as separate surfaces and choose each radius independently instead of forcing strict concentric math.
 - **Clipping:** clip horizontal overflow with `overflow-x: clip`, which keeps `position: sticky` and `fixed` working where `overflow: hidden` breaks them; a section that overflows on purpose keeps `overflow: visible`. The full overflow rules are in [[web/frontend/responsive]].
+
+### Shadows instead of borders
+
+The one shadow style above may be a shadow-as-border. For **buttons, cards, and containers** that use a border for depth or elevation, prefer replacing it with a subtle `box-shadow`. Shadows adapt to any background since they use transparency; solid borders don't. This also helps when using images or multiple colors as backgrounds — solid border colors don't work well on backgrounds other than the ones they were designed for.
+
+**Do not apply this to dividers** (`border-b`, `border-t`, side borders) or any border whose purpose is layout separation rather than element depth. Those should stay as borders.
+
+The shadow is comprised of three layers. The first acts as a 1px border ring, the second adds subtle lift, and the third provides ambient depth:
+
+```css
+:root {
+  --shadow-border:
+    0px 0px 0px 1px oklch(0 0 0 / 0.06),
+    0px 1px 2px -1px oklch(0 0 0 / 0.06),
+    0px 2px 4px 0px oklch(0 0 0 / 0.04);
+  --shadow-border-hover:
+    0px 0px 0px 1px oklch(0 0 0 / 0.08),
+    0px 1px 2px -1px oklch(0 0 0 / 0.08),
+    0px 2px 4px 0px oklch(0 0 0 / 0.06);
+}
+```
+
+Apply the variable and add `transition-[box-shadow]` for a smooth hover:
+
+```css
+.card {
+  box-shadow: var(--shadow-border);
+  transition-property: box-shadow;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-border-hover);
+}
+```
+
+| Use shadows | Use borders |
+| --- | --- |
+| Cards, containers with depth | Dividers between list items |
+| Buttons with bordered styles | Table cell boundaries |
+| Elevated elements (dropdowns, modals) | Form input outlines (for accessibility) |
+| Elements on varied backgrounds | Hairline separators in dense UI |
+| Hover/focus states for lift effect | |
+
+The dark-mode ring is in [[web/frontend/dark-mode]].
+
+### Image outlines
+
+Add a subtle `1px` outline with low opacity to images. This creates consistent depth, especially in design systems where other elements use borders or shadows.
+
+#### Colour rules
+
+- **Light mode**: pure black, `oklch(0 0 0 / 0.1)`.
+- **Dark mode**: pure white, `oklch(1 0 0 / 0.1)`.
+- Never use a near-black or near-white from the project palette (e.g. slate-900, zinc-900, `#0a0a0a`, `#111827`, `#f5f5f7`). Tinted outlines pick up the surrounding surface color and read as dirt on the image edge.
+- Never match the outline to the project's accent or ink color. The outline is a neutral separator, not a themed element.
+
+```css
+img {
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px; /* inset so it doesn't add to layout */
+}
+```
+
+The dark-mode outline is in [[web/frontend/dark-mode]].
+
+## Layout geometry
+
+Most "it looks slightly off" defects are geometry: a gap of 16 next to a gap of 22, a row of buttons whose tops differ by 3px, a settings label that starts 6px right of the one above, a label sitting 2px low inside its button, a button touching the window edge. Each is small; together they read as amateur. They are invisible in a downscaled screenshot and easy to introduce when elements are placed by hand, so this reference treats geometry as something you **construct with layout rules and then measure**, never something you judge by eye.
+
+### Construct geometry, do not place it
+
+- Every group of siblings is laid out by a layout container with **one gap token**: CSS flex/grid `gap`. Hand-set coordinates are for genuinely free elements only: world-space markers, diegetic UI, decorative art.
+- Never fix a misalignment by nudging one element's offset. Find the shared cause (different pivots, mixed anchors, a missing layout group, different control heights, sprite padding) and fix it at the container, component, or token.
+- Siblings of the same kind share a size: buttons in one row or column have the same height, and the same width when they are a set (menu stack, dialog actions, tab bar). Width comes from either the longest localized label plus padding or a fixed size token, applied to the whole set.
+- Snap to whole pixels after scaling. Choose control and icon sizes with matching parity (an even icon in an even box, odd in odd) so centering never leaves a half-pixel.
+
+### Spacing rhythm: equal intervals, nested by relationship
+
+- All gaps, paddings, and insets come from the spacing scale. A value outside the scale is a defect unless it is layout math.
+- **Same relationship, same gap.** Every gap between items of the same kind in one group is identical: all buttons in a menu, all rows in a list, all icons in a toolbar. A different gap must mean a different relationship (a new group), and then it is a clearly larger step from the scale, not a few pixels more.
+- **Proximity ladder.** inside a control < between items in a group < between groups < container padding. Concretely, with a 4-based scale: icon↔label 8, item↔item 12–16, group↔group 24–32, panel padding 24–32 (phone 16–24).
+- **Padding is never smaller than the gaps it contains.** If buttons inside a window are 16 apart, the window padding is at least 16, usually one step more. Content closer to the frame than to its siblings reads as about to fall out.
+- Padding is symmetric unless the design says otherwise: left = right, and top = bottom except for a header band whose extra space is a token.
+
+One uniform gap everywhere is a primary tell of unconsidered layout.
+
+Refactoring UI's heuristic: start with more whitespace than feels necessary, then remove until it feels right, never the reverse. Related elements (label and input, heading and its paragraph, icon and its text) move closer; unrelated elements move apart — this is proximity (see [[web/frontend/ux-principles]]) made literal in pixels.
+
+### Alignment lines
+
+Every element sits on at least one line it shares with its neighbours. Define the lines first (keylines), then attach elements to them.
+
+- **Rows.** Items in a row share a horizontal line: equal-height items share top, center, and bottom; mixed-height items (label + toggle, text + button) share their vertical centers, or text baselines when several texts sit side by side. Never "roughly level".
+- **Columns and lists.** Items stacked in a column share an edge: usually the start edge (left in LTR). In a settings list every label starts on one vertical keyline, every control starts on (or ends on) a second keyline, and values align on a third. Achieve this with a two-column grid or a fixed label column width, never with per-row offsets. Numbers that are compared align on the end edge with tabular numerals.
+- **Text vs. its box.** Align text by its visible start, not by its container's padding: a label inside a padded row and a heading outside it must still start on the same keyline if they belong to the same column.
+- **Window structure.** Title, content, and the action row share the window's content edges; the action row is anchored to a consistent corner or centered as a set, identically in every dialog of the product.
+- Optical exceptions are explicit: a large heading's side bearing, a round icon next to square ones. Correct them once in the component or token and record why.
+
+### Content inside small controls
+
+Small controls (buttons, chips, tabs, slots, toggles, icon buttons) are where misplacement is most visible, because the margin of error is a few pixels.
+
+- **Center by the visible ink, not by the line box.** Font line boxes include ascender and descender space, so a label "centered" by its line box sits low or high, worse for all-caps and Cyrillic. `text-box: trim-both cap alphabetic` (where supported) or equal padding tuned to the font's cap height, verified by measurement; set `line-height` explicitly on controls. Default line-box centering measurably puts caps about 1px low in a 56px button at 16px system-ui, so even untouched browser buttons need this check.
+- **Icons: measure the sprite, not the rect.** Transparent padding in a sprite or SVG viewBox moves the visible icon off-center. Trim the asset, and keep all icons of a set on the same canvas size with the same internal margin.
+- **Optical centering is declared, not improvised.** Asymmetric glyphs (a play triangle, an arrow, a speech bubble) are centered by visual mass: shift toward the light side by roughly 5–10% of the icon width. Bake the offset into the icon asset or the icon-button component, and declare it so a check can tell intent from error.
+- **Icon + label.** One gap token between them, the pair centered as a unit, icon vertically centered on the label's cap height. The same pair uses the same gap and icon size in every control of the set.
+- **Start-aligned content** (list rows, menu items with leading icons) uses the same start inset in every sibling control, and is still vertically centered.
+- **Fit.** Content keeps at least the control's padding on every side for the longest supported localized string. Horizontal padding ≥ vertical padding. A primary action label never truncates or shrinks below the type scale; widen the set, wrap to two lines by design, or shorten the copy.
+
+### Optical alignment
+
+When geometric centering looks off, align optically instead.
+
+#### Buttons with Text + Icon
+
+Use slightly less padding on the icon side to make the button feel balanced. A reliable rule of thumb is:
+`icon-side padding = text-side padding - 2px`.
+
+```css
+/* Good — less padding on icon side */
+.button-with-icon {
+  padding-left: 16px;
+  padding-right: 14px; /* icon side = text side - 2px */
+}
+
+/* Bad — equal padding looks like icon is pushed too far right */
+.button-with-icon {
+  padding: 0 16px;
+}
+```
+
+```tsx
+// Tailwind
+<button className="pl-4 pr-3.5 flex items-center gap-2">
+  <span>Continue</span>
+  <ArrowRightIcon />
+</button>
+```
+
+#### Play Button Triangles
+
+Play icons are triangular and their geometric center is not their visual center. Shift slightly right:
+
+```css
+/* Good — optically centered */
+.play-button svg {
+  margin-left: 2px; /* shift right to account for triangle shape */
+}
+
+/* Bad — geometrically centered but looks off */
+.play-button svg {
+  /* no adjustment */
+}
+```
+
+#### Asymmetric Icons (Stars, Arrows, Carets)
+
+Some icons have uneven visual weight. The best fix is adjusting the SVG directly so no extra margin/padding is needed in the component code.
+
+```tsx
+// Best — fix in the SVG itself
+// Adjust the viewBox or path to visually center the icon
+
+// Fallback — adjust with margin
+<span className="ml-px">
+  <StarIcon />
+</span>
+```
+
+### Breathing room: nothing clipped, nothing on the edge
+
+- Nothing overflows its parent: no button, label, icon, focus ring, or glow clipped by the window, panel, mask, or screen. Scroll regions are the only legitimate overflow, and their content still keeps padding inside the viewport.
+- Nothing sits on the edge: every child keeps at least the parent's padding from every edge. Treat a 0–4px distance to a frame as a defect even when nothing is clipped yet; at another aspect ratio or language it will be.
+- Screen-level margin: interactive UI stays inside the platform safe area (notches, rounded corners). Keep at least the panel padding token from the window edge at the smallest supported resolution.
+- Leave reserve for growth: localized text (German, Russian often +30–40%), large numbers, 200% text, hover/pressed scale (a 1.05 scale on a button that is 2px from the edge will clip). Reserve = scale headroom + focus ring width.
+- A dense surface may use smaller tokens; it does not get to drop the padding rule. When content does not fit, change the layout (scroll, columns, pagination, collapse), never the margins.
+
+### Visual check at real scale
+
+- Capture at the native target resolution and inspect **crops at 1:1 or 2–4× zoom**: each button row, each list's start edge, each small control. Never judge 2px from a full-screen thumbnail.
+- Turn on layout debug overlays where they exist (browser layout/flex overlays and outlines) and look for edges that almost but not quite line up.
+- Squint at a column: start edges should form one clean vertical line; rows should form one clean horizontal band.
+
+### Failure catalogue
+
+| Symptom | Usual cause | Fix at the cause |
+| --- | --- | --- |
+| One button's gap differs | Hand-placed child, or a spacer element in a flex row | Remove manual offsets/spacers; one `gap` token |
+| Row tops differ by a few px | Different control heights | Shared size token; the container owns position |
+| Settings labels start at different x | Per-row padding, labels with different alignment, or no shared column | Two-column grid / fixed label column width |
+| Label low inside button | Line-box centering (CSS line-height) | Cap/ink centering per section 4 |
+| Icon off-center in its slot | Transparent sprite/SVG padding, or no optical offset on an asymmetric glyph | Trim asset; declare optical offset in the component |
+| Button touches or exits the window | Fixed widths + long localization, hover scale, missing padding | Padding token, content-sized set, reserve for scale and focus ring |
+| Half-pixel blur or 1px drift | Odd/even size mismatch, fractional scaling | Matching parity; round positions after scaling |
+
+## Composition
+
+### Grids: 12-column, modular, bento
+
+The 12-column grid is the workhorse because 12 divides into halves, thirds, quarters, and sixths. Primary content spans 6 to 8 columns, secondary 3 to 4. Establish a max content width and consistent gutters, then compose within them.
+
+Bento grids (modular blocks of varying size, named after the compartmentalized Japanese lunchbox) are strong for showcasing diverse content (feature sets, dashboards, capability overviews) because Gestalt proximity and similarity make uneven blocks read as one organized whole, and they restack cleanly on mobile. Popularized by Apple product pages and Linear.
+
+Caution: bento-everything is now itself a 2025 to 2026 tell — use it when content genuinely varies in size and importance, not as the default container for three equal features.
+
+Modular and Swiss grids treat the grid itself as the visible structure: columns, baseline rhythm, and alignment are the design.
+
+### Asymmetry and editorial composition
+
+Symmetry is safe and static; intentional asymmetry creates energy and directs the eye — offset a heading from its supporting text, let an image bleed past the grid, or stagger a two-column layout so the eye moves diagonally.
+
+Editorial layouts borrow from print: real columns, pull quotes, rules and dividers instead of cards, drop caps, a strong measure. The goal is at least one intentional, brief-specific layout move per page so the composition is not the default template.
+
+State the move (for example "asymmetric two-column hero with the product screenshot bleeding off the right edge") before building.
+
+### Whitespace as a tool
+
+Whitespace is not empty; it is the primary signal of quality and confidence. The shared principle across Stripe, Linear, and Vercel: take the spacing that already feels generous, then add more.
+
+Macro whitespace (between sections, around the page) sets the calm; micro whitespace (line-height, padding inside controls, gaps in a group) sets legibility. Premium and editorial positioning lean on vast whitespace and large type; dense tools spend it carefully. Cramped-by-default is a slop tell; so is uniform whitespace with no rhythm.
+
+### Scanning patterns and placement
+
+Eyes scan predictably. For text-heavy pages, the F-pattern: users read the top line, scan down the left edge, and dip right occasionally, so put the most important words at the start of headings and left-align body.
+
+For sparse, visual pages (landing, hero), the Z-pattern: top-left brand, top-right action, diagonal to the value proposition, then to the primary CTA bottom-right. Most critical content goes top-left; the primary CTA sits along the natural path.
+
+On dashboards, the most important metric goes top-left and the layout follows the decision the view supports.
+
+### Density by artifact type
+
+Density must fit the job. Dashboards and professional tools tolerate and often require high density: small type steps, tight rows, many elements per view, because power users scan and compare.
+
+Marketing, portfolio, and premium pages want air: few elements per view, large type, generous space. Matching density to the artifact is itself a deslop move — a marketing page with dashboard density feels cramped, a dashboard with marketing air feels empty and wastes the expert user's screen.
+
+### Composition tells
+
+- Hero plus three equal feature cards plus testimonials plus CTA as the only structure.
+- Everything centered in a max-width container as the sole layout idea.
+- Identical same-sized card grid as the only device for everything.
+- Nested cards (cards inside cards inside cards).
+- Uniform spacing everywhere with no tight-within / loose-between rhythm.
+- Bento grid used by reflex for content that does not vary in size or importance.
+- Centered long-form body text (reserve centering for short headings and one to two line blocks).
+- A fixed grid that squashes instead of restacking on mobile.
+
+### Layout moves to borrow
+
+Transpose the named move, not the page. All names below are inspiration only.
+
+- **Linear**: bento sections with subtle glow-bordered blocks; consistent rhythm across every screen. Transpose the disciplined block grid with one accent on active state.
+- **Apple product pages**: bento for diverse capabilities, full-bleed imagery, dramatic vertical pacing. Transpose the alternation of full-bleed and contained sections.
+- **Vercel**: a faint blueprint grid behind content; white on near-black; build-log animation in the hero. Transpose the structural background grid at low opacity.
+- **Stripe**: generous whitespace, embedded live code samples beside prose, a confident single accent over near-monochrome. Transpose the product-in-the-hero (real interface, not stock).
+- **Mercury**: premium minimalism, vast whitespace, restrained palette. Transpose the air-as-confidence pacing.
+- **Editorial/broadsheet** (The Verge, magazine sites): columns, rules, pull quotes, drop caps. Transpose rules-and-columns replacing the card grid entirely.
+- **Swiss reference** (Josef Mueller-Brockmann posters): rigorous grid, asymmetric balance, one accent. Transpose the visible grid as structure.
 
 ## Motion
 
-Decide the page's motion once in the plan: which one reveal, which hover signals, whether there is any loop.
-
-- **How much a page moves:** at most three kinds of motion per page (for example one reveal, one hover change and one loop). Most pages have too much. Pick one of four levels with the visual direction: none at all; quick, at 0.7 to 0.75 times the durations below; lively, at 0.85 to 0.9 times; or slow and calm, at 1.0 to 1.3 times.
-
-- **Tools:** CSS transitions and `@property` first. Use the Motion library for coordinated entrances in React, and GSAP only when a timeline is what the product shows.
-
-- **Animate only `transform` and `opacity`.** `filter: blur`, `clip-path`, `mask` and `box-shadow` may join when they stay smooth on that element alone. Never `transition: all`; list the properties.
-- **Easings:** ease-out for things arriving, ease-in for things leaving, ease-in-out for toggles. Never the browser's default `ease`; `linear` only for progress bars and scrubbing; no overshoot on UI state.
-
-  ```css
-  :root {
-    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
-    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  }
-  ```
-
-- **Durations:** 120ms for a press, a tick or a colour change; 220ms for hover, tooltips and menus; 420ms for a modal, a drawer, an accordion or a reveal. An exit takes 60 to 75% of its entrance. Stagger 30 to 50ms between rows and 60 to 100ms between blocks, 500ms in total at most, and only once.
-- **The hero entrance:** one settle of 0.4 to 0.8s including its stagger, starting from a state where the content is already visible. A fade with an 8px rise counts as one motion. Never a fade, a sweep and a scale on one element; never a bounce; never a starfield, mouse parallax, or an auto-rotating carousel.
-- **One reveal per page,** staggered per item, 0.4 to 0.8s in total, with the content visible when scripting is off. The recipe is in [[web/frontend/states-and-interactions]].
-- **Scroll:** use IntersectionObserver for reveals and for states that change at a threshold; a passive, frame-throttled scroll listener only where scroll direction matters. Animation tied to scroll position is allowed only as one of the patterns in [[web/frontend/scroll-animation]].
-- **Hover is one signal** that raises contrast: a colour step, or a 1px lift at 120ms on a control that keeps its colour. Focus rings never animate.
-- **Reduced motion:** under `prefers-reduced-motion: reduce`, every reveal shows its end state at once and every loop stops. Motion that must still run (a loader, a 150ms fade) opts out with a class:
-
-  ```css
-  @media (prefers-reduced-motion: reduce) {
-    *:not(.keep-motion), *:not(.keep-motion)::before, *:not(.keep-motion)::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
-  }
-  ```
-
-- **Never:** parallax; a custom cursor or a cursor follower; a marquee that does not pause on hover and focus; `will-change` on a whole class; a pulsing dot; a caret blinking for more than five blinks; an infinite loop other than a loader, except one small loop of 4s or less, or one slow background loop of 8s or more. Every loop stops when off-screen, and a loop that runs longer than 5 seconds has a visible pause control ([[web/frontend/states-and-interactions]]).
+Motion timing, easings, what may animate, the reveal and loop rules and reduced motion are in [[web/frontend/motion]].
 
 ## Page details
 

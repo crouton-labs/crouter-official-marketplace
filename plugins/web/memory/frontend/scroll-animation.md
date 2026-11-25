@@ -1,14 +1,14 @@
 ---
 kind: knowledge
 when-and-why-to-read: When you are considering animation tied to scroll position (a pinned section whose steps advance as you scroll, a heading that wipes in, a reading-progress line, a pinned image beside scrolling figures), this knowledge should be read because the default is none, at most one such pattern earns a place on a page, and each must leave a complete static page for reduced motion, small screens, browsers without support and script failures.
-short-form: "Scroll-linked animation: none by default; at most one pattern per page, on structure never body text; finished layout in base CSS, the animation only inside @supports (animation-timeline) and reduced-motion/min-width queries; linear timing; four recipes (pinned steps, headline wipe, progress line, pinned two-pane); fallback is a reveal-once, never a scroll listener."
+short-form: "Scroll-linked animation: none by default; at most one pattern per page, on structure never body text; finished layout in base CSS, the animation only inside @supports (animation-timeline) and reduced-motion/min-width queries; linear timing; four recipes (pinned steps, headline wipe, progress line, pinned two-pane) plus scroll-fade edges, scroll zoom and theme scrub; fallback is a reveal-once, never a scroll listener."
 rationale: >-
-  Adapted from Hallmark's scroll-choreography reference (github.com/Nutlope/hallmark, MIT). Durations, easings, the one-reveal-per-page rule and the motion bans (parallax, cursor followers) live in [[web/frontend/visual-craft]]; the section compositions these patterns sit in live in [[web/frontend/marketing-pages]]. This document owns scroll-linked animation only.
+  Adapted from Hallmark's scroll-choreography reference (github.com/Nutlope/hallmark, MIT). The scroll-fade-edges, scroll-zoom and theme-scrub effects are from better-design's effects library (github.com/Moddingflow/better-design, MIT). Durations, easings, the one-reveal-per-page rule and the motion bans (parallax, cursor followers) live in [[web/frontend/motion]]; the section compositions these patterns sit in live in [[web/frontend/marketing-pages]]. This document owns scroll-linked animation only.
 ---
 
 # Scroll-linked animation
 
-The default is none. A page's normal motion is a single reveal-once as content enters: its timing is in [[web/frontend/visual-craft]] and its recipe in [[web/frontend/states-and-interactions]]. A scroll-linked pattern, where animation progress follows scroll position, is an exception: used once, on a structural element, when the content has a real sequence worth pinning or scrubbing through.
+The default is none. A page's normal motion is a single reveal-once as content enters: its timing is in [[web/frontend/motion]] and its recipe in [[web/frontend/states-and-interactions]]. A scroll-linked pattern, where animation progress follows scroll position, is an exception: used once, on a structural element, when the content has a real sequence worth pinning or scrubbing through.
 
 ## Limits
 
@@ -18,7 +18,7 @@ The default is none. A page's normal motion is a single reveal-once as content e
 - **The finished layout is the base CSS.** All animation lives inside `@supports (animation-timeline: view())` (or `scroll()`) and `@media (prefers-reduced-motion: no-preference) and (min-width: 40rem)`. Reduced motion, small screens and browsers without support all get the complete, static page.
 - **Declare `animation-timeline` and `animation-range` after the `animation` shorthand;** the shorthand resets them.
 - **Use `linear` timing.** Scrubbing maps scroll distance to progress one to one; an easing curve makes the page drift away from the scroll position.
-- It counts toward the page's limit of three kinds of motion (for example a reveal, a hover change and one loop), set out in [[web/frontend/visual-craft]].
+- It counts toward the page's limit of three kinds of motion (for example a reveal, a hover change and one loop), set out in [[web/frontend/motion]].
 
 ## 1. Pinned steps
 
@@ -108,6 +108,20 @@ The animation adds only a fade on the scrolling figures, which move and so can u
   }
 }
 ```
+
+## 5. Effects from the signature pool
+
+These three come from the signature effects in [[web/frontend/texture]]; their budget and verify rules apply, and the limits above apply to each.
+
+### fx:scroll-fade-edges — overflow you can feel
+
+A horizontally scrolling row fades only at the edge where more content waits: no fade at the start, both edges in the middle, only the left at the end. Scroll-driven (`animation-timeline: scroll(self inline)` animating two registered properties used in the mask), no JS; without support the edges stay sharp. Keep visible arrow buttons or a scrollbar when the row holds key actions.
+
+### fx:scroll-zoom and fx:theme-scrub — scroll-linked scenes
+
+- **Scroll zoom:** as the block scrolls in, its media scales from 1.18 to 1 inside a frame whose radius grows from 0 to 28 px, so a full-bleed product shot settles into a card. Native view timeline, final state without support.
+- **Theme scrub:** a section's background turns from black to `#f5f5f7` while it enters; the text color flips in one step at the midpoint so no frame is gray on gray. Give the section at least 25vh of top padding so its text reaches reading position after the colors settle.
+- **Rules:** one zoom per page (the hero product) and theme flips only at real chapter breaks. Both never hijack scrolling: the page scrolls natively and reduced motion shows the final state.
 
 ## Fallback when the browser lacks support
 
